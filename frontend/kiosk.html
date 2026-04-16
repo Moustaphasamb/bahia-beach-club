@@ -431,12 +431,6 @@ function renderMenu() {
   }
 
   el.innerHTML = html;
-  el.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', e => { if (e.target.closest('.add-quick')) return; openSheet(card.dataset.id); });
-  });
-  el.querySelectorAll('.add-quick').forEach(btn => {
-    btn.addEventListener('click', e => { e.stopPropagation(); quickAdd(btn.dataset.id); });
-  });
 }
 
 function cardHtml(item) {
@@ -504,7 +498,7 @@ $('shArBtn').onclick = () => {
   $('sheetOv').classList.remove('open');
   $('arScreen').classList.add('open');
   $('mvLoading').classList.remove('hidden');
-  mv.src = activeItem.modelUrl && activeItem.modelUrl !== '' ? `http://localhost:3001${activeItem.modelUrl}` : DEFAULT_MODEL;
+  mv.src = activeItem.modelUrl && activeItem.modelUrl !== '' ? `${window.location.origin}${activeItem.modelUrl}` : DEFAULT_MODEL;
   mv.addEventListener('load', () => $('mvLoading').classList.add('hidden'), {once:true});
 };
 $('arBack').onclick = () => { $('arScreen').classList.remove('open'); mv.src = ''; if (activeItem) openSheet(activeItem.id); };
@@ -584,6 +578,16 @@ function showToast(msg) {
   clearTimeout(toastT);
   toastT = setTimeout(() => $('toast').classList.remove('show'), 2200);
 }
+
+// ═══════════════════════════════
+// EVENT DELEGATION — menu cards
+// ═══════════════════════════════
+document.getElementById('menuScroll').addEventListener('click', function(e) {
+  const addBtn = e.target.closest('.add-quick');
+  if (addBtn) { quickAdd(addBtn.dataset.id); return; }
+  const card = e.target.closest('.card');
+  if (card) { openSheet(card.dataset.id); }
+});
 
 // ═══════════════════════════════
 // INIT

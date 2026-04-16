@@ -126,6 +126,7 @@
       justify-content: center;
       text-align: center;
       overflow: hidden;
+      padding-top: 80px;
     }
 
     .hero-bg {
@@ -1120,6 +1121,18 @@
       footer .footer-social { width:32px; height:32px; }
     }
 
+    /* ── REDUCED MOTION — keep elements visible if animations are disabled ── */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-content, .hero-badge,
+      .hero-title .line1, .hero-title .line2, .hero-title .line3,
+      .hero-sub, .hero-actions, .scroll-line, .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        letter-spacing: inherit !important;
+      }
+    }
+
     /* ── SMALL MOBILE ≤ 420px ── */
     @media (max-width: 420px) {
       .hero-title { font-size:clamp(2.4rem,11vw,4rem); }
@@ -1495,6 +1508,19 @@
   // NAV SCROLL
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+
+  // SMOOTH SCROLL — JS fallback for anchor links (covers iOS and any CSS gap)
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const id = this.getAttribute('href').slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
 
   // STARS
   const starsEl = document.getElementById('stars');
