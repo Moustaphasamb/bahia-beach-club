@@ -27,7 +27,12 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── FRONTEND STATIQUE ──────────────────────────────────
-app.use(express.static(path.join(__dirname, '../frontend')));
+const frontendPath = path.join(__dirname, '../frontend');
+if (require('fs').existsSync(frontendPath)) {
+  app.use(express.static(frontendPath));
+} else {
+  app.use(express.static(path.join(__dirname, 'public')));
+}
 
 // ── DOSSIERS UPLOADS ───────────────────────────────────
 fs.mkdirSync('uploads/models', { recursive: true });
