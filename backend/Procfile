@@ -1,9 +1,1 @@
-◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
-
-  ╔═══════════════════════════════════════╗
-  ║   BAHIA BEACH CLUB — API Server       ║
-  ║   http://localhost:3001               ║
-  ║   Admin : admin@bahia.sn              ║
-  ║   Pass  : bahia2025                   ║
-  ╚═══════════════════════════════════════╝
-  
+web: node server.js
