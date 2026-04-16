@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(taskkill /PID 13700 /F)",
+      "Bash(powershell -Command \"Stop-Process -Id 13700 -Force -ErrorAction SilentlyContinue; Write-Host 'Done'\")",
+      "Bash(node server.js)",
+      "Bash(curl -s http://localhost:3001/api/health)",
+      "Bash(curl -s \"http://localhost:3001/api/menu?cat=cocktails\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'{len\\(d\\)} cocktails: {[i[\\\\\"name\\\\\"] for i in d[:3]]}'\\)\")",
+      "Bash(curl -s \"http://localhost:3001/api/menu\")",
+      "Bash(powershell -Command \"Stop-Process -Id \\(Get-NetTCPConnection -LocalPort 3001 -ErrorAction SilentlyContinue\\).OwningProcess -Force -ErrorAction SilentlyContinue; Write-Host 'Stopped'\")",
+      "Bash(curl -s -o /dev/null -w \"kiosk.html: %{http_code}\\\\n\" http://localhost:3001/kiosk.html)",
+      "Bash(curl -s -o /dev/null -w \"admin.html: %{http_code}\\\\n\" http://localhost:3001/admin.html)",
+      "Bash(curl -s -o /dev/null -w \"index.html: %{http_code}\\\\n\" http://localhost:3001/index.html)",
+      "Bash(node -e \"const path=require\\('path'\\); console.log\\(path.join\\('c:/Users/samb9/Desktop/bahia-beach-club/backend','../frontend'\\)\\)\")",
+      "Bash(netstat -ano)",
+      "Bash(powershell -Command \"Stop-Process -Id 21304 -Force; Write-Host Done\")",
+      "Bash(curl -s \"http://localhost:3001/api/qrcode/7\")"
+    ]
+  }
+}

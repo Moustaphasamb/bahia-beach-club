@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+}
+
+model MenuItem {
+  id         String      @id @default(uuid())
+  cat        String
+  name       String
+  emoji      String
+  price      Int
+  desc       String
+  ingr       String[]
+  intensity  Int         @default(0)
+  ar         Boolean     @default(false)
+  available  Boolean     @default(true)
+  isNew      Boolean     @default(false)
+  modelUrl   String      @default("")
+  imageUrl   String      @default("")
+  grad       String      @default("")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  orderItems OrderItem[]
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  tableNumber Int
+  note        String      @default("")
+  total       Int
+  status      String      @default("pending")
+  items       OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  menuItemId String
+  name       String
+  price      Int
+  qty        Int
+  order      Order    @relation(fields: [orderId], references: [id])
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+}
+
+model Table {
+  id             String  @id @default(uuid())
+  number         Int     @unique
+  active         Boolean @default(false)
+  currentOrderId String  @default("")
+}
+
+model Reservation {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  date      String
+  time      String
+  guests    Int
+  message   String   @default("")
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+}

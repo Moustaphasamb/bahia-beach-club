@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Bahia Beach Club · Table 7</title>
+
+  <!-- Google Model Viewer — AR 3D officiel -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    :root {
+      --bg: #06090e;
+      --surface: #0d1622;
+      --surface2: #131f32;
+      --border: rgba(255,255,255,0.07);
+      --turq: #1fd9c0;
+      --turq-dim: rgba(31,217,192,0.12);
+      --gold: #d4a847;
+      --white: #f2ede6;
+      --muted: rgba(242,237,230,0.45);
+    }
+    html, body { height:100%; background:var(--bg); color:var(--white); font-family:'DM Sans',sans-serif; font-weight:300; overflow:hidden; }
+    #app { height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+
+    /* AMBIENT */
+    .ambient { position:fixed; inset:0; pointer-events:none; z-index:0; }
+    .blob { position:absolute; border-radius:50%; filter:blur(90px); opacity:.28; }
+    .b1 { width:280px;height:280px;background:#1fd9c0;top:-100px;right:-60px;animation:drift 14s ease-in-out infinite alternate; }
+    .b2 { width:220px;height:220px;background:#d4a847;bottom:15%;left:-80px;animation:drift 18s ease-in-out infinite alternate-reverse; }
+    @keyframes drift { from{transform:translate(0,0)} to{transform:translate(20px,30px)} }
+
+    /* HEADER */
+    header { position:relative; z-index:10; padding:18px 18px 0; flex-shrink:0; }
+    .header-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .brand-name { font-family:'Playfair Display',serif; font-size:1.1rem; }
+    .brand-name span { font-style:italic; color:var(--turq); }
+    .table-pill { font-size:.55rem; letter-spacing:.15em; text-transform:uppercase; background:var(--turq); color:var(--bg); padding:6px 14px; border-radius:20px; font-weight:500; }
+
+    /* SEARCH */
+    .search-wrap { position:relative; margin-bottom:14px; }
+    .search-wrap input { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:13px 16px 13px 44px; color:var(--white); font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:300; outline:none; transition:border-color .2s; }
+    .search-wrap input::placeholder { color:var(--muted); }
+    .search-wrap input:focus { border-color:rgba(31,217,192,.4); }
+    .search-ico { position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:.9rem; pointer-events:none; }
+
+    /* CATEGORY PILLS */
+    .cats-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin:0 -18px; padding:0 18px; }
+    .cats-scroll::-webkit-scrollbar { display:none; }
+    .cats { display:flex; gap:8px; padding-bottom:14px; width:max-content; }
+    .cat { padding:8px 18px; border-radius:22px; font-size:.68rem; letter-spacing:.04em; border:1px solid var(--border); background:var(--surface); color:var(--muted); cursor:pointer; white-space:nowrap; transition:all .22s; display:flex; align-items:center; gap:6px; }
+    .cat.active { background:var(--turq); border-color:var(--turq); color:var(--bg); font-weight:500; }
+
+    /* MENU SCROLL */
+    .menu-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; padding:0 18px 120px; position:relative; z-index:5; }
+    .menu-scroll::-webkit-scrollbar { display:none; }
+
+    .sec { font-size:.5rem; letter-spacing:.3em; text-transform:uppercase; color:var(--turq); margin:20px 0 12px; display:flex; align-items:center; gap:10px; }
+    .sec::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* PRODUCT CARD */
+    .card { display:flex; background:var(--surface); border:1px solid var(--border); border-radius:18px; margin-bottom:10px; overflow:hidden; cursor:pointer; transition:transform .18s, border-color .2s; }
+    .card:active { transform:scale(.98); border-color:rgba(31,217,192,.3); }
+    .card-visual { width:96px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:3rem; position:relative; overflow:hidden; min-height:96px; }
+    .card-visual-bg { position:absolute; inset:0; }
+    .card-emoji { position:relative; z-index:1; }
+    .card-info { flex:1; padding:14px 12px 14px 14px; display:flex; flex-direction:column; justify-content:space-between; min-width:0; }
+    .card-row1 { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:5px; }
+    .card-name { font-family:'Playfair Display',serif; font-size:.98rem; line-height:1.2; flex:1; }
+    .card-badges { display:flex; gap:4px; flex-shrink:0; flex-direction:column; align-items:flex-end; }
+    .badge { font-size:.38rem; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:8px; white-space:nowrap; }
+    .badge-ar { border:1px solid rgba(31,217,192,.35); color:var(--turq); }
+    .badge-new { border:1px solid rgba(212,168,71,.35); color:var(--gold); }
+    .card-desc { font-size:.61rem; color:var(--muted); line-height:1.55; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:10px; flex:1; }
+    .card-bottom { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .card-price { font-family:'Playfair Display',serif; font-size:1.05rem; color:var(--gold); }
+    .card-ar-hint { font-size:.48rem; letter-spacing:.08em; text-transform:uppercase; color:var(--turq); display:flex; align-items:center; gap:4px; margin-top:3px; }
+    .add-quick { width:32px; height:32px; border-radius:50%; background:var(--turq); border:none; color:var(--bg); font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s; flex-shrink:0; }
+    .add-quick:active { background:var(--gold); transform:scale(.88); }
+
+    .empty { text-align:center; padding:60px 20px; color:var(--muted); }
+    .empty span { font-size:3rem; display:block; margin-bottom:14px; }
+
+    /* ══════════════════════════════════════
+       DETAIL SHEET
+    ══════════════════════════════════════ */
+    .sheet-ov { position:fixed; inset:0; background:rgba(6,9,14,.82); backdrop-filter:blur(10px); z-index:50; opacity:0; pointer-events:none; transition:opacity .3s; display:flex; align-items:flex-end; }
+    .sheet-ov.open { opacity:1; pointer-events:all; }
+    .sheet { width:100%; background:var(--surface); border-radius:26px 26px 0 0; border-top:1px solid var(--border); max-height:92dvh; overflow-y:auto; transform:translateY(100%); transition:transform .38s cubic-bezier(.32,.72,0,1); }
+    .sheet-ov.open .sheet { transform:translateY(0); }
+    .sheet-handle { width:38px; height:4px; background:var(--border); border-radius:2px; margin:13px auto 0; }
+
+    /* Sheet hero */
+    .sheet-hero { height:220px; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .sh-bg { position:absolute; inset:0; }
+    .sh-emoji-back { position:absolute; font-size:11rem; opacity:.12; animation:shf 5s ease-in-out infinite; }
+    .sh-emoji-main { position:relative; z-index:2; font-size:5rem; animation:shf 3.5s ease-in-out infinite reverse; filter:drop-shadow(0 12px 30px rgba(31,217,192,.35)); }
+    @keyframes shf { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-14px) rotate(4deg)} }
+    .sh-fade { position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to top, var(--surface), transparent); }
+
+    .sheet-body { padding:22px 22px 36px; }
+    .sh-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:5px; }
+    .sh-name { font-family:'Playfair Display',serif; font-size:1.65rem; line-height:1.1; flex:1; padding-right:14px; }
+    .sh-close { width:34px;height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--border); display:flex;align-items:center;justify-content:center; cursor:pointer; color:var(--muted); font-size:.85rem; }
+    .sh-cat { font-size:.52rem; letter-spacing:.22em; text-transform:uppercase; color:var(--turq); margin-bottom:14px; }
+    .sh-desc { font-size:.78rem; line-height:2; color:var(--muted); margin-bottom:20px; }
+    .chips-lbl { font-size:.5rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .chip { padding:6px 14px; border-radius:20px; border:1px solid var(--border); font-size:.62rem; background:var(--surface2); display:flex; align-items:center; gap:6px; }
+    .chip-dot { width:5px;height:5px; background:var(--turq); border-radius:50%; }
+    .intensity { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--surface2); border-radius:12px; margin-bottom:20px; }
+    .int-lbl { font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+    .int-dots { display:flex; gap:5px; }
+    .int-dot { width:9px;height:9px; border-radius:50%; border:1px solid var(--border); }
+    .int-dot.on { background:var(--turq); border-color:var(--turq); }
+
+    /* AR BUTTON — grand, bien visible */
+    .ar-visualize {
+      width:100%; padding:18px; border-radius:16px;
+      background:linear-gradient(135deg,rgba(31,217,192,.2),rgba(31,217,192,.06));
+      border:1px solid rgba(31,217,192,.35);
+      color:var(--turq); font-family:'DM Sans',sans-serif;
+      font-size:.8rem; letter-spacing:.08em; text-transform:uppercase;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      gap:14px; margin-bottom:16px; transition:all .25s; font-weight:400;
+    }
+    .ar-visualize:active { background:rgba(31,217,192,.28); transform:scale(.99); }
+    .ar-ico-btn { font-size:1.4rem; }
+
+    .sh-actions { display:flex; align-items:center; gap:12px; }
+    .qty { display:flex; align-items:center; gap:12px; background:var(--surface2); border-radius:14px; padding:8px 16px; }
+    .qty-btn { width:30px;height:30px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--white); font-size:1.1rem; display:flex;align-items:center;justify-content:center; cursor:pointer; transition:all .15s; }
+    .qty-btn:active { background:var(--turq); color:var(--bg); }
+    .qty-n { font-family:'Playfair Display',serif; font-size:1.1rem; min-width:18px; text-align:center; }
+    .add-main { flex:1; padding:16px; border-radius:14px; background:var(--turq); border:none; color:var(--bg); font-family:'DM Sans',sans-serif; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; justify-content:space-between; font-weight:500; transition:all .2s; }
+    .add-main:active { background:var(--gold); }
+    .add-main-price { font-family:'Playfair Display',serif; font-size:.95rem; }
+
+    /* ══════════════════════════════════════
+       AR VIEWER SCREEN — model-viewer réel
+    ══════════════════════════════════════ */
+    .ar-screen {
+      position:fixed; inset:0; z-index:80;
+      background:var(--bg);
+      display:flex; flex-direction:column;
+      opacity:0; pointer-events:none; transition:opacity .35s;
+    }
+    .ar-screen.open { opacity:1; pointer-events:all; }
+
+    /* Top bar */
+    .ar-topbar {
+      position:absolute; top:0; left:0; right:0;
+      padding:16px 18px;
+      display:flex; justify-content:space-between; align-items:center;
+      z-index:10;
+      background:linear-gradient(to bottom, rgba(6,9,14,.9), transparent);
+    }
+    .ar-back-btn {
+      font-size:.58rem; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--white); background:rgba(13,22,34,.8);
+      border:1px solid var(--border); padding:9px 18px; border-radius:22px; cursor:pointer;
+      display:flex; align-items:center; gap:8px; backdrop-filter:blur(8px);
+    }
+    .ar-topbar-title {
+      font-family:'Playfair Display',serif; font-size:.95rem; font-style:italic;
+      color:var(--white);
+    }
+    .ar-topbar-price {
+      font-family:'Playfair Display',serif; font-size:.9rem; color:var(--gold);
+    }
+
+    /* model-viewer container */
+    .mv-wrap {
+      flex:1; position:relative;
+      background: radial-gradient(ellipse 80% 60% at 50% 60%, rgba(13,32,53,0.8) 0%, var(--bg) 100%);
+    }
+
+    model-viewer {
+      width:100%; height:100%;
+      background:transparent;
+      --poster-color: transparent;
+    }
+
+    /* Loading overlay */
+    .mv-loading {
+      position:absolute; inset:0;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:20px; z-index:2;
+      transition:opacity .4s;
+    }
+    .mv-loading.hidden { opacity:0; pointer-events:none; }
+    .mv-spinner {
+      width:48px; height:48px;
+      border:2px solid var(--border);
+      border-top-color:var(--turq);
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .mv-loading-txt { font-size:.6rem; letter-spacing:.25em; text-transform:uppercase; color:var(--turq); }
+    .mv-loading-sub { font-size:.55rem; color:var(--muted); text-align:center; }
+
+    /* AR not available fallback */
+    .mv-no-ar {
+      display:none;
+      position:absolute; inset:0; align-items:center; justify-content:center;
+      flex-direction:column; gap:16px; text-align:center; padding:40px;
+      background:rgba(6,9,14,.9);
+    }
+    .mv-no-ar.show { display:flex; }
+    .mv-no-ar-ico { font-size:3.5rem; margin-bottom:8px; }
+    .mv-no-ar h3 { font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:8px; }
+    .mv-no-ar p { font-size:.7rem; color:var(--muted); line-height:1.9; }
+
+    /* Interaction hint */
+    .mv-hint {
+      position:absolute; bottom:0; left:0; right:0;
+      padding:0 18px 12px;
+      background:linear-gradient(to top, rgba(6,9,14,.95) 60%, transparent);
+      display:flex; flex-direction:column; gap:12px;
+      z-index:5;
+    }
+    .mv-hint-txt {
+      font-size:.52rem; letter-spacing:.15em; text-transform:uppercase;
+      color:var(--muted); text-align:center;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+    }
+    .mv-hint-dot { width:5px;height:5px;background:var(--turq);border-radius:50%;animation:blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+    /* AR LAUNCH BUTTON — le vrai bouton AR Google */
+    .ar-launch-row { display:flex; gap:10px; }
+
+    .btn-ar-real {
+      flex:1; padding:17px 20px;
+      border-radius:15px;
+      background:linear-gradient(135deg, var(--turq), #17b8a8);
+      border:none; color:var(--bg);
+      font-family:'DM Sans',sans-serif;
+      font-size:.75rem; letter-spacing:.1em; text-transform:uppercase;
+      cursor:pointer; font-weight:500;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      box-shadow:0 6px 24px rgba(31,217,192,.3);
+      transition:all .2s;
+    }
+    .btn-ar-real:active { transform:scale(.98); box-shadow:0 3px 12px rgba(31,217,192,.2); }
+    .btn-ar-real svg { width:18px; height:18px; fill:var(--bg); flex-shrink:0; }
+
+    .btn-add-ar {
+      padding:17px 20px;
+      border-radius:15px;
+      background:rgba(212,168,71,.12);
+      border:1px solid rgba(212,168,71,.3);
+      color:var(--gold);
+      font-family:'DM Sans',sans-serif;
+      font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+      cursor:pointer; font-weight:400;
+      display:flex; align-items:center; gap:8px;
+      transition:all .2s;
+    }
+    .btn-add-ar:active { background:rgba(212,168,71,.2); }
+
+    /* AR mode badge (shown when AR is active) */
+    .ar-mode-badge {
+      position:absolute; top:70px; left:50%; transform:translateX(-50%);
+      background:var(--turq); color:var(--bg);
+      font-size:.5rem; letter-spacing:.2em; text-transform:uppercase;
+      padding:6px 18px; border-radius:20px; font-weight:500;
+      z-index:6; opacity:0; transition:opacity .3s;
+    }
+    .ar-mode-badge.show { opacity:1; }
+
+    /* Explainer chips */
+    .ar-explainer {
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:4px;
+    }
+    .exp-chip {
+      font-size:.48rem; letter-spacing:.08em; text-transform:uppercase;
+      padding:5px 12px; border-radius:20px;
+      border:1px solid var(--border); color:var(--muted); background:var(--surface2);
+      display:flex; align-items:center; gap:5px;
+    }
+
+    /* CART BAR */
+    .cart-bar { position:fixed; bottom:0;left:0;right:0; z-index:40; padding:12px 18px calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(to top,var(--bg) 60%,transparent); transform:translateY(100%); transition:transform .35s cubic-bezier(.32,.72,0,1); }
+    .cart-bar.show { transform:translateY(0); }
+    .cart-btn { width:100%; padding:17px 22px; border-radius:16px; background:var(--turq); border:none; color:var(--bg); font-family:'DM Sans',sans-serif; font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; justify-content:space-between; font-weight:500; box-shadow:0 8px 30px rgba(31,217,192,.25); transition:all .2s; }
+    .cart-btn:active { background:var(--gold); }
+    .cart-left { display:flex; align-items:center; gap:12px; }
+    .cart-dot { width:26px;height:26px; background:rgba(6,9,14,.25); border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:.72rem; font-weight:500; }
+    .cart-price { font-family:'Playfair Display',serif; font-size:1rem; }
+
+    /* ORDER PANEL */
+    .order-ov { position:fixed;inset:0;background:rgba(6,9,14,.85);backdrop-filter:blur(12px);z-index:60;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:flex-end; }
+    .order-ov.open { opacity:1;pointer-events:all; }
+    .order-panel { width:100%;background:var(--surface);border-radius:24px 24px 0 0;border-top:1px solid var(--border);max-height:86dvh;overflow-y:auto;transform:translateY(100%);transition:transform .36s cubic-bezier(.32,.72,0,1); }
+    .order-ov.open .order-panel { transform:translateY(0); }
+    .op-handle { width:38px;height:4px;background:var(--border);border-radius:2px;margin:13px auto 0; }
+    .op-head { display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1; }
+    .op-title { font-family:'Playfair Display',serif;font-size:1.15rem; }
+    .op-close { width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted); }
+    .op-body { padding:18px 22px; }
+    .op-item { display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border); }
+    .op-ico { width:44px;height:44px;background:var(--surface2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0; }
+    .op-info { flex:1; }
+    .op-name { font-size:.85rem;margin-bottom:3px; }
+    .op-price { font-size:.68rem;color:var(--gold); }
+    .op-rm { background:none;border:none;color:var(--muted);font-size:.65rem;padding:4px 8px;border-radius:8px;cursor:pointer; }
+    .op-rm:active { color:#e05252; }
+    .op-note { margin:18px 0;padding:14px;background:var(--surface2);border-radius:12px;border:1px solid var(--border); }
+    .op-note-lbl { font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--turq);margin-bottom:8px; }
+    .op-note textarea { width:100%;background:none;border:none;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:300;resize:none;outline:none;min-height:55px; }
+    .op-note textarea::placeholder { color:var(--muted); }
+    .op-total { display:flex;justify-content:space-between;align-items:center;padding:18px 0 0; }
+    .op-total-lbl { font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted); }
+    .op-total-amt { font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--gold); }
+    .op-total-amt small { font-family:'DM Sans',sans-serif;font-size:.5rem;color:var(--muted); }
+    .btn-waiter { width:100%;margin-top:18px;padding:16px;border-radius:14px;background:rgba(212,168,71,.1);border:1px solid rgba(212,168,71,.25);color:var(--gold);font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;transition:all .2s; }
+    .btn-confirm { width:100%;padding:17px;border-radius:14px;background:var(--turq);border:none;color:var(--bg);font-family:'DM Sans',sans-serif;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-weight:500;transition:all .2s;margin-bottom:22px; }
+    .btn-confirm:active { background:var(--gold); }
+
+    /* TOAST */
+    .toast { position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-70px);background:var(--surface);border:1px solid var(--turq);border-radius:22px;padding:9px 20px;font-size:.68rem;color:var(--turq);z-index:100;white-space:nowrap;display:flex;align-items:center;gap:8px;transition:transform .35s cubic-bezier(.32,.72,0,1);box-shadow:0 4px 20px rgba(31,217,192,.2); }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+
+    /* SUCCESS */
+    .success { position:fixed;inset:0;background:var(--bg);z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;opacity:0;pointer-events:none;transition:opacity .4s; }
+    .success.open { opacity:1;pointer-events:all; }
+    .success-ico { font-size:4rem;margin-bottom:18px;animation:pop .5s cubic-bezier(.32,.72,0,1); }
+    @keyframes pop { from{transform:scale(0)} to{transform:scale(1)} }
+    .success h2 { font-family:'Playfair Display',serif;font-size:1.7rem;margin-bottom:10px; }
+    .success p { font-size:.75rem;color:var(--muted);line-height:2;margin-bottom:28px; }
+    .success-back { padding:14px 32px;border-radius:22px;background:var(--turq);border:none;color:var(--bg);font-family:'DM Sans',sans-serif;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;font-weight:500; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="ambient"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+  <header>
+    <div class="header-top">
+      <div class="brand-name">Bahia <span>Beach Club</span></div>
+      <div class="table-pill">Table 7</div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input id="searchInput" type="text" placeholder="Chercher un plat, cocktail, ingrédient…"/>
+    </div>
+    <div class="cats-scroll">
+      <div class="cats" id="cats"></div>
+    </div>
+  </header>
+
+  <div class="menu-scroll" id="menuScroll"></div>
+
+  <div class="cart-bar" id="cartBar">
+    <button class="cart-btn" id="cartBtn">
+      <div class="cart-left">
+        <div class="cart-dot" id="cartCount">0</div>
+        <span>Voir ma commande</span>
+      </div>
+      <span class="cart-price" id="cartTotal">0 FCFA</span>
+    </button>
+  </div>
+</div>
+
+<!-- DETAIL SHEET -->
+<div class="sheet-ov" id="sheetOv">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-hero">
+      <div class="sh-bg" id="shBg"></div>
+      <div class="sh-emoji-back" id="shEmojiBack"></div>
+      <div class="sh-fade"></div>
+      <div class="sh-emoji-main" id="shEmoji"></div>
+    </div>
+    <div class="sheet-body">
+      <div class="sh-head">
+        <div class="sh-name" id="shName"></div>
+        <button class="sh-close" id="shClose">✕</button>
+      </div>
+      <div class="sh-cat" id="shCat"></div>
+      <div class="sh-desc" id="shDesc"></div>
+      <div class="chips-lbl">Ingrédients</div>
+      <div class="chips" id="shChips"></div>
+      <div class="intensity" id="shInt">
+        <span class="int-lbl">Intensité alcool</span>
+        <div class="int-dots" id="shDots"></div>
+      </div>
+
+      <!-- BOUTON AR — gros et bien visible -->
+      <button class="ar-visualize" id="shArBtn">
+        <span class="ar-ico-btn">✦</span>
+        Voir ce produit en Réalité Augmentée 3D
+      </button>
+
+      <div class="sh-actions">
+        <div class="qty">
+          <button class="qty-btn" id="qtyM">−</button>
+          <span class="qty-n" id="qtyN">1</span>
+          <button class="qty-btn" id="qtyP">+</button>
+        </div>
+        <button class="add-main" id="shAddBtn">
+          <span>Ajouter</span>
+          <span class="add-main-price" id="shAddPrice"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     AR VIEWER SCREEN — model-viewer réel
+══════════════════════════════════════ -->
+<div class="ar-screen" id="arScreen">
+
+  <!-- Top bar -->
+  <div class="ar-topbar">
+    <button class="ar-back-btn" id="arBack">← Retour</button>
+    <div class="ar-topbar-title" id="arTitle">—</div>
+    <div class="ar-topbar-price" id="arPrice">—</div>
+  </div>
+
+  <!-- Badge AR actif -->
+  <div class="ar-mode-badge" id="arModeBadge">AR Active</div>
+
+  <!-- model-viewer -->
+  <div class="mv-wrap">
+
+    <!-- Loading -->
+    <div class="mv-loading" id="mvLoading">
+      <div class="mv-spinner"></div>
+      <div class="mv-loading-txt">Chargement du modèle 3D…</div>
+      <div class="mv-loading-sub">Veuillez patienter quelques secondes</div>
+    </div>
+
+    <!-- Fallback si AR non dispo -->
+    <div class="mv-no-ar" id="mvNoAr">
+      <div class="mv-no-ar-ico">📱</div>
+      <h3>AR non disponible</h3>
+      <p>La réalité augmentée nécessite un appareil compatible (Android avec ARCore, ou iPhone/iPad avec ARKit).<br><br>Vous pouvez tout de même faire pivoter le modèle 3D ci-dessous.</p>
+    </div>
+
+    <model-viewer
+      id="modelViewer"
+      alt="Modèle 3D"
+      shadow-intensity="1"
+      camera-controls
+      touch-action="pan-y"
+      auto-rotate
+      auto-rotate-delay="500"
+      rotation-per-second="30deg"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      ar-scale="fixed"
+      ar-placement="floor"
+      environment-image="neutral"
+      exposure="1.2"
+      shadow-softness="0.8"
+      style="width:100%;height:100%;"
+    ></model-viewer>
+  </div>
+
+  <!-- Bottom controls -->
+  <div class="mv-hint">
+    <div class="ar-explainer">
+      <div class="exp-chip">👆 Glisser pour pivoter</div>
+      <div class="exp-chip">🤏 Pincer pour zoomer</div>
+      <div class="exp-chip">📱 Incliner pour explorer</div>
+    </div>
+    <div class="mv-hint-txt">
+      <div class="mv-hint-dot"></div>
+      Modèle 3D interactif · Phase 3
+    </div>
+    <div class="ar-launch-row">
+      <button class="btn-ar-real" id="btnArLaunch">
+        <!-- AR icon -->
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18l7.5 3.75L12 11.68 4.5 7.93 12 4.18zM4 9.43l7 3.5V19.5L4 16V9.43zm9 10.07V12.93l7-3.5V16l-7 3.5z"/>
+        </svg>
+        Lancer la vraie AR
+      </button>
+      <button class="btn-add-ar" id="btnAddAr">
+        + Ajouter
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER PANEL -->
+<div class="order-ov" id="orderOv">
+  <div class="order-panel">
+    <div class="op-handle"></div>
+    <div class="op-head">
+      <div class="op-title">Ma commande</div>
+      <button class="op-close" id="opClose">✕</button>
+    </div>
+    <div class="op-body">
+      <div id="opItems"></div>
+      <div class="op-note">
+        <div class="op-note-lbl">Note pour le serveur</div>
+        <textarea placeholder="Sans glaçons, allergie aux noix…"></textarea>
+      </div>
+      <div class="op-total">
+        <span class="op-total-lbl">Total estimé</span>
+        <span class="op-total-amt" id="opTotal">0 <small>FCFA</small></span>
+      </div>
+      <button class="btn-waiter" id="btnWaiter">🔔 &nbsp;Appeler le serveur</button>
+      <button class="btn-confirm" id="btnConfirm">Confirmer la commande</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ <span id="toastTxt"></span></div>
+
+<div class="success" id="successEl">
+  <div class="success-ico">🥂</div>
+  <h2>Commande envoyée !</h2>
+  <p>Votre serveur arrive dans quelques instants.<br>Profitez de la vue sur l'Atlantique.</p>
+  <button class="success-back" id="successBack">Continuer à parcourir</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// MODÈLES 3D — sources .glb publiques libres de droit
+// En production : remplacer par vos propres modèles uploadés
+// Source : Google Model Viewer samples + Sketchfab CC0
+// ═══════════════════════════════════════════════════════
+const MODELS = {
+  // Cocktails → verre / drink
+  cocktail_default: 'https://modelviewer.dev/shared-assets/models/Avocado.glb', // placeholder
+  drink:  'https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/DragonAttenuation/glTF-Binary/DragonAttenuation.glb',
+  // On utilise des modèles de démo disponibles publiquement
+  // Pour la prod : https://sketchfab.com/features/download (CC0)
+  avocado:  'https://modelviewer.dev/shared-assets/models/Avocado.glb',
+  helmet:   'https://modelviewer.dev/shared-assets/models/RobotExpressive.glb',
+  astronaut:'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
+  horse:    'https://modelviewer.dev/shared-assets/models/Horse.glb',
+  shishito: 'https://modelviewer.dev/shared-assets/models/ShiShinGoldenDragon.glb',
+};
+
+// Mapping produit → modèle 3D
+// En production : chaque produit aura son vrai .glb de cocktail/plat
+const PRODUCT_MODEL = {
+  1:  'https://modelviewer.dev/shared-assets/models/Astronaut.glb',  // Bahia Sunset
+  2:  'https://modelviewer.dev/shared-assets/models/RobotExpressive.glb', // Atlantic Blue
+  3:  'https://modelviewer.dev/shared-assets/models/Avocado.glb',    // Dakar Sour
+  6:  'https://modelviewer.dev/shared-assets/models/Astronaut.glb',  // Nuit de Gorée
+  10: 'https://modelviewer.dev/shared-assets/models/RobotExpressive.glb', // Thiéboudienne
+};
+
+// Modèle par défaut si pas de mapping spécifique
+const DEFAULT_MODEL = 'https://modelviewer.dev/shared-assets/models/Avocado.glb';
+
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const CATS = [
+  {id:'all',      label:'Tout',         icon:'✦'},
+  {id:'cocktails',label:'Cocktails',    icon:'🍹'},
+  {id:'entrees',  label:'Entrées',      icon:'🥗'},
+  {id:'plats',    label:'Plats',        icon:'🍽️'},
+  {id:'desserts', label:'Desserts',     icon:'🍮'},
+  {id:'soft',     label:'Sans alcool',  icon:'🌺'},
+  {id:'vins',     label:'Vins & Bulles',icon:'🥂'},
+];
+
+const MENU = [
+  {id:1,  cat:'cocktails',name:'Bahia Sunset',          emoji:'🍹',price:4500, desc:'Rhum blanc, mangue fraîche, citron vert, gingembre, sirop de canne. La signature absolue.',    ingr:['Rhum blanc','Mangue','Citron vert','Gingembre','Sirop canne'],intensity:3,ar:true, new:false,grad:'linear-gradient(135deg,rgba(255,100,0,.2),rgba(200,30,60,.14))'},
+  {id:2,  cat:'cocktails',name:'Atlantic Blue',         emoji:'🌊',price:5000, desc:'Vodka premium, curaçao bleu, pamplemousse rosé, eau de coco. Mystérieux et profond.',          ingr:['Vodka','Curaçao bleu','Pamplemousse','Eau de coco'],intensity:3,ar:true, new:false,grad:'linear-gradient(135deg,rgba(0,140,200,.2),rgba(10,50,140,.14))'},
+  {id:3,  cat:'cocktails',name:'Dakar Sour',            emoji:'🌴',price:5500, desc:'Whisky single malt, jus de bissap maison, citron, blanc d\'œuf fouetté. Puissant et élégant.', ingr:['Whisky','Bissap','Citron','Blanc d\'œuf'],intensity:4,ar:true, new:false,grad:'linear-gradient(135deg,rgba(180,20,80,.2),rgba(100,10,60,.14))'},
+  {id:4,  cat:'cocktails',name:'Baobab Fizz',           emoji:'🫐',price:4800, desc:'Gin artisanal, jus de baobab, tonic premium, basilic frais. Le terroir sénégalais en verre.',   ingr:['Gin','Jus baobab','Tonic','Basilic'],intensity:2,ar:false,new:false,grad:'linear-gradient(135deg,rgba(60,160,90,.18),rgba(20,80,60,.12))'},
+  {id:5,  cat:'cocktails',name:'Teranga Spritz',        emoji:'🍊',price:4200, desc:'Aperol, prosecco, orange sanguine, menthe. L\'hospitalité sénégalaise en bulles.',             ingr:['Aperol','Prosecco','Orange sanguine','Menthe'],intensity:2,ar:false,new:false,grad:'linear-gradient(135deg,rgba(255,90,10,.18),rgba(220,160,30,.12))'},
+  {id:6,  cat:'cocktails',name:'Nuit de Gorée',         emoji:'🍸',price:6000, desc:'Tequila, mezcal, hibiscus infusé, jalapeño, sel de mer. Pour les âmes aventureuses.',          ingr:['Tequila','Mezcal','Hibiscus','Jalapeño','Sel de mer'],intensity:5,ar:true, new:true, grad:'linear-gradient(135deg,rgba(160,10,140,.2),rgba(80,0,80,.14))'},
+  {id:7,  cat:'entrees',  name:'Accras de Morue',       emoji:'🐟',price:3500, desc:'Beignets croustillants à la morue salée, sauce chien, citron vert. La mer en bouchée.',        ingr:['Morue salée','Farine','Piment','Herbes'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(180,140,60,.18),rgba(100,70,20,.12))'},
+  {id:8,  cat:'entrees',  name:'Salade Avocat Crevettes',emoji:'🥗',price:4200,desc:'Avocat, crevettes grillées, vinaigrette citron-gingembre, roquette, sésame.',                  ingr:['Avocat','Crevettes','Citron','Gingembre','Roquette'],intensity:0,ar:false,new:true, grad:'linear-gradient(135deg,rgba(80,160,80,.17),rgba(30,100,50,.12))'},
+  {id:9,  cat:'entrees',  name:'Soupe de Poisson',      emoji:'🍲',price:3800, desc:'Bouillon de poisson frais, légumes du marché, épices douces, pain croustillant.',              ingr:['Poisson frais','Légumes','Épices','Tomates'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(200,100,40,.17),rgba(140,60,20,.12))'},
+  {id:10, cat:'plats',    name:'Thiéboudienne',         emoji:'🍛',price:7500, desc:'Le plat national — riz rouge au poisson, légumes du marché, sauce tomate. Incontournable.',     ingr:['Riz brisé','Poisson','Tomates','Légumes','Épices'],intensity:0,ar:true, new:false,grad:'linear-gradient(135deg,rgba(220,80,20,.2),rgba(160,40,10,.14))'},
+  {id:11, cat:'plats',    name:'Poulet Yassa',          emoji:'🍗',price:6800, desc:'Poulet mariné au citron, oignons caramélisés, olives, moutarde. Tradition revisitée.',          ingr:['Poulet','Citron','Oignons','Moutarde','Olives'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(220,160,40,.18),rgba(160,100,20,.12))'},
+  {id:12, cat:'plats',    name:'Poisson Braisé',        emoji:'🐠',price:8500, desc:'Poisson entier braisé au charbon, marinade d\'herbes et citron, légumes grillés.',              ingr:['Poisson entier','Herbes','Citron','Légumes'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(30,140,180,.17),rgba(10,80,120,.12))'},
+  {id:13, cat:'plats',    name:'Brochettes Mixtes',     emoji:'🍢',price:7000, desc:'Bœuf et poulet marinés, légumes grillés, sauce arachide maison. Généreux et savoureux.',        ingr:['Bœuf','Poulet','Légumes','Sauce arachide'],intensity:0,ar:false,new:true, grad:'linear-gradient(135deg,rgba(160,60,20,.18),rgba(100,30,10,.12))'},
+  {id:14, cat:'desserts', name:'Fondant Chocolat',      emoji:'🍫',price:3500, desc:'Fondant au chocolat noir, cœur coulant, glace vanille de Madagascar, coulis de mangue.',        ingr:['Chocolat noir','Œufs','Beurre','Vanille','Mangue'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(80,40,10,.25),rgba(40,15,5,.2))'},
+  {id:15, cat:'desserts', name:'Salade de Fruits',      emoji:'🍍',price:2800, desc:'Mangue, papaye, ananas, pastèque — fruits tropicaux frais, menthe, citron, hibiscus.',          ingr:['Mangue','Papaye','Ananas','Pastèque','Hibiscus'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(220,160,30,.17),rgba(180,80,60,.12))'},
+  {id:16, cat:'desserts', name:'Thiakry Glacé',         emoji:'🍮',price:3200, desc:'Thiakry traditionnel revisité, servi froid, crème parfumée, noix de cajou grillées.',           ingr:['Mil','Yaourt','Sucre vanillé','Cajou'],intensity:0,ar:false,new:true, grad:'linear-gradient(135deg,rgba(240,200,120,.17),rgba(180,140,60,.1))'},
+  {id:17, cat:'soft',     name:'Cocktail Bissap',       emoji:'🌺',price:2500, desc:'Infusion d\'hibiscus, gingembre, citron vert, menthe, eau pétillante.',                         ingr:['Bissap','Gingembre','Citron vert','Menthe'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(200,40,80,.17),rgba(120,10,60,.12))'},
+  {id:18, cat:'soft',     name:'Bouye Ice',             emoji:'🥛',price:2800, desc:'Pain de singe (baobab) glacé, lait de coco, vanille de Madagascar. Onctueux et exotique.',      ingr:['Jus baobab','Lait de coco','Vanille','Glace'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(220,180,100,.16),rgba(160,110,50,.1))'},
+  {id:19, cat:'soft',     name:'Citronnade Maison',     emoji:'🍋',price:2000, desc:'Citrons pressés, eau pétillante, sirop de menthe, gingembre. Classique et rafraîchissant.',     ingr:['Citron','Menthe','Gingembre','Pétillant'],intensity:0,ar:false,new:false,grad:'linear-gradient(135deg,rgba(220,200,40,.16),rgba(160,140,10,.1))'},
+  {id:20, cat:'vins',     name:'Rosé de Provence',      emoji:'🥂',price:4000, desc:'Sélection de rosés de Provence, frais et floraux. Le compagnon parfait du coucher de soleil.', ingr:['Rosé de Provence'],intensity:2,ar:false,new:false,grad:'linear-gradient(135deg,rgba(240,140,140,.14),rgba(200,80,100,.1))'},
+  {id:21, cat:'vins',     name:'Champagne Maison',      emoji:'🍾',price:12000,desc:'Champagne brut sélection, servi frais. Pour les grandes occasions face à l\'Atlantique.',       ingr:['Champagne brut'],intensity:3,ar:false,new:true, grad:'linear-gradient(135deg,rgba(212,168,71,.2),rgba(160,120,40,.12))'},
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let activeCat='all', searchQ='', cart=[], activeItem=null, qty=1;
+const fmt = p => p.toLocaleString('fr-FR')+' FCFA';
+
+// ═══════════════════════════════════════════════════════
+// CATEGORIES
+// ═══════════════════════════════════════════════════════
+const catsEl=document.getElementById('cats');
+CATS.forEach(c=>{
+  const btn=document.createElement('button');
+  btn.className='cat'+(c.id===activeCat?' active':'');
+  btn.innerHTML=`<span>${c.icon}</span>${c.label}`;
+  btn.onclick=()=>{
+    activeCat=c.id;
+    document.querySelectorAll('.cat').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMenu();
+  };
+  catsEl.appendChild(btn);
+});
+
+document.getElementById('searchInput').addEventListener('input',e=>{searchQ=e.target.value.toLowerCase();renderMenu();});
+
+// ═══════════════════════════════════════════════════════
+// RENDER MENU
+// ═══════════════════════════════════════════════════════
+function renderMenu(){
+  const el=document.getElementById('menuScroll');
+  let items=MENU.filter(i=>{
+    const catOk=activeCat==='all'||i.cat===activeCat;
+    const srOk=!searchQ||i.name.toLowerCase().includes(searchQ)||i.desc.toLowerCase().includes(searchQ)||i.ingr.some(x=>x.toLowerCase().includes(searchQ));
+    return catOk&&srOk;
+  });
+  if(!items.length){el.innerHTML=`<div class="empty"><span>🔍</span><p>Aucun résultat pour "<b>${searchQ}</b>"</p></div>`;return;}
+  let html='';
+  if(activeCat==='all'&&!searchQ){
+    CATS.filter(c=>c.id!=='all').forEach(c=>{
+      const grp=items.filter(i=>i.cat===c.id);
+      if(!grp.length)return;
+      html+=`<div class="sec">${c.icon} ${c.label}</div>`;
+      grp.forEach(i=>html+=cardHtml(i));
+    });
+  } else {
+    html+=`<div class="sec">${searchQ?'Résultats':CATS.find(c=>c.id===activeCat)?.label}</div>`;
+    items.forEach(i=>html+=cardHtml(i));
+  }
+  el.innerHTML=html;
+  el.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click',e=>{if(e.target.closest('.add-quick'))return;openSheet(+card.dataset.id);});
+  });
+  el.querySelectorAll('.add-quick').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.stopPropagation();quickAdd(+btn.dataset.id);});
+  });
+}
+
+function cardHtml(item){
+  const badges=[item.ar?`<span class="badge badge-ar">✦ AR 3D</span>`:'',item.new?`<span class="badge badge-new">Nouveau</span>`:''].join('');
+  return `<div class="card" data-id="${item.id}">
+    <div class="card-visual"><div class="card-visual-bg" style="background:${item.grad}"></div><div class="card-emoji">${item.emoji}</div></div>
+    <div class="card-info">
+      <div>
+        <div class="card-row1"><div class="card-name">${item.name}</div><div class="card-badges">${badges}</div></div>
+        <div class="card-desc">${item.desc}</div>
+      </div>
+      <div class="card-bottom">
+        <div>
+          <div class="card-price">${fmt(item.price)}</div>
+          ${item.ar?`<div class="card-ar-hint">✦ Voir en AR 3D</div>`:''}
+        </div>
+        <button class="add-quick" data-id="${item.id}">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// DETAIL SHEET
+// ═══════════════════════════════════════════════════════
+function openSheet(id){
+  activeItem=MENU.find(i=>i.id===id);if(!activeItem)return;qty=1;updateQty();
+  document.getElementById('shBg').style.background=activeItem.grad;
+  document.getElementById('shEmojiBack').textContent=activeItem.emoji;
+  document.getElementById('shEmoji').textContent=activeItem.emoji;
+  document.getElementById('shName').textContent=activeItem.name;
+  document.getElementById('shCat').textContent=CATS.find(c=>c.id===activeItem.cat)?.label||'';
+  document.getElementById('shDesc').textContent=activeItem.desc;
+  document.getElementById('shChips').innerHTML=activeItem.ingr.map(i=>`<div class="chip"><div class="chip-dot"></div>${i}</div>`).join('');
+  const intEl=document.getElementById('shInt');
+  if(activeItem.intensity>0){
+    intEl.style.display='flex';
+    document.getElementById('shDots').innerHTML=Array.from({length:5},(_,i)=>`<div class="int-dot${i<activeItem.intensity?' on':''}"></div>`).join('');
+  } else intEl.style.display='none';
+  document.getElementById('shArBtn').style.display=activeItem.ar?'flex':'none';
+  document.getElementById('sheetOv').classList.add('open');
+}
+document.getElementById('shClose').onclick=()=>document.getElementById('sheetOv').classList.remove('open');
+document.getElementById('sheetOv').addEventListener('click',e=>{if(e.target===document.getElementById('sheetOv'))document.getElementById('sheetOv').classList.remove('open');});
+function updateQty(){document.getElementById('qtyN').textContent=qty;document.getElementById('shAddPrice').textContent=fmt(activeItem.price*qty);}
+document.getElementById('qtyM').onclick=()=>{if(qty>1){qty--;updateQty();}};
+document.getElementById('qtyP').onclick=()=>{qty++;updateQty();};
+document.getElementById('shAddBtn').onclick=()=>{addToCart(activeItem,qty);document.getElementById('sheetOv').classList.remove('open');showToast(`${activeItem.name} ajouté`);};
+
+// ═══════════════════════════════════════════════════════
+// AR VIEWER — model-viewer
+// ═══════════════════════════════════════════════════════
+const mv = document.getElementById('modelViewer');
+const mvLoading = document.getElementById('mvLoading');
+
+document.getElementById('shArBtn').onclick = () => {
+  if(!activeItem) return;
+  openArScreen(activeItem);
+};
+
+function openArScreen(item) {
+  // Mise à jour UI
+  document.getElementById('arTitle').textContent = item.name;
+  document.getElementById('arPrice').textContent = fmt(item.price);
+  document.getElementById('sheetOv').classList.remove('open');
+
+  // Afficher l'écran AR
+  document.getElementById('arScreen').classList.add('open');
+
+  // Afficher le loader
+  mvLoading.classList.remove('hidden');
+
+  // Charger le modèle 3D
+  const modelSrc = PRODUCT_MODEL[item.id] || DEFAULT_MODEL;
+  mv.src = modelSrc;
+  mv.alt = `${item.name} — modèle 3D`;
+
+  // Cacher le loader quand le modèle est prêt
+  mv.addEventListener('load', () => {
+    mvLoading.classList.add('hidden');
+  }, {once:true});
+
+  // Vérifier si AR est disponible
+  mv.addEventListener('ar-status', (e) => {
+    const badge = document.getElementById('arModeBadge');
+    if(e.detail.status === 'session-started') badge.classList.add('show');
+    else badge.classList.remove('show');
+  });
+
+  // Vérifier compatibilité AR
+  checkArCompat();
+}
+
+async function checkArCompat() {
+  // WebXR check
+  const hasWebXR = navigator.xr && await navigator.xr.isSessionSupported('immersive-ar').catch(()=>false);
+  // iOS Quick Look check (UA-based)
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const noArEl = document.getElementById('mvNoAr');
+  if(!hasWebXR && !isIOS) {
+    noArEl.classList.add('show');
+  } else {
+    noArEl.classList.remove('show');
+  }
+}
+
+document.getElementById('arBack').onclick = () => {
+  document.getElementById('arScreen').classList.remove('open');
+  mv.src = ''; // libérer la mémoire
+  if(activeItem) openSheet(activeItem.id);
+};
+
+// Bouton "Lancer la vraie AR"
+document.getElementById('btnArLaunch').onclick = () => {
+  if(mv && mv.activateAR) {
+    mv.activateAR();
+  } else {
+    showToast('AR non disponible sur cet appareil');
+  }
+};
+
+// Bouton "Ajouter" depuis AR
+document.getElementById('btnAddAr').onclick = () => {
+  if(!activeItem) return;
+  addToCart(activeItem, 1);
+  document.getElementById('arScreen').classList.remove('open');
+  showToast(`${activeItem.name} ajouté`);
+};
+
+// ═══════════════════════════════════════════════════════
+// CART
+// ═══════════════════════════════════════════════════════
+function quickAdd(id){const item=MENU.find(i=>i.id===id);if(!item)return;addToCart(item,1);showToast(`${item.name} ajouté`);}
+function addToCart(item,q){const ex=cart.find(c=>c.id===item.id);if(ex)ex.qty+=q;else cart.push({...item,qty:q});updateCartBar();}
+function updateCartBar(){
+  const count=cart.reduce((s,c)=>s+c.qty,0),total=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('cartTotal').textContent=fmt(total);
+  document.getElementById('cartBar').classList.toggle('show',cart.length>0);
+}
+document.getElementById('cartBtn').onclick=openOrder;
+
+// ═══════════════════════════════════════════════════════
+// ORDER PANEL
+// ═══════════════════════════════════════════════════════
+function openOrder(){
+  document.getElementById('opItems').innerHTML=cart.map(c=>`<div class="op-item"><div class="op-ico">${c.emoji}</div><div class="op-info"><div class="op-name">${c.qty>1?c.qty+'× ':''}${c.name}</div><div class="op-price">${fmt(c.price*c.qty)}</div></div><button class="op-rm" data-id="${c.id}">Retirer</button></div>`).join('');
+  const total=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  document.getElementById('opTotal').innerHTML=`${total.toLocaleString('fr-FR')} <small>FCFA</small>`;
+  document.getElementById('orderOv').classList.add('open');
+  document.querySelectorAll('.op-rm').forEach(btn=>{btn.onclick=()=>{cart=cart.filter(c=>c.id!==+btn.dataset.id);updateCartBar();if(!cart.length)document.getElementById('orderOv').classList.remove('open');else openOrder();};});
+}
+document.getElementById('opClose').onclick=()=>document.getElementById('orderOv').classList.remove('open');
+document.getElementById('orderOv').addEventListener('click',e=>{if(e.target===document.getElementById('orderOv'))document.getElementById('orderOv').classList.remove('open');});
+document.getElementById('btnWaiter').onclick=()=>{showToast('Serveur appelé ! Il arrive…');document.getElementById('orderOv').classList.remove('open');};
+document.getElementById('btnConfirm').onclick=()=>{document.getElementById('orderOv').classList.remove('open');setTimeout(()=>{document.getElementById('successEl').classList.add('open');cart=[];updateCartBar();},300);};
+document.getElementById('successBack').onclick=()=>document.getElementById('successEl').classList.remove('open');
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+let toastT;
+function showToast(msg){document.getElementById('toastTxt').textContent=msg;document.getElementById('toast').classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>document.getElementById('toast').classList.remove('show'),2200);}
+
+// INIT
+renderMenu();
+</script>
+</body>
+</html>
