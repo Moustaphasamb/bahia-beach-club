@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bahia Beach Club · Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #06090e;
+      --surface:  #0d1622;
+      --surface2: #131f32;
+      --border:   rgba(255,255,255,0.07);
+      --turq:     #1fd9c0;
+      --gold:     #d4a847;
+      --white:    #f2ede6;
+      --muted:    rgba(242,237,230,0.45);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: pan-y;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    #header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      padding: 14px 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    #header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .brand em { color: var(--turq); font-style: italic; }
+    .table-pill {
+      font-size: .5rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      background: var(--turq);
+      color: var(--bg);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* ── SEARCH ── */
+    #search-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    #search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px 11px 40px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .84rem;
+      font-weight: 300;
+      outline: none;
+    }
+    #search-wrap input::placeholder { color: var(--muted); }
+    #search-ico {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: .9rem;
+    }
+
+    /* ── CATÉGORIES ── */
+    #cats-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin: 0 -16px;
+      padding: 0 16px;
+    }
+    #cats-scroll::-webkit-scrollbar { display: none; }
+    #cats {
+      display: flex;
+      gap: 7px;
+      padding-bottom: 12px;
+      width: max-content;
+    }
+    .cat-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .64rem;
+      letter-spacing: .04em;
+      white-space: nowrap;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 34px;
+      transition: background .18s, color .18s, border-color .18s;
+    }
+    .cat-btn.active {
+      background: var(--turq);
+      border-color: var(--turq);
+      color: var(--bg);
+      font-weight: 500;
+    }
+
+    /* ── MENU LIST ── */
+    #menu-list {
+      padding: 12px 16px 140px;
+    }
+    .section-title {
+      font-size: .46rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--turq);
+      margin: 18px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── CARD ── */
+    .card {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 9px;
+      overflow: hidden;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 90px;
+      transition: opacity .15s, transform .15s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .card:active { opacity: .85; transform: scale(.99); }
+
+    .card-visual {
+      width: 88px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.7rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-visual-bg { position: absolute; inset: 0; }
+    .card-emoji { position: relative; z-index: 1; }
+
+    .card-info {
+      flex: 1;
+      padding: 12px 11px 12px 13px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: .92rem;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .card-desc {
+      font-size: .58rem;
+      color: var(--muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+      margin-bottom: 8px;
+    }
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-price {
+      font-family: 'Playfair Display', serif;
+      font-size: .98rem;
+      color: var(--gold);
+    }
+    .badge-new {
+      font-size: .34rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid rgba(212,168,71,.35);
+      color: var(--gold);
+    }
+
+    /* bouton + rapide */
+    .add-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--turq);
+      border: none;
+      color: var(--bg);
+      font-size: 1.15rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      flex-shrink: 0;
+      transition: background .15s, transform .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .add-btn:active { background: var(--gold); transform: scale(.88); }
+
+    /* ── BOTTOM SHEET ── */
+    #sheet-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6,9,14,.8);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease;
+    }
+    #sheet-overlay.open { opacity: 1; pointer-events: all; }
+
+    #sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1001;
+      background: var(--surface);
+      border-radius: 22px 22px 0 0;
+      border-top: 1px solid var(--border);
+      max-height: 88dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      transform: translateY(100%);
+      transition: transform .3s ease;
+    }
+    #sheet.open { transform: translateY(0); }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 12px auto 0;
+    }
+    .sheet-hero {
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .sheet-hero-bg { position: absolute; inset: 0; }
+    .sheet-hero-emoji { position: relative; z-index: 1; }
+    .sheet-hero-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(6,9,14,.6);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-size: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    #sheet-body { padding: 18px 20px 30px; }
+    #sh-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    #sh-cat {
+      font-size: .48rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--turq);
+      margin-bottom: 12px;
+    }
+    #sh-desc {
+      font-size: .75rem;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+    .ingr-label {
+      font-size: .46rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    #sh-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .chip {
+      padding: 5px 12px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      font-size: .58rem;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .chip-dot { width: 5px; height: 5px; background: var(--turq); border-radius: 50%; }
+
+    .sh-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 7px 14px;
+    }
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 28px;
+      transition: background .15s;
+    }
+    .qty-btn:active { background: var(--turq); color: var(--bg); }
+    #sh-qty {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      min-width: 18px;
+      text-align: center;
+    }
+    #sh-add {
+      flex: 1;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--turq);
+      border: none;
+      color: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .15s;
+    }
+    #sh-add:active { background: var(--gold); }
+    #sh-add-price {
+      font-family: 'Playfair Display', serif;
+      font-size: .9rem;
+    }
+
+    /* ── CART BAR ── */
+    #cart-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(to top, var(--bg) 65%, transparent);
+      transform: translateY(100%);
+      transition: transform .3s ease;
+    }
+    #cart-bar.show { transform: translateY(0); }
+    #cart-btn {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 14px;
+      background: var(--turq);
+      border: none;
+      color: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 6px 24px rgba(31,217,192,.22);
+      transition: background .15s;
+    }
+    #cart-btn:active { background: var(--gold); }
+    .cart-left { display: flex; align-items: center; gap: 10px; }
+    .cart-count {
+      width: 24px;
+      height: 24px;
+      background: rgba(6,9,14,.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .68rem;
+      font-weight: 500;
+    }
+    #cart-total {
+      font-family: 'Playfair Display', serif;
+      font-size: .95rem;
+    }
+
+    /* ── ORDER PANEL ── */
+    #order-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6,9,14,.85);
+      z-index: 1100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease;
+    }
+    #order-overlay.open { opacity: 1; pointer-events: all; }
+
+    #order-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1101;
+      background: var(--surface);
+      border-radius: 22px 22px 0 0;
+      border-top: 1px solid var(--border);
+      max-height: 88dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      transform: translateY(100%);
+      transition: transform .3s ease;
+    }
+    #order-panel.open { transform: translateY(0); }
+
+    .op-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 12px auto 0;
+    }
+    .op-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 1;
+    }
+    .op-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+    }
+    #op-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    #op-body { padding: 16px 20px; }
+    .op-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .op-emoji {
+      width: 40px;
+      height: 40px;
+      background: var(--surface2);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .op-info { flex: 1; }
+    .op-name { font-size: .82rem; margin-bottom: 2px; }
+    .op-price { font-size: .64rem; color: var(--gold); }
+    .op-rm {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: .58rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 32px;
+      min-width: 48px;
+    }
+
+    .op-note { margin: 16px 0; padding: 13px; background: var(--surface2); border-radius: 11px; border: 1px solid var(--border); }
+    .op-note-lbl { font-size: .44rem; letter-spacing: .2em; text-transform: uppercase; color: var(--turq); margin-bottom: 7px; }
+    .op-note textarea {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 300;
+      resize: none;
+      outline: none;
+      min-height: 50px;
+    }
+    .op-note textarea::placeholder { color: var(--muted); }
+
+    .op-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0 0;
+    }
+    .op-total-lbl { font-size: .54rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .op-total-amt { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--gold); }
+    .op-total-amt small { font-family: 'DM Sans', sans-serif; font-size: .48rem; color: var(--muted); }
+
+    #btn-waiter {
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(212,168,71,.1);
+      border: 1px solid rgba(212,168,71,.25);
+      color: var(--gold);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      transition: background .15s;
+    }
+    #btn-confirm {
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      background: var(--turq);
+      border: none;
+      color: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 50px;
+      margin-bottom: 20px;
+      transition: background .15s;
+    }
+    #btn-confirm:active { background: var(--gold); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: var(--surface);
+      border: 1px solid var(--turq);
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: .64rem;
+      color: var(--turq);
+      z-index: 2000;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: transform .3s ease;
+      box-shadow: 0 4px 18px rgba(31,217,192,.2);
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── SUCCESS ── */
+    #success {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 2100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 30px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s;
+    }
+    #success.open { opacity: 1; pointer-events: all; }
+    .success-ico { font-size: 3.8rem; margin-bottom: 16px; }
+    #success h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 8px; }
+    #success-order { font-family: 'Playfair Display', serif; font-size: .95rem; color: var(--turq); margin-bottom: 14px; }
+    #success p { font-size: .72rem; color: var(--muted); line-height: 1.9; margin-bottom: 26px; }
+    #success-back {
+      padding: 13px 30px;
+      border-radius: 20px;
+      background: var(--turq);
+      border: none;
+      color: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .64rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 48px;
+    }
+
+    /* ── ÉTATS ── */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      gap: 14px;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--border);
+      border-top-color: var(--turq);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-txt { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--turq); }
+    .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
+    .empty-ico { font-size: 2.8rem; margin-bottom: 12px; }
+    .empty p { font-size: .72rem; line-height: 1.8; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div id="header-top">
+    <a href="/" class="brand">Bahia <em>Beach Club</em></a>
+    <div class="table-pill" id="table-pill">Table —</div>
+  </div>
+  <div id="search-wrap">
+    <span id="search-ico">🔍</span>
+    <input id="search-input" type="text" placeholder="Chercher un plat, cocktail…" autocomplete="off">
+  </div>
+  <div id="cats-scroll"><div id="cats"></div></div>
+</div>
+
+<!-- MENU -->
+<div id="menu-list"></div>
+
+<!-- CART BAR -->
+<div id="cart-bar">
+  <button id="cart-btn">
+    <div class="cart-left">
+      <div class="cart-count" id="cart-count">0</div>
+      <span>Voir ma commande</span>
+    </div>
+    <span id="cart-total">0 FCFA</span>
+  </button>
+</div>
+
+<!-- BOTTOM SHEET DÉTAIL -->
+<div id="sheet-overlay"></div>
+<div id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-hero" id="sheet-hero">
+    <div class="sheet-hero-bg" id="sh-bg"></div>
+    <div class="sheet-hero-emoji" id="sh-emoji"></div>
+    <button class="sheet-hero-close" id="sh-close">✕</button>
+  </div>
+  <div id="sheet-body">
+    <div id="sh-name"></div>
+    <div id="sh-cat"></div>
+    <div id="sh-desc"></div>
+    <div class="ingr-label">Ingrédients</div>
+    <div id="sh-chips"></div>
+    <div class="sh-actions">
+      <div class="qty-row">
+        <button class="qty-btn" id="qty-minus">−</button>
+        <span id="sh-qty">1</span>
+        <button class="qty-btn" id="qty-plus">+</button>
+      </div>
+      <button id="sh-add">
+        <span>Ajouter</span>
+        <span id="sh-add-price"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER PANEL -->
+<div id="order-overlay"></div>
+<div id="order-panel">
+  <div class="op-handle"></div>
+  <div class="op-head">
+    <div class="op-title">Ma commande</div>
+    <button id="op-close">✕</button>
+  </div>
+  <div id="op-body">
+    <div id="op-items"></div>
+    <div class="op-note">
+      <div class="op-note-lbl">Note pour le serveur</div>
+      <textarea id="order-note" placeholder="Sans glaçons, allergie aux noix…"></textarea>
+    </div>
+    <div class="op-total">
+      <span class="op-total-lbl">Total estimé</span>
+      <span class="op-total-amt" id="op-total">0 <small>FCFA</small></span>
+    </div>
+    <button id="btn-waiter">🔔 Appeler le serveur</button>
+    <button id="btn-confirm">Confirmer la commande</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">✓ <span id="toast-txt"></span></div>
+
+<!-- SUCCESS -->
+<div id="success">
+  <div class="success-ico">🥂</div>
+  <h2>Commande envoyée !</h2>
+  <div id="success-order"></div>
+  <p>Votre serveur arrive dans quelques instants.<br>Profitez de la vue sur l'Atlantique.</p>
+  <button id="success-back">Continuer à parcourir</button>
+</div>
+
+<script>
+'use strict';
+
+// ── CONFIG ──────────────────────────────────────────────
+const API = window.location.origin + '/api';
+const params = new URLSearchParams(window.location.search);
+const TABLE  = parseInt(params.get('table')) || 1;
+
+document.getElementById('table-pill').textContent = 'Table ' + TABLE;
+document.title = 'Bahia Beach Club · Table ' + TABLE;
+
+// ── CATÉGORIES ──────────────────────────────────────────
+const CATS = [
+  { id:'all',        label:'Tout',               icon:'✦'  },
+  { id:'mocktails',  label:'Mocktails',           icon:'🌟' },
+  { id:'cocktails',  label:'Cocktails',           icon:'🍹' },
+  { id:'softs',      label:'Softs & Eaux',        icon:'💧' },
+  { id:'jus',        label:'Jus',                 icon:'🍊' },
+  { id:'bieres',     label:'Bières',              icon:'🍺' },
+  { id:'shooters',   label:'Shooters',            icon:'🥃' },
+  { id:'whisky',     label:'Whisky',              icon:'🥃' },
+  { id:'alcools',    label:'Alcools',             icon:'🍷' },
+  { id:'liqueurs',   label:'Liqueurs',            icon:'🌿' },
+  { id:'digestifs',  label:'Digestifs',           icon:'🥃' },
+  { id:'entrees',    label:'Entrées',             icon:'🥗' },
+  { id:'partager',   label:'À Partager',          icon:'🤝' },
+  { id:'plats',      label:'Nos Plats',           icon:'🍽️' },
+  { id:'grillades',  label:'Grillades',           icon:'🔥' },
+  { id:'pates',      label:'Pâtes',               icon:'🍝' },
+  { id:'burgers',    label:'Burgers & Sandwichs', icon:'🍔' },
+  { id:'plats_jour', label:'Plats du Jour',       icon:'📅' },
+  { id:'desserts',   label:'Desserts',            icon:'🍮' },
+  { id:'enfants',    label:'Menu Enfants',        icon:'👶' },
+];
+const CAT_MAP = Object.fromEntries(CATS.map(c => [c.id, c.label]));
+
+// ── STATE ───────────────────────────────────────────────
+let allItems   = [];
+let activeCat  = 'all';
+let searchQ    = '';
+let cart       = [];
+let activeItem = null;
+let shQty      = 1;
+let toastTimer = null;
+
+// ── HELPERS ─────────────────────────────────────────────
+const el  = id => document.getElementById(id);
+const fmt = p  => Number(p).toLocaleString('fr-FR') + ' FCFA';
+
+// ── RENDU CATÉGORIES ────────────────────────────────────
+function renderCats() {
+  el('cats').innerHTML = CATS.map(c =>
+    `<button class="cat-btn${c.id === activeCat ? ' active' : ''}" data-cat="${c.id}">
+       <span>${c.icon}</span>${c.label}
+     </button>`
+  ).join('');
+}
+
+// ── RENDU MENU ──────────────────────────────────────────
+function renderMenu() {
+  const list = el('menu-list');
+  const q = searchQ.toLowerCase();
+  const items = allItems.filter(i => {
+    const catOk = activeCat === 'all' || i.cat === activeCat;
+    const srOk  = !q || i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q);
+    return catOk && srOk;
+  });
+
+  if (!items.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-ico">🔍</div><p>Aucun résultat${q ? ` pour "<b>${q}</b>"` : ''}.</p></div>`;
+    return;
+  }
+
+  let html = '';
+  if (activeCat === 'all' && !q) {
+    CATS.filter(c => c.id !== 'all').forEach(c => {
+      const grp = items.filter(i => i.cat === c.id);
+      if (!grp.length) return;
+      html += `<div class="section-title">${c.icon} ${c.label}</div>`;
+      grp.forEach(i => { html += cardHtml(i); });
+    });
+  } else {
+    const label = q ? 'Résultats' : (CAT_MAP[activeCat] || activeCat);
+    html += `<div class="section-title">${label}</div>`;
+    items.forEach(i => { html += cardHtml(i); });
+  }
+
+  list.innerHTML = html;
+}
+
+function cardHtml(item) {
+  const grad = item.grad || 'linear-gradient(135deg,rgba(31,217,192,.1),rgba(0,0,0,.2))';
+  const newBadge = item.isNew ? `<span class="badge-new">Nouveau</span>` : '';
+  return `<div class="card" data-id="${item.id}">
+    <div class="card-visual">
+      <div class="card-visual-bg" style="background:${grad}"></div>
+      <div class="card-emoji">${item.emoji}</div>
+    </div>
+    <div class="card-info">
+      <div class="card-name">${item.name}</div>
+      <div class="card-desc">${item.desc}</div>
+      <div class="card-bottom">
+        <div>
+          <div class="card-price">${fmt(item.price)}</div>
+          ${newBadge}
+        </div>
+        <button class="add-btn" data-add="${item.id}">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── BOTTOM SHEET ────────────────────────────────────────
+function openSheet(id) {
+  activeItem = allItems.find(i => i.id === id);
+  if (!activeItem) return;
+  shQty = 1;
+  updateShQty();
+
+  const grad = activeItem.grad || 'linear-gradient(135deg,rgba(31,217,192,.1),rgba(0,0,0,.3))';
+  el('sh-bg').style.background     = grad;
+  el('sh-emoji').textContent       = activeItem.emoji;
+  el('sh-name').textContent        = activeItem.name;
+  el('sh-cat').textContent         = CAT_MAP[activeItem.cat] || '';
+  el('sh-desc').textContent        = activeItem.desc;
+  el('sh-chips').innerHTML         = (activeItem.ingr || []).map(i =>
+    `<div class="chip"><div class="chip-dot"></div>${i}</div>`).join('');
+
+  el('sheet-overlay').classList.add('open');
+  el('sheet').classList.add('open');
+}
+
+function closeSheet() {
+  el('sheet-overlay').classList.remove('open');
+  el('sheet').classList.remove('open');
+}
+
+function updateShQty() {
+  el('sh-qty').textContent       = shQty;
+  el('sh-add-price').textContent = activeItem ? fmt(activeItem.price * shQty) : '';
+}
+
+// ── PANIER ──────────────────────────────────────────────
+function quickAdd(id) {
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+  addToCart(item, 1);
+  toast(item.name + ' ajouté');
+}
+
+function addToCart(item, qty) {
+  const ex = cart.find(c => c.id === item.id);
+  if (ex) ex.qty += qty;
+  else cart.push({ ...item, qty });
+  updateCartBar();
+}
+
+function updateCartBar() {
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  el('cart-count').textContent = count;
+  el('cart-total').textContent = fmt(total);
+  el('cart-bar').classList.toggle('show', cart.length > 0);
+}
+
+// ── ORDER PANEL ─────────────────────────────────────────
+function openOrder() {
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  el('op-items').innerHTML = cart.map(c =>
+    `<div class="op-item">
+       <div class="op-emoji">${c.emoji}</div>
+       <div class="op-info">
+         <div class="op-name">${c.qty > 1 ? c.qty + '× ' : ''}${c.name}</div>
+         <div class="op-price">${fmt(c.price * c.qty)}</div>
+       </div>
+       <button class="op-rm" data-rm="${c.id}">Retirer</button>
+     </div>`
+  ).join('');
+  el('op-total').innerHTML = total.toLocaleString('fr-FR') + ' <small>FCFA</small>';
+  el('order-overlay').classList.add('open');
+  el('order-panel').classList.add('open');
+}
+
+function closeOrder() {
+  el('order-overlay').classList.remove('open');
+  el('order-panel').classList.remove('open');
+}
+
+async function confirmOrder() {
+  const note  = el('order-note').value;
+  const items = cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.qty }));
+  try {
+    const res   = await fetch(API + '/orders', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ tableNumber: TABLE, items, note })
+    });
+    const order = await res.json();
+    closeOrder();
+    el('success-order').textContent = 'Commande #' + (order.id?.slice(-6).toUpperCase() || '—');
+    setTimeout(() => {
+      el('success').classList.add('open');
+      cart = [];
+      updateCartBar();
+    }, 320);
+  } catch {
+    toast('Erreur réseau — serveur déconnecté ?');
+  }
+}
+
+// ── TOAST ───────────────────────────────────────────────
+function toast(msg) {
+  el('toast-txt').textContent = msg;
+  el('toast').classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el('toast').classList.remove('show'), 2200);
+}
+
+// ── CHARGEMENT MENU ─────────────────────────────────────
+async function loadMenu() {
+  el('menu-list').innerHTML = `<div class="loading"><div class="spinner"></div><div class="loading-txt">Chargement…</div></div>`;
+  try {
+    const res = await fetch(API + '/menu');
+    allItems = await res.json();
+    renderMenu();
+  } catch {
+    el('menu-list').innerHTML = `<div class="empty"><div class="empty-ico">⚠️</div><p>Impossible de charger le menu.<br>Vérifiez la connexion.</p></div>`;
+  }
+}
+
+// ── UN SEUL LISTENER GLOBAL ─────────────────────────────
+document.body.addEventListener('click', function(e) {
+
+  // ── bouton + rapide sur carte
+  const addBtn = e.target.closest('[data-add]');
+  if (addBtn) {
+    e.stopPropagation();
+    quickAdd(addBtn.dataset.add);
+    return;
+  }
+
+  // ── carte → ouvrir sheet
+  const card = e.target.closest('.card');
+  if (card) {
+    openSheet(card.dataset.id);
+    return;
+  }
+
+  // ── pill catégorie
+  const catBtn = e.target.closest('[data-cat]');
+  if (catBtn) {
+    activeCat = catBtn.dataset.cat;
+    renderCats();
+    renderMenu();
+    return;
+  }
+
+  // ── fermer sheet (overlay ou bouton ✕)
+  if (e.target === el('sheet-overlay') || e.target.closest('#sh-close')) {
+    closeSheet();
+    return;
+  }
+
+  // ── qty moins
+  if (e.target.closest('#qty-minus')) {
+    if (shQty > 1) { shQty--; updateShQty(); }
+    return;
+  }
+
+  // ── qty plus
+  if (e.target.closest('#qty-plus')) {
+    shQty++;
+    updateShQty();
+    return;
+  }
+
+  // ── ajouter depuis sheet
+  if (e.target.closest('#sh-add')) {
+    if (!activeItem) return;
+    addToCart(activeItem, shQty);
+    closeSheet();
+    toast(activeItem.name + ' ajouté');
+    return;
+  }
+
+  // ── ouvrir panier
+  if (e.target.closest('#cart-btn')) {
+    openOrder();
+    return;
+  }
+
+  // ── fermer panier
+  if (e.target === el('order-overlay') || e.target.closest('#op-close')) {
+    closeOrder();
+    return;
+  }
+
+  // ── retirer item du panier
+  const rmBtn = e.target.closest('[data-rm]');
+  if (rmBtn) {
+    cart = cart.filter(c => c.id !== rmBtn.dataset.rm);
+    updateCartBar();
+    if (!cart.length) closeOrder();
+    else openOrder();
+    return;
+  }
+
+  // ── appeler serveur
+  if (e.target.closest('#btn-waiter')) {
+    toast('Serveur appelé ! Il arrive…');
+    closeOrder();
+    return;
+  }
+
+  // ── confirmer commande
+  if (e.target.closest('#btn-confirm')) {
+    confirmOrder();
+    return;
+  }
+
+  // ── page succès → retour menu
+  if (e.target.closest('#success-back')) {
+    el('success').classList.remove('open');
+    return;
+  }
+});
+
+// ── RECHERCHE ───────────────────────────────────────────
+el('search-input').addEventListener('input', function() {
+  searchQ = this.value;
+  renderMenu();
+});
+
+// ── INIT ────────────────────────────────────────────────
+renderCats();
+loadMenu();
+</script>
+</body>
+</html>
