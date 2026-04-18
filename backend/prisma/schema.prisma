@@ -76,3 +76,11 @@ model Reservation {
   status    String   @default("pending")
   createdAt DateTime @default(now())
 }
+
+model Avis {
+  id        String   @id @default(uuid())
+  nom       String
+  note      Int
+  texte     String
+  createdAt DateTime @default(now())
+}

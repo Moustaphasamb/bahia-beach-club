@@ -321,6 +321,35 @@ app.get('/api/admin/reservations', auth, async (req, res) => {
 });
 
 // ══════════════════════════════════════════════════════
+// AVIS
+// ══════════════════════════════════════════════════════
+
+app.get('/api/avis', async (req, res) => {
+  try {
+    const avis = await prisma.avis.findMany({ orderBy: { createdAt: 'desc' } });
+    res.json(avis);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/avis', async (req, res) => {
+  try {
+    const { nom, note, texte } = req.body;
+    if (!nom || !note || !texte)
+      return res.status(400).json({ error: 'Nom, note et texte requis' });
+    if (note < 1 || note > 5)
+      return res.status(400).json({ error: 'Note entre 1 et 5' });
+    const avis = await prisma.avis.create({
+      data: { nom: nom.trim(), note: parseInt(note), texte: texte.trim() }
+    });
+    res.status(201).json(avis);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ══════════════════════════════════════════════════════
 // STATS
 // ══════════════════════════════════════════════════════
 
