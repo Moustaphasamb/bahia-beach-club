@@ -1159,12 +1159,20 @@ async function loadMenu() {
   }
 }
 
-// ── UN SEUL LISTENER GLOBAL ─────────────────────────────
-document.body.addEventListener('click', function(e) {
+// ── UN SEUL LISTENER GLOBAL (touch + click pour Android) ─
+document.body.addEventListener('touchstart', function(e) {
+  handleInteraction(e);
+}, { passive: false });
 
+document.body.addEventListener('click', function(e) {
+  handleInteraction(e);
+});
+
+function handleInteraction(e) {
   // bouton + rapide
   const addBtn = e.target.closest('[data-add]');
   if (addBtn) {
+    e.preventDefault();
     e.stopPropagation();
     quickAdd(addBtn.dataset.add);
     return;
@@ -1172,15 +1180,19 @@ document.body.addEventListener('click', function(e) {
 
   // carte → ouvrir sheet
   const card = e.target.closest('.card');
-  if (card) { openSheet(card.dataset.id); return; }
+  if (card && !e.target.closest('[data-add]')) {
+    e.preventDefault();
+    openSheet(card.dataset.id);
+    return;
+  }
 
   // pill catégorie
   const catBtn = e.target.closest('[data-cat]');
   if (catBtn) {
+    e.preventDefault();
     activeCat = catBtn.dataset.cat;
     renderCats();
     renderMenu();
-    // Sur mobile : scroll vers le haut du contenu
     const mc = el('main-content');
     if (mc) mc.scrollTop = 0;
     return;
@@ -1188,24 +1200,28 @@ document.body.addEventListener('click', function(e) {
 
   // fermer sheet
   if (e.target === el('sheet-overlay') || e.target.closest('#sh-close')) {
+    e.preventDefault();
     closeSheet();
     return;
   }
 
   // qty −
   if (e.target.closest('#qty-minus')) {
+    e.preventDefault();
     if (shQty > 1) { shQty--; updateShQty(); }
     return;
   }
 
   // qty +
   if (e.target.closest('#qty-plus')) {
+    e.preventDefault();
     shQty++; updateShQty();
     return;
   }
 
   // ajouter depuis sheet
   if (e.target.closest('#sh-add')) {
+    e.preventDefault();
     if (!activeItem) return;
     addToCart(activeItem, shQty);
     closeSheet();
@@ -1215,12 +1231,14 @@ document.body.addEventListener('click', function(e) {
 
   // ouvrir panier
   if (e.target.closest('#cart-btn')) {
+    e.preventDefault();
     openOrder();
     return;
   }
 
   // fermer panier
   if (e.target === el('order-overlay') || e.target.closest('#op-close')) {
+    e.preventDefault();
     closeOrder();
     return;
   }
@@ -1228,6 +1246,7 @@ document.body.addEventListener('click', function(e) {
   // retirer item
   const rmBtn = e.target.closest('[data-rm]');
   if (rmBtn) {
+    e.preventDefault();
     cart = cart.filter(c => c.id !== rmBtn.dataset.rm);
     updateCartBar();
     if (!cart.length) closeOrder();
@@ -1237,6 +1256,7 @@ document.body.addEventListener('click', function(e) {
 
   // appeler serveur
   if (e.target.closest('#btn-waiter')) {
+    e.preventDefault();
     toast('Serveur appelé ! Il arrive…');
     closeOrder();
     return;
@@ -1244,16 +1264,18 @@ document.body.addEventListener('click', function(e) {
 
   // confirmer commande
   if (e.target.closest('#btn-confirm')) {
+    e.preventDefault();
     confirmOrder();
     return;
   }
 
   // retour depuis succès
   if (e.target.closest('#success-back')) {
+    e.preventDefault();
     el('success').classList.remove('open');
     return;
   }
-});
+}
 
 // ── RECHERCHE ───────────────────────────────────────────
 el('search-input').addEventListener('input', function() {
