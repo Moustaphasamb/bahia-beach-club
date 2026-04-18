@@ -552,7 +552,7 @@
         <span class="nav-icon">⊞</span> QR Codes
       </div>
       <div class="nav-section">Raccourcis</div>
-      <div class="nav-item" onclick="window.open('/kiosk.html?table=1','_blank')" style="cursor:pointer;">
+      <div class="nav-item" onclick="window.open('/menu.html?table=1','_blank')" style="cursor:pointer;">
         <span class="nav-icon">📱</span> Voir le kiosque
       </div>
       <div class="nav-item" onclick="window.open('/index.html','_blank')" style="cursor:pointer;">
@@ -899,7 +899,7 @@ function initApp() {
   $('userAvatar').textContent = (currentUser?.name || 'A')[0].toUpperCase();
   // Mettre à jour le subtitle QR avec l'origine réelle
   const sub = $('qrSubtitle');
-  if (sub) sub.textContent = `Scannez · ${window.location.origin}/kiosk.html?table=N`;
+  if (sub) sub.textContent = `Scannez · ${window.location.origin}/menu.html?table=N`;
   loadDashboard();
   buildMenuCatFilter();
   buildQrCodes();
@@ -1284,7 +1284,7 @@ function buildQrCodes() {
   const grid = $('qrGrid');
   grid.innerHTML = '';
   for(let i=1; i<=20; i++) {
-    const url = `${window.location.origin}/kiosk.html?table=${i}`;
+    const url = `${window.location.origin}/menu.html?table=${i}`;
     const card = document.createElement('div');
     card.className = 'qr-card';
     card.innerHTML = `
