@@ -949,9 +949,17 @@ if (token) initApp();
 // ═══════════════════════════════════════════════════════
 const PAGE_TITLES = { dashboard:'Dashboard', orders:'Commandes', menu:'Menu & Produits', tables:'Tables', qrcodes:'QR Codes' };
 
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.onclick = () => navTo(item.dataset.page);
-});
+// Listener délégué — évite d'écraser les onclick inline des raccourcis
+function handleNavClick(e) {
+  const navItem = e.target.closest('[data-page]');
+  if (navItem) {
+    e.preventDefault();
+    navTo(navItem.dataset.page);
+    if (window.innerWidth <= 1024) closeSidebar();
+  }
+}
+document.addEventListener('click', handleNavClick);
+document.addEventListener('touchstart', handleNavClick, { passive: false });
 
 function navTo(page) {
   document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -1366,12 +1374,7 @@ function closeSidebar() {
 }
 $('sidebarOverlay').addEventListener('click', closeSidebar);
 
-// Fermer sidebar après navigation sur mobile
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (window.innerWidth <= 1024) closeSidebar();
-  });
-});
+// Fermer sidebar après navigation sur mobile → géré dans handleNavClick
 </script>
 </body>
 </html>
