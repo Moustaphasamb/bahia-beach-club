@@ -2,2012 +2,1114 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bahia Beach Club — Dakar</title>
+  <meta name="description" content="Restaurant & Beach Club à Dakar. Cuisine raffinée, cocktails, vue mer et ambiance unique sur la Corniche." />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --noir: #060a0f;
-      --noir-bleu: #0a1220;
-      --ocean: #0d2035;
-      --turquoise: #2de0c8;
-      --turquoise-pale: rgba(45,224,200,0.15);
-      --or: #c9a84c;
-      --or-pale: rgba(201,168,76,0.12);
-      --blanc: #f0ece4;
-      --gris: rgba(240,236,228,0.5);
+      --bg: #06090e;
+      --surface: #0d1622;
+      --surface2: #111d2e;
+      --turq: #1fd9c0;
+      --turq-dim: rgba(31,217,192,0.15);
+      --gold: #d4a847;
+      --gold-dim: rgba(212,168,71,0.15);
+      --text: #e8e8e8;
+      --muted: #7a8a9a;
+      --border: rgba(255,255,255,0.07);
+      --nav-h: 72px;
     }
-
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-
     body {
-      background: var(--noir);
-      color: var(--blanc);
       font-family: 'Josefin Sans', sans-serif;
-      font-weight: 300;
+      background: var(--bg);
+      color: var(--text);
       overflow-x: hidden;
-      cursor: none;
     }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; }
 
-    /* CURSOR */
-    .cursor {
-      position: fixed;
-      width: 8px; height: 8px;
-      background: var(--turquoise);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width .2s, height .2s, background .2s;
-    }
-    .cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border: 1px solid rgba(45,224,200,0.5);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: all .12s ease-out;
-    }
-    body:hover .cursor { opacity: 1; }
-
-    /* NAV */
+    /* ── NAV ── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      background: transparent;
+      transition: background 0.4s, backdrop-filter 0.4s;
       z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 28px 60px;
-      transition: all .4s;
     }
     nav.scrolled {
-      background: rgba(6,10,15,0.92);
-      backdrop-filter: blur(20px);
-      padding: 18px 60px;
-      border-bottom: 1px solid rgba(45,224,200,0.1);
+      background: rgba(6,9,14,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
     .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.3em;
-      color: var(--or);
-      text-transform: uppercase;
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
     }
-    .nav-logo span { color: var(--turquoise); }
+    .nav-logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--turq), var(--gold));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600;
+      color: #06090e;
+    }
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 600;
+      color: var(--text); letter-spacing: 0.05em;
+    }
     .nav-links {
-      display: flex;
-      gap: 28px;
+      display: flex; align-items: center; gap: 32px;
       list-style: none;
     }
     .nav-links a {
-      font-size: .65rem;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--gris);
+      color: var(--muted);
       text-decoration: none;
-      transition: color .3s;
-      position: relative;
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      transition: color 0.2s;
     }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0; right: 0;
-      height: 1px;
-      background: var(--turquoise);
-      transform: scaleX(0);
-      transition: transform .3s;
-    }
-    .nav-links a:hover { color: var(--turquoise); }
-    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-links a:hover { color: var(--turq); }
     .nav-cta {
-      font-size: .6rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--noir);
-      background: var(--turquoise);
-      padding: 10px 24px;
-      text-decoration: none;
-      transition: all .3s;
+      padding: 9px 22px;
+      border: 1px solid var(--turq);
+      color: var(--turq) !important;
+      border-radius: 3px;
+      transition: background 0.2s, color 0.2s !important;
     }
-    .nav-cta:hover { background: var(--or); }
+    .nav-cta:hover { background: var(--turq); color: var(--bg) !important; }
+    .nav-burger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px;
+    }
+    .nav-burger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .nav-mobile {
+      display: none;
+      position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: rgba(6,9,14,0.97);
+      backdrop-filter: blur(16px);
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      z-index: 99;
+      flex-direction: column; gap: 20px;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .nav-mobile a:hover { color: var(--turq); }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+    }
 
-    /* HERO */
-    .hero {
+    /* ── HERO ── */
+    #hero {
       position: relative;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       text-align: center;
+      padding: 0 5%;
       overflow: hidden;
-      padding-top: 80px;
     }
-
     .hero-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(13,32,53,0.9) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 20% 20%, rgba(45,224,200,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 10%, rgba(201,168,76,0.05) 0%, transparent 60%),
-        linear-gradient(180deg, var(--noir) 0%, var(--ocean) 50%, var(--noir-bleu) 100%);
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(31,217,192,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(212,168,71,0.06) 0%, transparent 50%),
+                  linear-gradient(180deg, #06090e 0%, #0a1520 50%, #06090e 100%);
     }
-
-    /* Animated ocean waves */
-    .waves {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 200px;
-      overflow: hidden;
-    }
-    .wave {
-      position: absolute;
-      bottom: 0;
-      width: 200%;
-      height: 100%;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='rgba(45,224,200,0.04)' d='M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z'/%3E%3C/svg%3E") repeat-x;
-      background-size: 50% 100%;
-      animation: wave 8s linear infinite;
-    }
-    .wave:nth-child(2) {
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='rgba(45,224,200,0.03)' d='M0,80 C360,20 720,100 1080,40 C1260,10 1380,70 1440,80 L1440,120 L0,120 Z'/%3E%3C/svg%3E") repeat-x;
-      background-size: 50% 100%;
-      animation: wave 12s linear infinite reverse;
-      opacity: .7;
-    }
-    .wave:nth-child(3) {
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='rgba(201,168,76,0.02)' d='M0,40 C480,120 960,0 1440,60 L1440,120 L0,120 Z'/%3E%3C/svg%3E") repeat-x;
-      background-size: 50% 100%;
-      animation: wave 6s linear infinite;
-      opacity: .5;
-    }
-    @keyframes wave {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* Stars */
-    .stars {
-      position: absolute;
-      inset: 0;
+    .stars-canvas {
+      position: absolute; inset: 0;
       pointer-events: none;
     }
-    .star {
-      position: absolute;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle var(--d, 3s) ease-in-out infinite;
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: .1; transform: scale(1); }
-      50% { opacity: .8; transform: scale(1.4); }
-    }
-
-    /* Floating particles */
-    .particles { position: absolute; inset: 0; pointer-events: none; }
-    .particle {
-      position: absolute;
-      width: 2px; height: 2px;
-      background: var(--turquoise);
-      border-radius: 50%;
-      animation: float var(--dur, 6s) ease-in-out infinite;
-      opacity: 0;
-    }
-    @keyframes float {
-      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-      10% { opacity: .6; }
-      90% { opacity: .3; }
-      100% { transform: translateY(-10vh) translateX(var(--dx, 40px)); opacity: 0; }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      animation: heroIn 1.4s cubic-bezier(0.16,1,0.3,1) forwards;
-      opacity: 0;
-    }
-    @keyframes heroIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .hero-badge {
       display: inline-block;
-      font-size: .55rem;
-      letter-spacing: .4em;
-      text-transform: uppercase;
-      color: var(--turquoise);
-      border: 1px solid rgba(45,224,200,0.3);
-      padding: 8px 20px;
-      margin-bottom: 40px;
-      animation: badgeIn 1s .3s forwards;
-      opacity: 0;
+      border: 1px solid var(--turq-dim);
+      background: var(--turq-dim);
+      color: var(--turq);
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 6px 18px; border-radius: 20px;
+      margin-bottom: 28px;
+      position: relative; z-index: 1;
     }
-    @keyframes badgeIn {
-      from { opacity: 0; letter-spacing: .8em; }
-      to { opacity: 1; letter-spacing: .4em; }
-    }
-
     .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(4rem, 10vw, 9rem);
-      font-weight: 300;
-      line-height: .95;
-      letter-spacing: -.01em;
-      margin-bottom: 10px;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 300; line-height: 1;
+      letter-spacing: -0.01em;
+      position: relative; z-index: 1;
+      margin-bottom: 8px;
     }
-    .hero-title .line1 { display: block; opacity: 0; animation: lineIn 1s .5s forwards; }
-    .hero-title .line2 {
-      display: block;
-      font-style: italic;
-      color: var(--turquoise);
-      opacity: 0;
-      animation: lineIn 1s .7s forwards;
+    .hero-title em {
+      font-style: italic; color: var(--turq);
     }
-    .hero-title .line3 {
-      display: block;
-      font-size: 0.28em;
-      font-style: normal;
-      letter-spacing: .5em;
-      color: var(--or);
-      font-family: 'Josefin Sans', sans-serif;
-      font-weight: 100;
-      margin-top: 20px;
-      opacity: 0;
-      animation: lineIn 1s .9s forwards;
-    }
-    @keyframes lineIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .hero-sub {
-      margin-top: 50px;
-      font-size: .7rem;
-      letter-spacing: .2em;
-      color: var(--gris);
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 2;
-      opacity: 0;
-      animation: lineIn 1s 1.1s forwards;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 300; letter-spacing: 0.06em;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      position: relative; z-index: 1;
+      margin-bottom: 16px;
     }
-
+    .hero-desc {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 0.85rem; line-height: 1.8; letter-spacing: 0.05em;
+      position: relative; z-index: 1;
+      margin-bottom: 40px;
+    }
     .hero-actions {
-      margin-top: 50px;
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      opacity: 0;
-      animation: lineIn 1s 1.3s forwards;
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      position: relative; z-index: 1;
     }
-
     .btn-primary {
+      padding: 14px 36px;
+      background: linear-gradient(135deg, var(--turq), #16b8a4);
+      color: #06090e;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: .6rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--noir);
-      background: var(--turquoise);
-      padding: 16px 36px;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      transition: all .4s;
-      display: inline-block;
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      font-weight: 600;
+      border: none; border-radius: 3px;
+      cursor: pointer; text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--or);
-      transform: translateX(-100%);
-      transition: transform .4s cubic-bezier(0.16,1,0.3,1);
-    }
-    .btn-primary:hover::before { transform: translateX(0); }
-    .btn-primary span { position: relative; z-index: 1; }
-
-    .btn-ghost {
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+    .btn-outline {
+      padding: 13px 36px;
+      background: transparent;
+      color: var(--text);
       font-family: 'Josefin Sans', sans-serif;
-      font-size: .6rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--blanc);
-      border: 1px solid rgba(240,236,228,0.3);
-      padding: 16px 36px;
-      text-decoration: none;
-      transition: all .3s;
-      display: inline-block;
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      cursor: pointer; text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
     }
-    .btn-ghost:hover {
-      border-color: var(--or);
-      color: var(--or);
+    .btn-outline:hover { border-color: var(--turq); color: var(--turq); transform: translateY(-2px); }
+    .hero-scroll-hint {
+      position: absolute; bottom: 36px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--muted); font-size: 0.65rem; letter-spacing: 0.15em;
+      z-index: 1;
+      animation: bounce 2s infinite;
     }
-
-    .scroll-line {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      opacity: 0;
-      animation: lineIn 1s 1.6s forwards;
-    }
-    .scroll-line span {
-      font-size: .5rem;
-      letter-spacing: .3em;
-      color: var(--gris);
-      text-transform: uppercase;
-    }
-    .scroll-bar {
-      width: 1px;
-      height: 60px;
-      background: linear-gradient(to bottom, var(--turquoise), transparent);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
-    @keyframes scrollPulse {
-      0%, 100% { transform: scaleY(1); opacity: 1; }
-      50% { transform: scaleY(.5); opacity: .4; }
-    }
-
-    /* SECTION BASE */
-    section { position: relative; }
-
-    .section-label {
-      font-size: .5rem;
-      letter-spacing: .5em;
-      text-transform: uppercase;
-      color: var(--turquoise);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .section-label::before {
+    .hero-scroll-hint::after {
       content: '';
-      width: 30px;
-      height: 1px;
-      background: var(--turquoise);
+      display: block; width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
     }
 
-    /* ABOUT */
-    .about {
-      padding: 140px 60px;
+    /* ── SECTIONS COMMON ── */
+    section { padding: 100px 5%; }
+    .section-eyebrow {
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--turq); margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300; line-height: 1.1;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-desc {
+      max-width: 540px;
+      color: var(--muted); line-height: 1.8;
+      font-size: 0.85rem; letter-spacing: 0.04em;
+      margin-top: 16px;
+    }
+    .section-header { margin-bottom: 60px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-desc { margin: 16px auto 0; }
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── EXPERIENCE ── */
+    #experience { background: var(--surface); }
+    .exp-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 100px;
-      align-items: center;
-      max-width: 1400px;
-      margin: 0 auto;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
     }
-
-    .about-visual {
-      position: relative;
-      height: 600px;
+    .exp-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px 32px;
+      transition: border-color 0.3s, transform 0.3s;
     }
-    .about-img-main {
-      position: absolute;
-      top: 0; left: 0;
-      width: 75%;
-      height: 80%;
-      background: linear-gradient(135deg, var(--ocean) 0%, var(--noir-bleu) 100%);
-      border: 1px solid rgba(45,224,200,0.15);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .about-img-accent {
-      position: absolute;
-      bottom: 0; right: 0;
-      width: 55%;
-      height: 55%;
-      background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, var(--noir-bleu) 100%);
-      border: 1px solid rgba(201,168,76,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .visual-icon {
-      font-size: 4rem;
-      opacity: .3;
-    }
-
-    .about-tag {
-      position: absolute;
-      top: 50%;
-      right: -20px;
-      transform: translateY(-50%);
-      background: var(--turquoise);
-      color: var(--noir);
-      padding: 12px 20px;
-      font-size: .55rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      writing-mode: vertical-rl;
-    }
-
-    .about-text h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 4vw, 4rem);
-      font-weight: 300;
-      line-height: 1.1;
-      margin-bottom: 30px;
-    }
-    .about-text h2 em {
-      font-style: italic;
-      color: var(--or);
-    }
-    .about-text p {
-      font-size: .8rem;
-      line-height: 2.2;
-      color: var(--gris);
-      margin-bottom: 20px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-      margin-top: 50px;
-      padding-top: 40px;
-      border-top: 1px solid rgba(240,236,228,0.08);
-    }
-    .stat-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.8rem;
-      font-weight: 300;
-      color: var(--turquoise);
+    .exp-card:hover { border-color: var(--turq); transform: translateY(-4px); }
+    .exp-icon {
+      font-size: 2.5rem; margin-bottom: 20px;
       display: block;
     }
-    .stat-label {
-      font-size: .5rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--gris);
-      margin-top: 8px;
-      display: block;
+    .exp-card h3 {
+      font-size: 1.4rem; font-weight: 400; margin-bottom: 12px;
+      color: var(--text);
     }
+    .exp-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.8; }
 
-    /* MENU PREVIEW */
-    .menu-section {
-      padding: 120px 60px;
-      background: linear-gradient(180deg, var(--noir) 0%, var(--noir-bleu) 50%, var(--noir) 100%);
+    /* ── MENU APERÇU ── */
+    #menu-apercu { background: var(--bg); }
+    .menu-cats {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 40px;
     }
-    .menu-header {
-      text-align: center;
-      margin-bottom: 80px;
+    .menu-cat-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      border-radius: 2px; cursor: pointer;
+      transition: all 0.2s;
     }
-    .menu-header h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 6vw, 5.5rem);
-      font-weight: 300;
-      line-height: 1;
+    .menu-cat-btn.active, .menu-cat-btn:hover {
+      border-color: var(--turq); color: var(--turq);
+      background: var(--turq-dim);
     }
-    .menu-header h2 em {
-      font-style: italic;
-      color: var(--turquoise);
-    }
-    .menu-header p {
-      margin-top: 20px;
-      font-size: .7rem;
-      letter-spacing: .15em;
-      color: var(--gris);
-    }
-
-    .menu-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      margin-bottom: 60px;
-      border-bottom: 1px solid rgba(240,236,228,0.08);
-    }
-    .menu-tab {
-      font-size: .6rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      padding: 16px 30px;
-      color: var(--gris);
-      cursor: pointer;
-      transition: all .3s;
-      position: relative;
-      background: none;
-      border: none;
-    }
-    .menu-tab::after {
-      content: '';
-      position: absolute;
-      bottom: -1px; left: 0; right: 0;
-      height: 1px;
-      background: var(--turquoise);
-      transform: scaleX(0);
-      transition: transform .3s;
-    }
-    .menu-tab.active { color: var(--turquoise); }
-    .menu-tab.active::after, .menu-tab:hover::after { transform: scaleX(1); }
-    .menu-tab:hover { color: var(--blanc); }
-
     .menu-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .menu-card {
-      position: relative;
-      padding: 50px 40px;
-      background: rgba(10,18,32,0.6);
-      border: 1px solid rgba(45,224,200,0.06);
-      transition: all .4s;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .menu-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--turquoise-pale) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity .4s;
-    }
-    .menu-card:hover { border-color: rgba(45,224,200,0.2); transform: translateY(-4px); }
-    .menu-card:hover::before { opacity: 1; }
-
-    .card-emoji {
-      font-size: 2.5rem;
-      margin-bottom: 24px;
-      display: block;
-      filter: grayscale(.5);
-      transition: filter .3s;
-    }
-    .menu-card:hover .card-emoji { filter: grayscale(0); }
-
-    .card-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 400;
-      margin-bottom: 10px;
-    }
-    .card-desc {
-      font-size: .65rem;
-      line-height: 1.8;
-      color: var(--gris);
-      margin-bottom: 24px;
-    }
-    .card-price {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      color: var(--or);
-    }
-    .card-price span {
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: .55rem;
-      letter-spacing: .1em;
-      color: var(--gris);
-      margin-left: 6px;
-    }
-
-    .card-ar-badge {
-      position: absolute;
-      top: 20px; right: 20px;
-      font-size: .45rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--turquoise);
-      border: 1px solid rgba(45,224,200,0.3);
-      padding: 4px 10px;
-      opacity: 0;
-      transition: opacity .3s;
-    }
-    .menu-card:hover .card-ar-badge { opacity: 1; }
-
-    /* QR KIOSK SECTION */
-    .kiosk-section {
-      padding: 140px 60px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 100px;
-      align-items: center;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .kiosk-text h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 4vw, 4rem);
-      font-weight: 300;
-      line-height: 1.1;
-      margin-bottom: 30px;
-    }
-    .kiosk-text h2 em { font-style: italic; color: var(--turquoise); }
-    .kiosk-text p {
-      font-size: .8rem;
-      line-height: 2.2;
-      color: var(--gris);
-      margin-bottom: 16px;
-    }
-
-    .features {
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 20px;
+      min-height: 200px;
     }
-    .feature {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      padding: 20px;
-      border: 1px solid rgba(45,224,200,0.08);
-      transition: border-color .3s;
+    .menu-item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px; overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
     }
-    .feature:hover { border-color: rgba(45,224,200,0.25); }
-    .feature-icon {
-      width: 40px; height: 40px;
-      background: var(--turquoise-pale);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
+    .menu-item-card:hover { border-color: var(--turq-dim); transform: translateY(-3px); }
+    .menu-item-img {
+      width: 100%; height: 160px;
+      object-fit: cover; background: var(--surface2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 2rem;
     }
-    .feature-text h4 {
-      font-size: .7rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      color: var(--blanc);
-    }
-    .feature-text p {
-      font-size: .65rem;
-      color: var(--gris);
-      line-height: 1.7;
-      margin: 0;
-    }
+    .menu-item-body { padding: 18px; }
+    .menu-item-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; margin-bottom: 6px; }
+    .menu-item-desc { color: var(--muted); font-size: 0.78rem; line-height: 1.6; margin-bottom: 12px; }
+    .menu-item-price { color: var(--gold); font-size: 0.85rem; letter-spacing: 0.05em; }
+    .menu-more-wrap { text-align: center; margin-top: 48px; }
 
-    /* QR Phone mockup */
-    .kiosk-visual {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-    .phone-mockup {
-      width: 260px;
-      height: 520px;
-      background: var(--noir-bleu);
-      border: 2px solid rgba(45,224,200,0.2);
-      border-radius: 36px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 80px rgba(45,224,200,0.1), 0 40px 80px rgba(0,0,0,0.6);
-      animation: phonefloat 4s ease-in-out infinite;
-    }
-    @keyframes phonefloat {
-      0%, 100% { transform: translateY(0) rotate(-2deg); }
-      50% { transform: translateY(-16px) rotate(-2deg); }
-    }
-    .phone-screen {
-      position: absolute;
-      inset: 12px;
-      background: linear-gradient(160deg, var(--ocean) 0%, var(--noir) 100%);
-      border-radius: 26px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      padding: 20px;
-    }
-    .phone-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: .8rem;
-      letter-spacing: .3em;
-      color: var(--or);
-      text-align: center;
-    }
-    .qr-box {
-      width: 110px; height: 110px;
-      border: 1px solid rgba(45,224,200,0.4);
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .qr-box::before, .qr-box::after {
-      content: '';
-      position: absolute;
-      width: 16px; height: 16px;
-      border-color: var(--turquoise);
-      border-style: solid;
-    }
-    .qr-box::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-    .qr-box::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-    .qr-grid {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 2px;
-      width: 90px;
-    }
-    .qr-cell {
-      width: 100%; aspect-ratio: 1;
-      background: var(--turquoise);
-      opacity: var(--o, .9);
-    }
-
-    .phone-label {
-      font-size: .45rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--turquoise);
-      text-align: center;
-    }
-    .phone-cocktail-preview {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(45,224,200,0.2) 0%, transparent 70%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      animation: rotateSlow 8s linear infinite;
-    }
-    @keyframes rotateSlow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .phone-menu-items {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .phone-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 8px;
-      border: 1px solid rgba(45,224,200,0.1);
-      border-radius: 4px;
-      font-size: .35rem;
-      letter-spacing: .1em;
-      color: var(--gris);
-    }
-    .phone-item span { color: var(--or); }
-
-    /* Glow ring */
-    .glow-ring {
-      position: absolute;
-      width: 360px; height: 360px;
-      border: 1px solid rgba(45,224,200,0.08);
-      border-radius: 50%;
-      animation: glowPulse 3s ease-in-out infinite;
-    }
-    .glow-ring:nth-child(2) {
-      width: 460px; height: 460px;
-      animation-delay: .5s;
-      border-color: rgba(45,224,200,0.04);
-    }
-    @keyframes glowPulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: .5; }
-    }
-
-    /* AMBIANCE */
-    .ambiance {
-      padding: 120px 60px;
-      background: var(--noir-bleu);
-      text-align: center;
-    }
-    .ambiance h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 6vw, 5rem);
-      font-weight: 300;
-      margin-bottom: 16px;
-    }
-    .ambiance h2 em { font-style: italic; color: var(--or); }
-    .ambiance > p {
-      font-size: .75rem;
-      letter-spacing: .15em;
-      color: var(--gris);
-      margin-bottom: 60px;
-    }
-
+    /* ── AMBIANCE ── */
+    #ambiance { background: var(--surface); }
     .ambiance-grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 3px;
-      max-width: 1100px;
-      margin: 0 auto 60px;
-      height: 500px;
+      grid-template-rows: 240px 240px;
+      gap: 12px;
     }
-    .ambiance-card {
+    .amb-card {
+      border-radius: 6px; overflow: hidden;
+      background: var(--surface2);
       position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      padding: 24px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border);
     }
-    .ambiance-card:first-child {
-      grid-row: span 2;
+    .amb-card:first-child { grid-row: 1 / 3; }
+    .amb-card-emoji { font-size: 3rem; }
+    .amb-card-label {
+      position: absolute; bottom: 16px; left: 16px;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      background: rgba(6,9,14,0.7); backdrop-filter: blur(8px);
+      padding: 5px 12px; border-radius: 2px;
     }
-    .ambiance-card-bg {
-      position: absolute;
-      inset: 0;
-      transition: transform .6s cubic-bezier(0.16,1,0.3,1);
-    }
-    .ambiance-card:hover .ambiance-card-bg { transform: scale(1.05); }
-    .ac-1 { background: linear-gradient(160deg, var(--ocean) 0%, rgba(45,224,200,0.08) 100%); }
-    .ac-2 { background: linear-gradient(160deg, rgba(201,168,76,0.1) 0%, var(--noir-bleu) 100%); }
-    .ac-3 { background: linear-gradient(160deg, var(--noir-bleu) 0%, rgba(45,224,200,0.05) 100%); }
-    .ac-4 { background: linear-gradient(160deg, var(--ocean) 0%, rgba(201,168,76,0.08) 100%); }
-    .ac-5 { background: linear-gradient(160deg, rgba(45,224,200,0.06) 0%, var(--noir-bleu) 100%); }
-
-    .ambiance-icon-large {
-      font-size: 5rem;
-      opacity: .15;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .ambiance-card-label {
-      position: relative;
-      z-index: 1;
-      font-size: .55rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--blanc);
-      padding: 6px 14px;
-      border: 1px solid rgba(240,236,228,0.15);
-      background: rgba(6,10,15,0.5);
+    @media (max-width: 640px) {
+      .ambiance-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .amb-card:first-child { grid-row: auto; }
     }
 
-    /* HOURS & CONTACT */
-    .info-section {
-      padding: 120px 60px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 2px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .info-card {
-      padding: 60px 50px;
-      background: rgba(10,18,32,0.4);
-      border: 1px solid rgba(240,236,228,0.05);
-    }
-    .info-card h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.8rem;
-      font-weight: 300;
-      margin-bottom: 30px;
-    }
-    .info-card h3 em { font-style: italic; color: var(--turquoise); }
-
-    .hours-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .hours-list li {
-      display: flex;
-      justify-content: space-between;
-      font-size: .65rem;
-      letter-spacing: .08em;
-      color: var(--gris);
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(240,236,228,0.05);
-    }
-    .hours-list li:last-child { border: none; }
-    .hours-list .day { color: var(--blanc); }
-    .hours-list .weekend { color: var(--or); }
-
-    .contact-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .contact-list li {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
-    .contact-icon {
-      width: 36px; height: 36px;
-      border: 1px solid rgba(45,224,200,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .9rem;
-      flex-shrink: 0;
-      color: var(--turquoise);
-    }
-    .contact-info {
-      font-size: .65rem;
-      line-height: 1.8;
-      color: var(--gris);
-    }
-    .contact-info strong { display: block; color: var(--blanc); font-weight: 300; letter-spacing: .08em; margin-bottom: 2px; }
-
-    .reservation-card {
-      background: linear-gradient(135deg, rgba(45,224,200,0.08) 0%, rgba(201,168,76,0.05) 100%);
-      border-color: rgba(45,224,200,0.15);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .reservation-card p {
-      font-size: .7rem;
-      line-height: 2;
-      color: var(--gris);
-      margin-bottom: 30px;
-    }
-
-    /* FOOTER */
-    footer {
-      padding: 60px;
-      border-top: 1px solid rgba(240,236,228,0.06);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .footer-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      letter-spacing: .3em;
-      color: var(--or);
-    }
-    .footer-logo span { color: var(--turquoise); }
-    .footer-copy {
-      font-size: .5rem;
-      letter-spacing: .15em;
-      color: rgba(240,236,228,0.2);
-      text-transform: uppercase;
-    }
-    .footer-socials {
-      display: flex;
-      gap: 20px;
-    }
-    .footer-social {
-      width: 36px; height: 36px;
-      border: 1px solid rgba(240,236,228,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .7rem;
-      color: var(--gris);
-      text-decoration: none;
-      transition: all .3s;
-    }
-    .footer-social:hover {
-      border-color: var(--turquoise);
-      color: var(--turquoise);
-    }
-
-    /* REVEAL ON SCROLL */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity .9s cubic-bezier(0.16,1,0.3,1), transform .9s cubic-bezier(0.16,1,0.3,1);
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: .1s; }
-    .reveal-delay-2 { transition-delay: .2s; }
-    .reveal-delay-3 { transition-delay: .3s; }
-
-    /* ── FORM RÉSERVATION ── */
-    #reservationForm { display:flex; flex-direction:column; gap:12px; }
-    .res-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .res-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
-    .res-input, #reservationForm textarea {
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(45,224,200,0.2); border-radius:4px;
-      padding:10px 14px; color:var(--blanc);
-      font-family:'Josefin Sans',sans-serif; font-size:.65rem; letter-spacing:.08em;
-      outline:none; width:100%; box-sizing:border-box;
-    }
-    .res-input[type="date"], .res-input[type="time"] { color-scheme:dark; }
-    #reservationForm textarea { resize:none; min-height:64px; }
-
-    /* ── HAMBURGER NAV ── */
-    .nav-ham {
-      display:none; flex-direction:column; gap:5px;
-      cursor:pointer; background:none; border:none; padding:8px; z-index:110;
-    }
-    .ham-line { display:block; width:22px; height:2px; background:var(--blanc); border-radius:2px; transition:all .3s; }
-    .nav-ham.open .ham-line:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
-    .nav-ham.open .ham-line:nth-child(2) { opacity:0; transform:translateX(8px); }
-    .nav-ham.open .ham-line:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
-
-    .mobile-nav {
-      position:fixed; top:0; right:-100%; width:280px; height:100vh;
-      background:var(--noir-bleu); z-index:200;
-      display:flex; flex-direction:column; padding:24px 28px;
-      transition:right .32s cubic-bezier(.32,.72,0,1);
-      border-left:1px solid rgba(45,224,200,0.1);
-      overflow-y:auto;
-    }
-    .mobile-nav.open { right:0; }
-    .mn-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:36px; }
-    .mn-logo { font-family:'Cormorant Garamond',serif; font-size:1rem; color:var(--or); letter-spacing:.3em; }
-    .mn-logo span { color:var(--turquoise); }
-    .mn-close { background:none; border:none; color:var(--gris); font-size:1.2rem; cursor:pointer; padding:6px; }
-    .mn-link { font-size:.6rem; letter-spacing:.25em; text-transform:uppercase; color:var(--gris); text-decoration:none; padding:16px 0; border-bottom:1px solid rgba(240,236,228,0.06); transition:color .2s; display:block; }
-    .mn-link:hover { color:var(--turquoise); }
-    .mn-cta { margin-top:28px; font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--noir); background:var(--turquoise); padding:16px 24px; text-decoration:none; text-align:center; transition:all .3s; display:block; }
-    .mn-cta:hover { background:var(--or); }
-    .mn-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:199; backdrop-filter:blur(2px); }
-    .mn-overlay.show { display:block; }
-
-    /* ── INSTAGRAM SECTION ── */
-    .instagram-section {
-      padding: 120px 60px;
-      background: linear-gradient(180deg, var(--noir) 0%, var(--noir-bleu) 50%, var(--noir) 100%);
-      overflow: hidden;
-    }
-    .instagram-section .section-label,
-    .avis-section .section-label { justify-content: center; }
-    .instagram-section .section-label::after,
-    .avis-section .section-label::after {
-      content: ''; width: 30px; height: 1px; background: var(--turquoise);
-    }
-    .instagram-section h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 300;
-      text-align: center;
-      line-height: 1.1;
-      margin-bottom: 10px;
-    }
-    .instagram-section h2 em { font-style: italic; color: var(--or); }
-    .insta-sub {
-      text-align: center;
-      font-size: .65rem;
-      letter-spacing: .25em;
-      color: var(--turquoise);
-      margin-bottom: 50px;
-    }
-    .insta-track-wrap { overflow: hidden; margin: 0 -60px; }
+    /* ── INSTAGRAM BANDEAU ── */
+    #instagram { background: var(--bg); padding: 60px 0; overflow: hidden; }
+    .insta-header { text-align: center; padding: 0 5% 40px; }
+    .insta-track-wrap { overflow: hidden; }
     .insta-track {
-      display: flex;
-      gap: 16px;
-      animation: scrollTrack 30s linear infinite;
+      display: flex; gap: 12px;
       width: max-content;
-      padding: 20px 60px;
+      animation: scrollLeft 25s linear infinite;
     }
     .insta-track:hover { animation-play-state: paused; }
-    @keyframes scrollTrack {
+    @keyframes scrollLeft {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
-    .insta-card {
-      width: 220px; height: 220px;
-      border-radius: 16px; flex-shrink: 0;
-      position: relative; overflow: hidden;
+    .insta-tile {
+      width: 180px; height: 180px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
       cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: transform .3s, box-shadow .3s;
+      transition: border-color 0.2s;
+      position: relative; overflow: hidden;
     }
-    .insta-card:hover { transform: scale(1.03); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
-    .insta-card-bg { position: absolute; inset: 0; }
-    .insta-card-emoji {
-      position: absolute; font-size: 4rem;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%); opacity: 0.4;
+    .insta-tile:hover { border-color: var(--turq); }
+    .insta-tile-overlay {
+      position: absolute; inset: 0;
+      background: rgba(31,217,192,0.12);
+      opacity: 0; transition: opacity 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
     }
-    .insta-card-caption {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 12px;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      font-size: .62rem; color: rgba(255,255,255,0.85); line-height: 1.5;
-    }
-    .insta-card-likes {
-      position: absolute; top: 10px; right: 10px;
-      font-size: .55rem; color: white;
-      background: rgba(0,0,0,0.4); padding: 3px 8px; border-radius: 10px;
-    }
-    .btn-insta {
-      display: block; width: fit-content; margin: 40px auto 0;
-      font-family: 'Josefin Sans', sans-serif; font-size: .6rem;
-      letter-spacing: .2em; text-transform: uppercase;
-      color: var(--blanc); border: 1px solid rgba(240,236,228,0.3);
-      padding: 14px 32px; text-decoration: none; transition: all .3s;
-    }
-    .btn-insta:hover { border-color: var(--or); color: var(--or); }
+    .insta-tile:hover .insta-tile-overlay { opacity: 1; }
 
-    /* ── AVIS SECTION ── */
-    .avis-section {
-      padding: 120px 60px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .avis-section h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 300; text-align: center;
-      line-height: 1.1; margin-bottom: 40px;
-    }
-    .avis-section h2 em { font-style: italic; color: var(--turquoise); }
-    .note-globale { display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:50px; }
-    .note-num { font-family:'Cormorant Garamond',serif; font-size:4rem; font-weight:300; color:var(--turquoise); line-height:1; }
-    .etoiles { color:#f0c060; font-size:1.4rem; letter-spacing:4px; }
-    .note-count { font-size:.6rem; letter-spacing:.15em; color:var(--gris); text-transform:uppercase; }
-    .avis-scroll {
-      overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    /* ── REVIEWS ── */
+    #reviews { background: var(--surface); }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
       margin-bottom: 60px;
     }
-    .avis-scroll::-webkit-scrollbar { display: none; }
-    .avis-list { display:flex; gap:20px; width:max-content; padding-bottom:8px; }
-    .avis-card {
-      background: var(--noir-bleu);
-      border: 1px solid rgba(240,236,228,0.07);
-      border-radius: 18px; padding: 24px;
-      min-width: 300px; max-width: 340px; flex-shrink: 0;
-      transition: border-color .3s;
+    .review-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 28px;
+      transition: border-color 0.3s;
     }
-    .avis-card:hover { border-color: rgba(45,224,200,0.2); }
-    .avis-stars { color:#f0c060; font-size:1rem; margin-bottom:12px; }
-    .avis-texte { font-size:.8rem; color:var(--gris); line-height:1.9; margin-bottom:16px; font-style:italic; }
-    .avis-auteur { font-size:.7rem; font-weight:500; color:var(--blanc); }
-    .avis-date { font-size:.58rem; color:var(--gris); margin-top:4px; }
-    .avis-form-wrap {
-      background: rgba(10,18,32,0.6);
-      border: 1px solid rgba(45,224,200,0.1);
-      border-radius: 18px; padding: 40px;
-      max-width: 700px; margin: 0 auto;
+    .review-card:hover { border-color: var(--gold-dim); }
+    .review-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 14px; }
+    .review-text { color: var(--muted); font-size: 0.83rem; line-height: 1.8; margin-bottom: 18px; font-style: italic; }
+    .review-author { font-size: 0.78rem; letter-spacing: 0.08em; color: var(--text); }
+    .review-source { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+    .review-form-wrap {
+      max-width: 560px; margin: 0 auto;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 36px;
     }
-    .avis-form-wrap h3 {
-      font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300;
-      margin-bottom:24px; text-align:center;
+    .review-form-title { font-size: 1.6rem; margin-bottom: 24px; }
+    .form-row { margin-bottom: 16px; }
+    .form-row label { display: block; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .form-row input, .form-row textarea, .form-row select {
+      width: 100%; padding: 12px 16px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.82rem;
+      border-radius: 3px; outline: none;
+      transition: border-color 0.2s;
     }
-    .avis-form-wrap h3 em { font-style:italic; color:var(--turquoise); }
-    .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; align-items:center; }
-    #avisForm input[type="text"], #avisForm textarea {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(45,224,200,0.2); border-radius:4px;
-      padding: 10px 14px; color: var(--blanc);
-      font-family:'Josefin Sans',sans-serif; font-size:.65rem; letter-spacing:.08em;
-      outline:none; width:100%; box-sizing:border-box;
+    .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--turq); }
+    .form-row textarea { resize: vertical; min-height: 100px; }
+    .star-select { display: flex; gap: 8px; margin-bottom: 4px; }
+    .star-select span { font-size: 1.4rem; cursor: pointer; opacity: 0.35; transition: opacity 0.15s; }
+    .star-select span.active { opacity: 1; }
+    .form-msg { margin-top: 14px; font-size: 0.8rem; min-height: 1.2em; }
+    .form-msg.ok { color: var(--turq); }
+    .form-msg.err { color: #e05050; }
+
+    /* ── CONTACT + RÉSERVATION ── */
+    #contact { background: var(--bg); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: start;
     }
-    #avisForm textarea { resize:none; margin-bottom:12px; }
-    .stars-input { display:flex; gap:4px; justify-content:flex-end; align-items:center; }
-    .star-btn { font-size:1.6rem; color:rgba(240,236,228,0.2); cursor:pointer; transition:color .15s; }
-    .star-btn.active { color:#f0c060; }
-    .btn-avis {
-      font-family:'Josefin Sans',sans-serif; font-size:.6rem;
-      letter-spacing:.2em; text-transform:uppercase;
-      color:var(--noir); background:var(--turquoise);
-      padding:14px 30px; border:none; cursor:pointer; width:100%; transition:background .3s;
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+    .contact-info-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      margin-bottom: 24px;
     }
-    .btn-avis:hover { background:var(--or); }
-    #avisMsg { display:none; margin-top:10px; font-size:.6rem; letter-spacing:.1em; text-align:center; padding:8px; border-radius:4px; }
-
-    /* ── MAP ── */
-    .contact-map { max-width:1400px; margin:0 auto; padding:0 60px 60px; }
-    .map-wrap { border-radius:16px; overflow:hidden; border:1px solid rgba(240,236,228,0.07); }
-
-    /* ── TABLET ≤ 900px ── */
-    @media (max-width: 900px) {
-      body { overflow-x:hidden; cursor:auto; }
-      .cursor, .cursor-ring { display:none; }
-
-      nav { padding: 20px 24px; }
-      nav.scrolled { padding: 14px 24px; }
-      .nav-links, .nav-cta { display: none; }
-      .nav-ham { display:flex; }
-
-      .about, .kiosk-section { grid-template-columns: 1fr; gap: 60px; padding: 80px 24px; }
-      .about-visual { height: 300px; }
-      .about-tag { display:none; }
-      .menu-section { padding: 80px 24px; }
-      .menu-grid { grid-template-columns: 1fr 1fr; gap:2px; }
-      .ambiance { padding: 80px 24px; }
-      .ambiance-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; height: auto; }
-      .ambiance-card:first-child { grid-row: span 1; }
-      .ambiance-card { height: 150px; }
-      .info-section { grid-template-columns: 1fr; padding: 60px 24px; }
-      footer { flex-direction: column; gap: 30px; text-align: center; padding: 40px 24px; }
-
-      .hero-actions { flex-direction:column; align-items:center; gap:14px; padding:0 20px; }
-      .btn-primary, .btn-ghost { display:block; width:100%; max-width:300px; text-align:center; padding:16px 28px; }
-      .kiosk-visual { display:none; }
-      .features { gap:14px; }
-
-      .instagram-section { padding: 80px 24px; }
-      .insta-track-wrap { margin: 0 -24px; }
-      .insta-track { padding: 20px 24px; }
-      .avis-section { padding: 80px 24px; }
-      .avis-scroll { margin: 0 -24px; padding: 0 24px; }
-      .avis-form-wrap { padding: 28px 24px; }
-      .contact-map { padding: 0 24px 40px; }
+    .contact-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--turq-dim); border: 1px solid rgba(31,217,192,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .contact-info-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .contact-info-val { font-size: 0.88rem; color: var(--text); }
+    .map-placeholder {
+      margin-top: 30px;
+      height: 200px; border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px;
+      color: var(--muted); font-size: 0.82rem;
+    }
+    .map-placeholder a {
+      color: var(--turq); font-size: 0.75rem; letter-spacing: 0.08em;
+      text-decoration: none; margin-top: 4px;
     }
 
-    /* ── MOBILE ≤ 640px ── */
-    @media (max-width: 640px) {
-      nav { padding: 16px 20px; }
-      nav.scrolled { padding: 12px 20px; }
+    .resv-form-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; margin-bottom: 24px; font-weight: 300; }
+    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .form-2col { grid-template-columns: 1fr; } }
 
-      .hero-title { font-size: clamp(3rem, 12vw, 5.5rem); }
-      .hero-sub { font-size:.65rem; padding:0 16px; }
-
-      .about { padding:60px 20px; }
-      .about-visual { height:240px; }
-
-      .menu-section { padding:60px 20px; }
-      .menu-header { margin-bottom:40px; }
-      .menu-header h2 { font-size:clamp(2.5rem,10vw,4rem); }
-      .menu-tabs { overflow-x:auto; justify-content:flex-start; scrollbar-width:none; padding-bottom:2px; -webkit-overflow-scrolling:touch; }
-      .menu-tabs::-webkit-scrollbar { display:none; }
-      .menu-tab { padding:12px 18px; white-space:nowrap; }
-      .menu-grid { grid-template-columns:1fr; }
-      .menu-card { padding:36px 24px; }
-
-      .kiosk-section { padding:60px 20px; }
-      .ambiance { padding:60px 20px; }
-      .ambiance-grid { grid-template-columns:1fr 1fr; height:auto; }
-      .ambiance-card { height:130px; }
-
-      .info-section { padding:40px 20px; }
-      .info-card { padding:40px 28px; }
-
-      /* Formulaire réservation : 1 colonne */
-      .res-row-2, .res-row-3 { grid-template-columns:1fr; }
-
-      .stats { grid-template-columns:repeat(3,1fr); gap:20px; }
-
-      footer { padding:32px 20px; }
-      footer .footer-social { width:32px; height:32px; }
-
-      .instagram-section { padding:60px 20px; }
-      .insta-card { width:180px; height:180px; }
-      .avis-section { padding:60px 20px; }
-      .avis-card { min-width:260px; }
-      .form-row-2 { grid-template-columns:1fr; }
-      .stars-input { justify-content:flex-start; margin-top:6px; }
-      .avis-form-wrap { padding:24px 20px; }
-      .contact-map { padding:0 20px 40px; }
+    /* ── CTA ── */
+    #cta {
+      background: linear-gradient(135deg, var(--surface) 0%, #0a1d2e 100%);
+      text-align: center; padding: 100px 5%;
+      position: relative; overflow: hidden;
     }
-
-    /* ── REDUCED MOTION — keep elements visible if animations are disabled ── */
-    @media (prefers-reduced-motion: reduce) {
-      .hero-content, .hero-badge,
-      .hero-title .line1, .hero-title .line2, .hero-title .line3,
-      .hero-sub, .hero-actions, .scroll-line, .reveal {
-        opacity: 1 !important;
-        transform: none !important;
-        animation: none !important;
-        letter-spacing: inherit !important;
-      }
+    #cta::before {
+      content: '';
+      position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(31,217,192,0.07) 0%, transparent 70%);
+      pointer-events: none;
     }
+    .cta-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; margin-bottom: 16px; }
+    .cta-title em { font-style: italic; color: var(--turq); }
+    .cta-desc { color: var(--muted); font-size: 0.88rem; margin-bottom: 36px; letter-spacing: 0.04em; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
-    /* ── SMALL MOBILE ≤ 420px ── */
-    @media (max-width: 420px) {
-      .hero-title { font-size:clamp(2.4rem,11vw,4rem); }
-      .menu-grid { grid-template-columns:1fr; }
-      .ambiance-grid { grid-template-columns:1fr; }
-      .stats { grid-template-columns:1fr; }
-      .about-text h2 { font-size:clamp(1.8rem,8vw,2.8rem); }
-      .info-card h3 { font-size:1.4rem; }
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 60px 5% 30px;
     }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 40px;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+    .footer-brand p { color: var(--muted); font-size: 0.8rem; line-height: 1.8; margin-top: 14px; max-width: 260px; }
+    .footer-col-title { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--turq); margin-bottom: 18px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-hours p { color: var(--muted); font-size: 0.8rem; line-height: 2; }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { color: var(--muted); font-size: 0.73rem; }
+    .footer-bottom a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-bottom a:hover { color: var(--turq); }
+
+    /* ── DIVIDERS ── */
+    .divider {
+      width: 48px; height: 2px;
+      background: linear-gradient(to right, var(--turq), var(--gold));
+      margin: 20px 0;
+    }
+    .divider.center { margin: 20px auto; }
   </style>
 </head>
 <body>
 
-<!-- CURSOR -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<!-- NAV -->
-<nav id="nav">
-  <div class="nav-logo">Bahia <span>·</span> Beach Club</div>
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">B</div>
+    <span class="nav-logo-text">Bahia Beach Club</span>
+  </a>
   <ul class="nav-links">
-    <li><a href="#about">L'Esprit</a></li>
-    <li><a href="#menu">Menu</a></li>
-    <li><a href="#kiosk">Experience</a></li>
+    <li><a href="#experience">L'Expérience</a></li>
+    <li><a href="#menu-apercu">Menu</a></li>
     <li><a href="#ambiance">Ambiance</a></li>
-    <li><a href="#instagram">Instagram</a></li>
-    <li><a href="#avis">Avis</a></li>
+    <li><a href="#reviews">Avis</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-cta">Réserver</a></li>
   </ul>
-  <a href="#contact" class="nav-cta"><span>Réserver</span></a>
-  <button class="nav-ham" id="navHam" aria-label="Menu" onclick="openMobileMenu()">
-    <span class="ham-line"></span>
-    <span class="ham-line"></span>
-    <span class="ham-line"></span>
-  </button>
+  <div class="nav-burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
 </nav>
-
-<!-- MOBILE NAV -->
-<div class="mobile-nav" id="mobileNav">
-  <div class="mn-header">
-    <div class="mn-logo">Bahia <span>·</span> BC</div>
-    <button class="mn-close" onclick="closeMobileMenu()">✕</button>
-  </div>
-  <a href="#about"    class="mn-link" onclick="closeMobileMenu()">L'Esprit</a>
-  <a href="#menu"     class="mn-link" onclick="closeMobileMenu()">Menu</a>
-  <a href="#kiosk"    class="mn-link" onclick="closeMobileMenu()">Experience</a>
-  <a href="#ambiance"  class="mn-link" onclick="closeMobileMenu()">Ambiance</a>
-  <a href="#instagram" class="mn-link" onclick="closeMobileMenu()">Instagram</a>
-  <a href="#avis"      class="mn-link" onclick="closeMobileMenu()">Avis clients</a>
-  <a href="#contact"   class="mn-link" onclick="closeMobileMenu()">Contact</a>
-  <a href="/menu.html?table=1" class="mn-cta">Commander maintenant</a>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="#experience" onclick="toggleMenu()">L'Expérience</a>
+  <a href="#menu-apercu" onclick="toggleMenu()">Menu</a>
+  <a href="#ambiance" onclick="toggleMenu()">Ambiance</a>
+  <a href="#reviews" onclick="toggleMenu()">Avis</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <a href="#contact" onclick="toggleMenu()" style="color:var(--turq)">Réserver une table</a>
 </div>
-<div class="mn-overlay" id="mnOverlay" onclick="closeMobileMenu()"></div>
 
-<!-- HERO -->
-<section class="hero">
+<!-- ── HERO ── -->
+<section id="hero">
   <div class="hero-bg"></div>
+  <canvas class="stars-canvas" id="starsCanvas"></canvas>
 
-  <!-- Stars -->
-  <div class="stars" id="stars"></div>
-  <!-- Particles -->
-  <div class="particles" id="particles"></div>
-  <!-- Waves -->
-  <div class="waves">
-    <div class="wave"></div>
-    <div class="wave"></div>
-    <div class="wave"></div>
+  <div class="hero-badge">✦ Dakar, Corniche Ouest</div>
+  <h1 class="hero-title">Bahia<br><em>Beach Club</em></h1>
+  <p class="hero-sub">Restaurant · Bar · Événements</p>
+  <p class="hero-desc">
+    Une adresse d'exception sur la Corniche de Dakar. Cuisine raffinée, cocktails créatifs et vue imprenable sur l'Atlantique.
+  </p>
+  <div class="hero-actions">
+    <a href="/menu.html" class="btn-primary">Voir le menu</a>
+    <a href="#contact" class="btn-outline">Réserver une table</a>
   </div>
 
-  <div class="hero-content">
-    <div class="hero-badge">Dakar, Sénégal · Depuis 2018</div>
-    <h1 class="hero-title">
-      <span class="line1">Bahia</span>
-      <span class="line2">Beach Club</span>
-      <span class="line3">L'océan à portée de verre</span>
-    </h1>
-    <p class="hero-sub">
-      Un espace où l'Atlantique rencontre l'art de vivre sénégalais.<br>
-      Cocktails, tapas et couchers de soleil inoubliables.
-    </p>
-    <div class="hero-actions">
-      <a href="menu.html?table=1" class="btn-primary"><span>Commander maintenant</span></a>
-      <a href="#menu" class="btn-ghost">Voir la carte</a>
-    </div>
-  </div>
-
-  <div class="scroll-line">
-    <span>Défiler</span>
-    <div class="scroll-bar"></div>
-  </div>
+  <div class="hero-scroll-hint">DÉCOUVRIR</div>
 </section>
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="about">
-    <div class="about-visual reveal">
-      <div class="about-img-main">
-        <span class="visual-icon">🌊</span>
-      </div>
-      <div class="about-img-accent">
-        <span class="visual-icon">🍹</span>
-      </div>
-      <div class="about-tag">Dakar · Atlantique</div>
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">✦ Ce qui nous définit</p>
+    <h2 class="section-title">Une <em>expérience</em> unique</h2>
+    <div class="divider"></div>
+    <p class="section-desc">Du coucher de soleil à la nuit étoilée, Bahia Beach Club vous offre bien plus qu'un repas.</p>
+  </div>
+  <div class="exp-grid">
+    <div class="exp-card reveal">
+      <span class="exp-icon">🍽️</span>
+      <h3>Cuisine Raffinée</h3>
+      <p>Une carte inspirée des saveurs sénégalaises et méditerranéennes, élaborée avec des produits frais du marché local. Chaque plat est une invitation au voyage.</p>
     </div>
-    <div class="about-text">
-      <div class="section-label reveal">Notre histoire</div>
-      <h2 class="reveal reveal-delay-1">L'art de vivre <em>au bord de l'eau</em></h2>
-      <p class="reveal reveal-delay-2">
-        Perché face à l'Atlantique, Bahia Beach Club est une invitation à ralentir, à savourer et à s'évader. Depuis nos tables, le regard se perd sur l'horizon infini de l'océan.
-      </p>
-      <p class="reveal reveal-delay-2">
-        Notre cuisine mêle les saveurs du Sénégal aux influences méditerranéennes — tapas fraîches, cocktails élaborés, et une sélection de mets soigneusement curatés pour chaque moment de la journée.
-      </p>
-      <div class="stats reveal reveal-delay-3">
-        <div>
-          <span class="stat-num">40+</span>
-          <span class="stat-label">Cocktails signatures</span>
-        </div>
-        <div>
-          <span class="stat-num">5★</span>
-          <span class="stat-label">Vue panoramique</span>
-        </div>
-        <div>
-          <span class="stat-num">∞</span>
-          <span class="stat-label">Couchers de soleil</span>
-        </div>
-      </div>
+    <div class="exp-card reveal">
+      <span class="exp-icon">🍹</span>
+      <h3>Cocktails & Bar</h3>
+      <p>Notre bar à cocktails propose des créations uniques alliant rhums, fruits frais et épices locales. Une sélection de vins soigneusement choisie complète la carte.</p>
+    </div>
+    <div class="exp-card reveal">
+      <span class="exp-icon">🌊</span>
+      <h3>Vue sur l'Atlantique</h3>
+      <p>Installé face à l'océan sur la Corniche Ouest, profitez de couchers de soleil spectaculaires depuis notre terrasse panoramique surplombant les vagues.</p>
     </div>
   </div>
 </section>
 
-<!-- MENU -->
-<section id="menu" class="menu-section">
-  <div class="menu-header reveal">
-    <div class="section-label" style="justify-content:center">Notre carte</div>
-    <h2>Une carte <em>d'exception</em></h2>
-    <p>Scannez le QR code sur votre table pour visualiser chaque cocktail en réalité augmentée</p>
+<!-- ── MENU APERÇU ── -->
+<section id="menu-apercu">
+  <div class="section-header center reveal">
+    <p class="section-eyebrow">✦ Notre carte</p>
+    <h2 class="section-title">Un menu <em>inspiré</em></h2>
+    <div class="divider center"></div>
+    <p class="section-desc">Des entrées aux desserts, chaque plat raconte une histoire. Découvrez nos créations du moment.</p>
   </div>
-
-  <div class="menu-tabs reveal">
-    <button class="menu-tab active">Cocktails</button>
-    <button class="menu-tab">Tapas</button>
-    <button class="menu-tab">Sans alcool</button>
-    <button class="menu-tab">Vins & Bulles</button>
+  <div class="menu-cats" id="menu-cats">
+    <button class="menu-cat-btn active" data-cat="all">Tout</button>
+    <button class="menu-cat-btn" data-cat="entrees">Entrées</button>
+    <button class="menu-cat-btn" data-cat="plats">Plats</button>
+    <button class="menu-cat-btn" data-cat="desserts">Desserts</button>
+    <button class="menu-cat-btn" data-cat="boissons">Boissons</button>
   </div>
-
-  <div class="menu-grid" id="menuGrid">
-    <!-- Chargé dynamiquement depuis l'API -->
-    <div class="menu-card reveal">
-      <div class="card-ar-badge">Vue AR dispo</div>
-      <span class="card-emoji">🍹</span>
-      <div class="card-name">Bahia Sunset</div>
-      <div class="card-desc">Rhum blanc, mangue fraîche, citron vert, gingembre, sirop de canne — le coucher de soleil en verre</div>
-      <div class="card-price">4 500 <span>FCFA</span></div>
-    </div>
-    <div class="menu-card reveal reveal-delay-1">
-      <div class="card-ar-badge">Vue AR dispo</div>
-      <span class="card-emoji">🌊</span>
-      <div class="card-name">Atlantic Blue</div>
-      <div class="card-desc">Vodka, curaçao bleu, pamplemousse, eau de coco — aussi profond que l'océan</div>
-      <div class="card-price">5 000 <span>FCFA</span></div>
-    </div>
-    <div class="menu-card reveal reveal-delay-2">
-      <div class="card-ar-badge">Vue AR dispo</div>
-      <span class="card-emoji">🌴</span>
-      <div class="card-name">Dakar Sour</div>
-      <div class="card-desc">Whisky, jus de bissap, citron, blanc d'œuf — une ode à la ville aux deux mers</div>
-      <div class="card-price">5 500 <span>FCFA</span></div>
-    </div>
-    <div class="menu-card reveal">
-      <span class="card-emoji">🫐</span>
-      <div class="card-name">Baobab Fizz</div>
-      <div class="card-desc">Gin, jus de baobab, tonic, basilic frais — les saveurs du terroir sénégalais</div>
-      <div class="card-price">4 800 <span>FCFA</span></div>
-    </div>
-    <div class="menu-card reveal reveal-delay-1">
-      <span class="card-emoji">🍊</span>
-      <div class="card-name">Teranga Spritz</div>
-      <div class="card-desc">Aperol, prosecco, jus d'orange sanguine, feuilles de menthe — l'hospitalité en bulles</div>
-      <div class="card-price">4 200 <span>FCFA</span></div>
-    </div>
-    <div class="menu-card reveal reveal-delay-2">
-      <span class="card-emoji">🍸</span>
-      <div class="card-name">Nuit de Gorée</div>
-      <div class="card-desc">Tequila, mezcal, hibiscus, jalapeño, sel de mer — mystérieux comme l'île au crépuscule</div>
-      <div class="card-price">6 000 <span>FCFA</span></div>
-    </div>
+  <div class="menu-grid" id="menu-grid">
+    <div style="color:var(--muted);font-size:0.82rem;grid-column:1/-1;text-align:center;padding:40px">Chargement du menu…</div>
+  </div>
+  <div class="menu-more-wrap reveal">
+    <a href="/menu.html" class="btn-primary">Voir le menu complet</a>
   </div>
 </section>
 
-<!-- KIOSK / AR EXPERIENCE -->
-<section id="kiosk">
-  <div class="kiosk-section">
-    <div class="kiosk-text">
-      <div class="section-label reveal">Innovation</div>
-      <h2 class="reveal reveal-delay-1">Visualisez votre cocktail <em>avant de commander</em></h2>
-      <p class="reveal reveal-delay-2">
-        Bahia Beach Club est le premier bar à Dakar à intégrer la réalité augmentée dans son expérience client. Chaque table dispose d'un QR code unique.
-      </p>
-      <p class="reveal reveal-delay-2">
-        Scannez, et regardez votre cocktail apparaître en 3D sur votre table — tournez-le, explorez-le, faites votre choix en connaissance de cause.
-      </p>
-      <div class="features reveal reveal-delay-3">
-        <div class="feature">
-          <div class="feature-icon">📱</div>
-          <div class="feature-text">
-            <h4>QR Code par table</h4>
-            <p>Chaque table a son propre code — pas d'app à télécharger, juste votre téléphone.</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🥂</div>
-          <div class="feature-text">
-            <h4>Menu interactif complet</h4>
-            <p>Navigation fluide, descriptions détaillées, ingrédients, prix et allergènes affichés.</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">✨</div>
-          <div class="feature-text">
-            <h4>Visualisation AR 3D</h4>
-            <p>Posez votre cocktail virtuel sur la table en réalité augmentée avant de le commander.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="kiosk-visual reveal">
-      <div class="glow-ring"></div>
-      <div class="glow-ring"></div>
-      <div class="phone-mockup">
-        <div class="phone-screen">
-          <div class="phone-logo">BAHIA · BEACH CLUB</div>
-          <div class="phone-cocktail-preview">🍹</div>
-          <div class="qr-box">
-            <div class="qr-grid" id="qrGrid"></div>
-          </div>
-          <div class="phone-label">Table 7 · Scanner pour le menu</div>
-          <div class="phone-menu-items">
-            <div class="phone-item">Bahia Sunset <span>4 500 FCFA</span></div>
-            <div class="phone-item">Atlantic Blue <span>5 000 FCFA</span></div>
-            <div class="phone-item">Dakar Sour <span>5 500 FCFA</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- ── AMBIANCE ── -->
+<section id="ambiance">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">✦ L'atmosphère</p>
+    <h2 class="section-title">L'<em>ambiance</em> Bahia</h2>
+    <div class="divider"></div>
+    <p class="section-desc">Un cadre pensé pour chaque moment : dîner romantique, soirée entre amis ou événement privé.</p>
   </div>
-</section>
-
-<!-- AMBIANCE -->
-<section id="ambiance" class="ambiance">
-  <div class="section-label reveal" style="justify-content:center">L'atmosphère</div>
-  <h2 class="reveal"><em>Chaque heure,</em> une ambiance</h2>
-  <p class="reveal">Du brunch tranquille au dîner animé, Bahia évolue avec le soleil</p>
   <div class="ambiance-grid reveal">
-    <div class="ambiance-card">
-      <div class="ambiance-card-bg ac-1"></div>
-      <span class="ambiance-icon-large">🌅</span>
-      <span class="ambiance-card-label">Coucher de soleil</span>
+    <div class="amb-card">
+      <span class="amb-card-emoji">🌅</span>
+      <span class="amb-card-label">Terrasse Sunset</span>
     </div>
-    <div class="ambiance-card">
-      <div class="ambiance-card-bg ac-2"></div>
-      <span class="ambiance-icon-large">☀️</span>
-      <span class="ambiance-card-label">Brunch</span>
+    <div class="amb-card">
+      <span class="amb-card-emoji">🎶</span>
+      <span class="amb-card-label">Live Music</span>
     </div>
-    <div class="ambiance-card">
-      <div class="ambiance-card-bg ac-3"></div>
-      <span class="ambiance-icon-large">🎵</span>
-      <span class="ambiance-card-label">Live music</span>
+    <div class="amb-card">
+      <span class="amb-card-emoji">🌙</span>
+      <span class="amb-card-label">Soirées Privées</span>
     </div>
-    <div class="ambiance-card">
-      <div class="ambiance-card-bg ac-4"></div>
-      <span class="ambiance-icon-large">🌙</span>
-      <span class="ambiance-card-label">Nuit</span>
+    <div class="amb-card">
+      <span class="amb-card-emoji">🏖️</span>
+      <span class="amb-card-label">Beach Club</span>
     </div>
-    <div class="ambiance-card">
-      <div class="ambiance-card-bg ac-5"></div>
-      <span class="ambiance-icon-large">🍾</span>
-      <span class="ambiance-card-label">Privatisation</span>
+    <div class="amb-card">
+      <span class="amb-card-emoji">🥂</span>
+      <span class="amb-card-label">Happy Hour</span>
     </div>
   </div>
-  <a href="#contact" class="btn-primary reveal"><span>Réserver votre soirée</span></a>
 </section>
 
-<!-- INSTAGRAM -->
-<section id="instagram" class="instagram-section">
-  <div class="section-label reveal" style="justify-content:center">Nos réseaux</div>
-  <h2 class="reveal">Suivez-nous sur <em>Instagram</em></h2>
-  <p class="insta-sub reveal">@bahiabeachclubdk</p>
+<!-- ── INSTAGRAM ── -->
+<section id="instagram">
+  <div class="insta-header reveal">
+    <p class="section-eyebrow">✦ @bahiabeachclub_dakar</p>
+    <h2 class="section-title" style="text-align:center">Suivez-nous sur <em>Instagram</em></h2>
+  </div>
   <div class="insta-track-wrap">
-    <div class="insta-track" id="instaTrack"></div>
+    <div class="insta-track" id="insta-track">
+      <!-- Tiles filled by JS × 2 for infinite loop -->
+    </div>
   </div>
-  <a href="https://instagram.com/bahiabeachclubdk" target="_blank" class="btn-insta reveal">Voir notre Instagram →</a>
 </section>
 
-<!-- AVIS -->
-<section id="avis" class="avis-section">
-  <div class="section-label reveal" style="justify-content:center">Témoignages</div>
-  <h2 class="reveal">Ce que disent <em>nos clients</em></h2>
-  <div class="note-globale reveal">
-    <div class="note-num">4.8</div>
-    <div class="etoiles">★★★★★</div>
-    <div class="note-count">Basé sur 127 avis</div>
+<!-- ── REVIEWS ── -->
+<section id="reviews">
+  <div class="section-header center reveal">
+    <p class="section-eyebrow">✦ Ce qu'ils disent</p>
+    <h2 class="section-title">Avis <em>Google</em></h2>
+    <div class="divider center"></div>
   </div>
-  <div class="avis-scroll">
-    <div class="avis-list" id="avisList"></div>
+  <div class="reviews-grid" id="reviews-grid">
+    <!-- filled by JS -->
   </div>
-  <div class="avis-form-wrap reveal">
-    <h3>Partagez votre <em>expérience</em></h3>
-    <form id="avisForm">
-      <div class="form-row-2">
-        <input type="text" id="avis-nom" placeholder="Votre prénom" required>
-        <div class="stars-input">
-          <span class="star-btn" data-val="1">★</span>
-          <span class="star-btn" data-val="2">★</span>
-          <span class="star-btn" data-val="3">★</span>
-          <span class="star-btn" data-val="4">★</span>
-          <span class="star-btn" data-val="5">★</span>
+  <div class="review-form-wrap reveal">
+    <h3 class="review-form-title">Laissez votre <em>avis</em></h3>
+    <div class="form-row">
+      <label>Votre nom</label>
+      <input type="text" id="rv-nom" placeholder="Prénom Nom" />
+    </div>
+    <div class="form-row">
+      <label>Note</label>
+      <div class="star-select" id="star-select">
+        <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span>
+        <span data-v="4">★</span><span data-v="5">★</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Votre avis</label>
+      <textarea id="rv-texte" placeholder="Partagez votre expérience…"></textarea>
+    </div>
+    <button class="btn-primary" onclick="submitReview()">Publier mon avis</button>
+    <p class="form-msg" id="rv-msg"></p>
+  </div>
+</section>
+
+<!-- ── CONTACT + RÉSERVATION ── -->
+<section id="contact">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">✦ Nous trouver</p>
+    <h2 class="section-title">Contact & <em>Réservation</em></h2>
+    <div class="divider"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="contact-info-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <p class="contact-info-label">Adresse</p>
+          <p class="contact-info-val">Corniche Ouest, Dakar, Sénégal</p>
         </div>
       </div>
-      <textarea id="avis-texte" placeholder="Racontez votre expérience au Bahia..." rows="4"></textarea>
-      <button type="submit" class="btn-avis">Publier mon avis</button>
-      <div id="avisMsg"></div>
-    </form>
-  </div>
-</section>
-
-<!-- INFO & CONTACT -->
-<section id="contact">
-  <div class="info-section">
-    <div class="info-card reveal">
-      <h3>Nos <em>horaires</em></h3>
-      <ul class="hours-list">
-        <li><span class="day">Lundi — Jeudi</span><span>9h30 — 3h00</span></li>
-        <li><span class="day">Vendredi</span><span class="weekend">9h30 — 4h00</span></li>
-        <li><span class="day">Samedi</span><span class="weekend">9h30 — 4h00</span></li>
-        <li><span class="day">Dimanche</span><span>9h30 — 3h00</span></li>
-      </ul>
-    </div>
-    <div class="info-card reveal reveal-delay-1">
-      <h3>Nous <em>trouver</em></h3>
-      <ul class="contact-list">
-        <li>
-          <div class="contact-icon">📍</div>
-          <div class="contact-info">
-            <strong>Adresse</strong>
-            Face à l'Atlantique, Dakar<br>Sénégal
-          </div>
-        </li>
-        <li>
-          <div class="contact-icon">📞</div>
-          <div class="contact-info">
-            <strong>Téléphone</strong>
-            +221 33 801 94 01
-          </div>
-        </li>
-        <li>
-          <div class="contact-icon">✉️</div>
-          <div class="contact-info">
-            <strong>Email</strong>
-            contact@bahiabeachclub.sn
-          </div>
-        </li>
-        <li>
-          <div class="contact-icon">🌐</div>
-          <div class="contact-info">
-            <strong>Réseaux sociaux</strong>
-            @bahiabeachclubdk
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="info-card reservation-card reveal reveal-delay-2">
-      <h3>Réserver <em>votre table</em></h3>
-      <p>Privatisations, événements, anniversaires — notre équipe vous accompagne pour créer votre moment parfait face à l'océan.</p>
-      <form id="reservationForm">
-        <div class="res-row-2">
-          <input id="resName"  class="res-input" type="text" placeholder="Votre nom" required/>
-          <input id="resPhone" class="res-input" type="tel"  placeholder="Téléphone" required/>
+      <div class="contact-info-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <p class="contact-info-label">Téléphone</p>
+          <p class="contact-info-val">+221 33 XXX XX XX</p>
         </div>
-        <div class="res-row-3">
-          <input id="resDate"   class="res-input" type="date"   required/>
-          <input id="resTime"   class="res-input" type="time"   required/>
-          <input id="resGuests" class="res-input" type="number" min="1" max="50" placeholder="Couverts" required/>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📧</div>
+        <div>
+          <p class="contact-info-label">Email</p>
+          <p class="contact-info-val">contact@bahiabeachclub.sn</p>
         </div>
-        <textarea id="resMessage" class="res-input" rows="2" placeholder="Message (optionnel)"></textarea>
-        <button type="submit" class="btn-primary" id="resSubmit"><span>Confirmer la réservation</span></button>
-        <div id="resMsg" style="display:none;font-size:.6rem;letter-spacing:.1em;text-align:center;padding:8px;border-radius:4px;"></div>
-      </form>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">🕐</div>
+        <div>
+          <p class="contact-info-label">Horaires</p>
+          <p class="contact-info-val">Lun–Jeu : 12h – 23h<br>Ven–Dim : 12h – 01h</p>
+        </div>
+      </div>
+      <div class="map-placeholder">
+        <span style="font-size:2rem">🗺️</span>
+        <span>Corniche Ouest, Dakar</span>
+        <a href="https://maps.google.com/?q=Corniche+Ouest+Dakar" target="_blank" rel="noopener">Ouvrir dans Google Maps →</a>
+      </div>
     </div>
-  </div>
-  <div class="contact-map reveal">
-    <div class="map-wrap">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.123!2d-17.5216845!3d14.7410561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTTCsDQ0JzI3LjgiTiAxN8KwMzEnMTcuNCJX!5e0!3m2!1sfr!2ssn!4v1234567890"
-        width="100%"
-        height="380"
-        style="border:0; border-radius:16px; filter:invert(90%) hue-rotate(180deg);"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
+    <div class="resv-form reveal">
+      <h3 class="resv-form-title">Réserver une <em>table</em></h3>
+      <div class="form-row">
+        <label>Nom complet *</label>
+        <input type="text" id="res-name" placeholder="Prénom Nom" />
+      </div>
+      <div class="form-row">
+        <label>Téléphone *</label>
+        <input type="tel" id="res-phone" placeholder="+221 7X XXX XX XX" />
+      </div>
+      <div class="form-2col">
+        <div class="form-row">
+          <label>Date *</label>
+          <input type="date" id="res-date" />
+        </div>
+        <div class="form-row">
+          <label>Heure *</label>
+          <input type="time" id="res-time" min="12:00" max="23:30" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Nombre de personnes *</label>
+        <select id="res-guests">
+          <option value="">Sélectionner…</option>
+          <option value="1">1 personne</option>
+          <option value="2">2 personnes</option>
+          <option value="3">3 personnes</option>
+          <option value="4">4 personnes</option>
+          <option value="5">5 personnes</option>
+          <option value="6">6 personnes</option>
+          <option value="7">7 personnes</option>
+          <option value="8">8 personnes</option>
+          <option value="10">10 personnes</option>
+          <option value="12">12 personnes</option>
+          <option value="15">15+ personnes</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Message (optionnel)</label>
+        <textarea id="res-message" placeholder="Occasion spéciale, allergies, demandes particulières…"></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitReservation()" id="res-btn">Confirmer la réservation</button>
+      <p class="form-msg" id="res-msg"></p>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ── CTA ── -->
+<section id="cta">
+  <div class="reveal">
+    <h2 class="cta-title">Vivez l'expérience <em>Bahia</em></h2>
+    <p class="cta-desc">Tables disponibles ce soir. Réservez dès maintenant et profitez d'un coucher de soleil inoubliable.</p>
+    <div class="cta-actions">
+      <a href="#contact" class="btn-primary">Réserver une table</a>
+      <a href="/menu.html" class="btn-outline">Commander en ligne</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
 <footer>
-  <div class="footer-logo">Bahia <span>·</span> Beach Club</div>
-  <div class="footer-copy">
-    © 2025 Bahia Beach Club · Dakar, Sénégal · Tous droits réservés<br>
-    <a href="/admin.html" style="color:rgba(240,236,228,0.15);text-decoration:none;font-size:.4rem;letter-spacing:.2em;">⚙ Admin</a>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="nav-logo-icon">B</div>
+        <span class="nav-logo-text">Bahia Beach Club</span>
+      </div>
+      <p>Restaurant & Beach Club de prestige sur la Corniche Ouest de Dakar. Une adresse unique pour les moments qui comptent.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Navigation</p>
+      <ul class="footer-links">
+        <li><a href="#experience">L'Expérience</a></li>
+        <li><a href="#menu-apercu">Menu</a></li>
+        <li><a href="#ambiance">Ambiance</a></li>
+        <li><a href="#reviews">Avis</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Horaires</p>
+      <div class="footer-hours">
+        <p>Lundi – Jeudi<br>12h00 – 23h00</p>
+        <br>
+        <p>Vendredi – Dimanche<br>12h00 – 01h00</p>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Suivre</p>
+      <ul class="footer-links">
+        <li><a href="#instagram">Instagram</a></li>
+        <li><a href="#instagram">Facebook</a></li>
+        <li><a href="#instagram">TripAdvisor</a></li>
+        <li><a href="/admin.html">Admin</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="footer-socials">
-    <a href="#" class="footer-social">ig</a>
-    <a href="#" class="footer-social">fb</a>
-    <a href="#" class="footer-social">tw</a>
+  <div class="footer-bottom">
+    <p>© 2025 Bahia Beach Club — Dakar, Sénégal</p>
+    <div style="display:flex;gap:20px">
+      <a href="#">Mentions légales</a>
+      <a href="#">Confidentialité</a>
+    </div>
   </div>
 </footer>
 
 <script>
-  // CURSOR
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
-  function animRing() {
-    rx += (mx - rx) * 0.12; ry += (my - ry) *.12;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(animRing);
-  }
-  animRing();
+const API = window.location.origin + '/api';
 
-  // NAV SCROLL
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', scrollY > 60);
+});
 
-  // SMOOTH SCROLL — JS fallback for anchor links (covers iOS and any CSS gap)
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', function(e) {
-      const id = this.getAttribute('href').slice(1);
-      if (!id) return;
-      const target = document.getElementById(id);
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
+function toggleMenu() {
+  document.getElementById('nav-mobile').classList.toggle('open');
+}
 
-  // STARS
-  const starsEl = document.getElementById('stars');
-  for (let i = 0; i < 120; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 2 + 0.5;
-    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*60}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
-    starsEl.appendChild(s);
+// ── STARS ──
+(function initStars() {
+  const canvas = document.getElementById('starsCanvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
 
-  // PARTICLES
-  const partsEl = document.getElementById('particles');
-  for (let i = 0; i < 30; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.cssText = `left:${Math.random()*100}%;--dur:${6+Math.random()*10}s;--dx:${(Math.random()-.5)*80}px;animation-delay:${Math.random()*10}s`;
-    partsEl.appendChild(p);
-  }
-
-  // QR Grid
-  const qgEl = document.getElementById('qrGrid');
-  for (let i = 0; i < 64; i++) {
-    const c = document.createElement('div');
-    c.className = 'qr-cell';
-    c.style.setProperty('--o', Math.random() > .4 ? '0.9' : '0');
-    qgEl.appendChild(c);
-  }
-
-  // MENU TABS
-  document.querySelectorAll('.menu-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
-
-  // SCROLL REVEAL
-  const reveals = document.querySelectorAll('.reveal');
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  reveals.forEach(r => obs.observe(r));
-
-  // ═══════════════════════════════════════════
-  // MENU DEPUIS L'API
-  // ═══════════════════════════════════════════
-  const API_BASE = window.location.origin + '/api';
-  const delays = ['reveal', 'reveal reveal-delay-1', 'reveal reveal-delay-2'];
-
-  async function loadVitrineMenu() {
-    try {
-      const res = await fetch(`${API_BASE}/menu?cat=cocktails`);
-      if (!res.ok) return;
-      const items = await res.json();
-      if (!Array.isArray(items) || !items.length) return;
-
-      const grid = document.getElementById('menuGrid');
-      const first6 = items.slice(0, 6);
-      grid.innerHTML = first6.map((item, i) => `
-        <div class="menu-card ${delays[i % 3]}">
-          ${item.ar ? '<div class="card-ar-badge">Vue AR dispo</div>' : ''}
-          <span class="card-emoji">${item.emoji || '🍹'}</span>
-          <div class="card-name">${item.name}</div>
-          <div class="card-desc">${item.desc}</div>
-          <div class="card-price">${Number(item.price).toLocaleString('fr-FR')} <span>FCFA</span></div>
-        </div>
-      `).join('');
-
-      // Re-observer les nouvelles cartes pour le reveal
-      grid.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-    } catch {
-      // Laisse les cartes statiques par défaut si l'API est indisponible
+  function createStars(n) {
+    stars = [];
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        o: Math.random() * 0.6 + 0.1,
+        speed: Math.random() * 0.3 + 0.05
+      });
     }
   }
-  loadVitrineMenu();
 
-  // ═══════════════════════════════════════════
-  // FORMULAIRE DE RÉSERVATION
-  // ═══════════════════════════════════════════
-  const resForm = document.getElementById('reservationForm');
-  if (resForm) {
-    resForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('resSubmit');
-      const msgEl = document.getElementById('resMsg');
-      btn.querySelector('span').textContent = 'Envoi…';
-      btn.disabled = true;
-
-      const body = {
-        name:    document.getElementById('resName').value,
-        phone:   document.getElementById('resPhone').value,
-        date:    document.getElementById('resDate').value,
-        time:    document.getElementById('resTime').value,
-        guests:  document.getElementById('resGuests').value,
-        message: document.getElementById('resMessage').value
-      };
-
-      try {
-        const res = await fetch(`${API_BASE}/reservations`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        if (res.ok) {
-          msgEl.style.display = 'block';
-          msgEl.style.background = 'rgba(45,224,200,0.1)';
-          msgEl.style.color = 'var(--turquoise)';
-          msgEl.style.border = '1px solid rgba(45,224,200,0.3)';
-          msgEl.textContent = '✓ Réservation confirmée ! Nous vous contacterons sous peu.';
-          resForm.reset();
-        } else {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || 'Erreur serveur');
-        }
-      } catch (err) {
-        msgEl.style.display = 'block';
-        msgEl.style.background = 'rgba(201,168,76,0.1)';
-        msgEl.style.color = 'var(--or)';
-        msgEl.style.border = '1px solid rgba(201,168,76,0.3)';
-        msgEl.textContent = `⚠ ${err.message || 'Impossible d\'envoyer la réservation. Appelez-nous au +221 33 801 94 01'}`;
-      } finally {
-        btn.querySelector('span').textContent = 'Confirmer la réservation';
-        btn.disabled = false;
-        setTimeout(() => { msgEl.style.display = 'none'; }, 6000);
-      }
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.o += (Math.random() - 0.5) * 0.02;
+      s.o = Math.max(0.05, Math.min(0.8, s.o));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.o})`;
+      ctx.fill();
     });
+    requestAnimationFrame(draw);
   }
 
-  // ═══════════════════════════════════════════
-  // INSTAGRAM SIMULÉ
-  // ═══════════════════════════════════════════
-  const instaPosts = [
-    { emoji:'🍹', caption:'Notre Bahia Sunset, la signature du club', likes:'234', grad:'linear-gradient(135deg,rgba(255,100,0,.4),rgba(200,30,60,.3))' },
-    { emoji:'🌊', caption:'Vue sur l\'Atlantique depuis nos terrasses', likes:'412', grad:'linear-gradient(135deg,rgba(0,140,200,.4),rgba(10,50,140,.3))' },
-    { emoji:'🌅', caption:'Coucher de soleil magique ce soir', likes:'891', grad:'linear-gradient(135deg,rgba(255,160,0,.4),rgba(220,60,20,.3))' },
-    { emoji:'🍽️', caption:'Nouveau plat du jour : Thiéboudienne royale', likes:'156', grad:'linear-gradient(135deg,rgba(220,80,20,.4),rgba(160,40,10,.3))' },
-    { emoji:'🎵', caption:'Live music chaque vendredi soir', likes:'523', grad:'linear-gradient(135deg,rgba(100,0,200,.4),rgba(60,0,160,.3))' },
-    { emoji:'🥂', caption:'Soirée privatisation mémorable', likes:'678', grad:'linear-gradient(135deg,rgba(212,168,71,.4),rgba(160,120,40,.3))' },
-    { emoji:'🌴', caption:'Dakar Sour, notre cocktail signature', likes:'345', grad:'linear-gradient(135deg,rgba(180,20,80,.4),rgba(100,10,60,.3))' },
-    { emoji:'🌙', caption:'L\'ambiance nocturne du Bahia', likes:'789', grad:'linear-gradient(135deg,rgba(10,30,80,.6),rgba(31,217,192,.2))' },
-  ];
-  const instaTrack = document.getElementById('instaTrack');
-  if (instaTrack) {
-    instaTrack.innerHTML = [...instaPosts, ...instaPosts].map(p => `
-      <div class="insta-card">
-        <div class="insta-card-bg" style="background:${p.grad}"></div>
-        <div class="insta-card-emoji">${p.emoji}</div>
-        <div class="insta-card-likes">❤ ${p.likes}</div>
-        <div class="insta-card-caption">${p.caption}</div>
+  resize();
+  createStars(180);
+  draw();
+  window.addEventListener('resize', () => { resize(); createStars(180); });
+})();
+
+// ── REVEAL ON SCROLL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── MENU ──
+let allMenuItems = [];
+let activeMenuCat = 'all';
+
+async function loadMenu() {
+  try {
+    const res = await fetch(API + '/menu');
+    if (!res.ok) throw new Error();
+    allMenuItems = await res.json();
+    renderMenu();
+  } catch {
+    renderMenuFallback();
+  }
+}
+
+function renderMenu() {
+  const grid = document.getElementById('menu-grid');
+  const items = activeMenuCat === 'all'
+    ? allMenuItems.slice(0, 8)
+    : allMenuItems.filter(i => i.cat === activeMenuCat).slice(0, 8);
+
+  if (!items.length) {
+    grid.innerHTML = '<div style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px">Aucun article dans cette catégorie.</div>';
+    return;
+  }
+
+  grid.innerHTML = items.map(item => `
+    <div class="menu-item-card">
+      ${item.imageUrl
+        ? `<img class="menu-item-img" src="${item.imageUrl}" alt="${item.name}" loading="lazy" />`
+        : `<div class="menu-item-img">🍽️</div>`}
+      <div class="menu-item-body">
+        <div class="menu-item-name">${item.name}</div>
+        ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ''}
+        <div class="menu-item-price">${item.price.toLocaleString('fr-FR')} FCFA</div>
       </div>
-    `).join('');
-  }
+    </div>
+  `).join('');
+}
 
-  // ═══════════════════════════════════════════
-  // AVIS CLIENTS
-  // ═══════════════════════════════════════════
-  const avisStatiques = [
-    { nom:'Marie D.', note:5, date:'Avril 2025', texte:'Un endroit absolument magique ! Les cocktails sont divins et la vue sur l\'Atlantique est à couper le souffle. Le service est impeccable.' },
-    { nom:'Moussa K.', note:5, date:'Mars 2025', texte:'Meilleur beach club de Dakar sans hésitation. Le Bahia Sunset est incroyable. J\'y reviens chaque weekend !' },
-    { nom:'Sophie L.', note:4, date:'Mars 2025', texte:'Très belle ambiance, cocktails excellents. Parfait pour un afterwork ou une soirée entre amis. Je recommande vivement.' },
-    { nom:'Aminata B.', note:5, date:'Février 2025', texte:'Privatisation d\'anniversaire parfaite ! L\'équipe a été aux petits soins. Décoration magnifique, nourriture délicieuse.' },
-    { nom:'Thomas R.', note:4, date:'Janvier 2025', texte:'Cadre exceptionnel face à l\'océan. Les tapas sont très bonnes. Petite attente au service mais ça vaut le détour.' },
+function renderMenuFallback() {
+  const items = [
+    { name: 'Thiéboudienne Royal', desc: 'Riz au poisson façon Bahia, légumes du marché', price: 8500, emoji: '🐟' },
+    { name: 'Poulet Yassa Corniche', desc: 'Poulet mariné aux oignons et citron vert', price: 7200, emoji: '🍗' },
+    { name: 'Plateau Fruits de Mer', desc: 'Crevettes, homard et calamars grillés', price: 18500, emoji: '🦐' },
+    { name: 'Salade Tropicale', desc: 'Mangue, avocat, crevettes et vinaigrette passion', price: 5500, emoji: '🥗' },
+    { name: 'Mojito Bahia', desc: 'Rhum blanc, menthe fraîche, citron vert', price: 4500, emoji: '🍹' },
+    { name: 'Fondant Chocolat', desc: 'Cœur fondant, glace vanille bourbon', price: 3800, emoji: '🍫' },
   ];
+  const grid = document.getElementById('menu-grid');
+  grid.innerHTML = items.map(i => `
+    <div class="menu-item-card">
+      <div class="menu-item-img">${i.emoji}</div>
+      <div class="menu-item-body">
+        <div class="menu-item-name">${i.name}</div>
+        <div class="menu-item-desc">${i.desc}</div>
+        <div class="menu-item-price">${i.price.toLocaleString('fr-FR')} FCFA</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-  function renderAvis(list) {
-    const el = document.getElementById('avisList');
-    if (!el) return;
-    el.innerHTML = list.map(a => {
-      const dateStr = a.date || (a.createdAt ? new Date(a.createdAt).toLocaleDateString('fr-FR', {month:'long', year:'numeric'}) : '');
-      return `
-        <div class="avis-card">
-          <div class="avis-stars">${'★'.repeat(a.note)}${'☆'.repeat(5 - a.note)}</div>
-          <div class="avis-texte">"${a.texte}"</div>
-          <div class="avis-auteur">${a.nom}</div>
-          <div class="avis-date">${dateStr}</div>
-        </div>
-      `;
-    }).join('');
-  }
+document.getElementById('menu-cats').addEventListener('click', e => {
+  const btn = e.target.closest('.menu-cat-btn');
+  if (!btn) return;
+  document.querySelectorAll('.menu-cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeMenuCat = btn.dataset.cat;
+  renderMenu();
+});
 
-  async function loadAvis() {
-    try {
-      const res = await fetch(`${API_BASE}/avis`);
-      if (!res.ok) throw new Error();
+loadMenu();
+
+// ── INSTAGRAM TILES ──
+(function buildInsta() {
+  const emojis = ['🌅','🍹','🎶','🌊','🥘','🌴','🍽️','🥂','🌙','🏖️','🎉','🦐'];
+  const track = document.getElementById('insta-track');
+  const tiles = [...emojis, ...emojis].map(em => `
+    <div class="insta-tile">
+      ${em}
+      <div class="insta-tile-overlay">❤️</div>
+    </div>
+  `).join('');
+  track.innerHTML = tiles;
+})();
+
+// ── REVIEWS ──
+const staticReviews = [
+  { nom: 'Sophie M.', note: 5, texte: 'Un cadre absolument magique face à l\'océan. La cuisine est raffinée et les cocktails sont créatifs. On y retourne dès que possible !', source: 'Google' },
+  { nom: 'Ibrahim D.', note: 5, texte: 'Le meilleur restaurant de Dakar sans hésitation. Service impeccable, vue imprenable, et le thiéboudienne est à tomber.', source: 'Google' },
+  { nom: 'Marie-Claire L.', note: 5, texte: 'Soirée exceptionnelle pour notre anniversaire. L\'équipe a été aux petits soins et l\'ambiance musicale était parfaite.', source: 'Google' },
+  { nom: 'Ousmane B.', note: 4, texte: 'Très belle adresse sur la Corniche. Le plateau de fruits de mer est généreux et frais. Légèrement cher mais on en a pour son argent.', source: 'Google' },
+  { nom: 'Camille R.', note: 5, texte: 'Un coucher de soleil inoubliable depuis la terrasse. Les cocktails Bahia sont uniques. Une adresse à ne pas manquer à Dakar.', source: 'Google' },
+];
+
+async function loadReviews() {
+  let reviews = staticReviews;
+  try {
+    const res = await fetch(API + '/avis');
+    if (res.ok) {
       const data = await res.json();
-      renderAvis(data.length ? data : avisStatiques);
-    } catch {
-      renderAvis(avisStatiques);
+      if (data.length) reviews = [...data, ...staticReviews].slice(0, 8);
     }
-  }
-  loadAvis();
+  } catch {}
+  renderReviews(reviews);
+}
 
-  // Stars interactives
-  let selectedNote = 0;
-  document.querySelectorAll('.star-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      selectedNote = parseInt(btn.dataset.val);
-      document.querySelectorAll('.star-btn').forEach(b =>
-        b.classList.toggle('active', parseInt(b.dataset.val) <= selectedNote)
-      );
-    });
-    btn.addEventListener('mouseover', () => {
-      const hov = parseInt(btn.dataset.val);
-      document.querySelectorAll('.star-btn').forEach(b =>
-        b.classList.toggle('active', parseInt(b.dataset.val) <= hov)
-      );
-    });
-    btn.addEventListener('mouseout', () => {
-      document.querySelectorAll('.star-btn').forEach(b =>
-        b.classList.toggle('active', parseInt(b.dataset.val) <= selectedNote)
-      );
-    });
+function renderReviews(list) {
+  document.getElementById('reviews-grid').innerHTML = list.map(r => `
+    <div class="review-card reveal">
+      <div class="review-stars">${'★'.repeat(r.note || r.note)}</div>
+      <p class="review-text">"${r.texte || r.texte}"</p>
+      <p class="review-author">${r.nom}</p>
+      <p class="review-source">${r.source || 'Bahia Beach Club'}</p>
+    </div>
+  `).join('');
+  document.querySelectorAll('.review-card.reveal').forEach(el => observer.observe(el));
+}
+
+loadReviews();
+
+// ── STAR SELECT ──
+let selectedStars = 0;
+document.getElementById('star-select').addEventListener('click', e => {
+  const span = e.target.closest('span');
+  if (!span) return;
+  selectedStars = parseInt(span.dataset.v);
+  document.querySelectorAll('#star-select span').forEach((s, i) => {
+    s.classList.toggle('active', i < selectedStars);
   });
+});
 
-  const avisForm = document.getElementById('avisForm');
-  if (avisForm) {
-    avisForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const msgEl = document.getElementById('avisMsg');
-      const nom   = document.getElementById('avis-nom').value.trim();
-      const texte = document.getElementById('avis-texte').value.trim();
-      if (!nom || !texte || !selectedNote) {
-        msgEl.style.cssText = 'display:block;background:rgba(201,168,76,.1);color:var(--or);border:1px solid rgba(201,168,76,.3)';
-        msgEl.textContent = '⚠ Remplissez tous les champs et choisissez une note.';
-        return;
-      }
-      try {
-        const res = await fetch(`${API_BASE}/avis`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nom, note: selectedNote, texte })
-        });
-        if (!res.ok) throw new Error();
-        msgEl.style.cssText = 'display:block;background:rgba(45,224,200,.1);color:var(--turquoise);border:1px solid rgba(45,224,200,.3)';
-        msgEl.textContent = '✓ Merci pour votre avis !';
-        avisForm.reset();
-        selectedNote = 0;
-        document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
-        loadAvis();
-      } catch {
-        msgEl.style.cssText = 'display:block;background:rgba(201,168,76,.1);color:var(--or);border:1px solid rgba(201,168,76,.3)';
-        msgEl.textContent = '⚠ Impossible de publier. Réessayez.';
-      }
-      setTimeout(() => { msgEl.style.display = 'none'; }, 5000);
+async function submitReview() {
+  const nom   = document.getElementById('rv-nom').value.trim();
+  const texte = document.getElementById('rv-texte').value.trim();
+  const msg   = document.getElementById('rv-msg');
+
+  if (!nom || !selectedStars || !texte) {
+    msg.textContent = 'Veuillez remplir tous les champs et choisir une note.';
+    msg.className = 'form-msg err';
+    return;
+  }
+
+  try {
+    const res = await fetch(API + '/avis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nom, note: selectedStars, texte })
     });
+    if (!res.ok) throw new Error();
+    msg.textContent = 'Merci pour votre avis ! Il sera publié après modération.';
+    msg.className = 'form-msg ok';
+    document.getElementById('rv-nom').value = '';
+    document.getElementById('rv-texte').value = '';
+    selectedStars = 0;
+    document.querySelectorAll('#star-select span').forEach(s => s.classList.remove('active'));
+  } catch {
+    msg.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+    msg.className = 'form-msg err';
+  }
+}
+
+// ── RÉSERVATION ──
+async function submitReservation() {
+  const name    = document.getElementById('res-name').value.trim();
+  const phone   = document.getElementById('res-phone').value.trim();
+  const date    = document.getElementById('res-date').value;
+  const time    = document.getElementById('res-time').value;
+  const guests  = document.getElementById('res-guests').value;
+  const message = document.getElementById('res-message').value.trim();
+  const msg     = document.getElementById('res-msg');
+  const btn     = document.getElementById('res-btn');
+
+  if (!name || !phone || !date || !time || !guests) {
+    msg.textContent = 'Veuillez remplir tous les champs obligatoires (*).';
+    msg.className = 'form-msg err';
+    return;
   }
 
-  // ═══════════════════════════════════════════
-  // MENU MOBILE (hamburger)
-  // ═══════════════════════════════════════════
-  function openMobileMenu() {
-    document.getElementById('mobileNav').classList.add('open');
-    document.getElementById('mnOverlay').classList.add('show');
-    document.getElementById('navHam').classList.add('open');
-    document.body.style.overflow = 'hidden';
+  btn.disabled = true;
+  btn.textContent = 'Envoi…';
+
+  try {
+    const res = await fetch(API + '/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, date, time, guests, message })
+    });
+    if (!res.ok) throw new Error();
+    msg.textContent = '✓ Réservation confirmée ! Nous vous contacterons pour la confirmation définitive.';
+    msg.className = 'form-msg ok';
+    ['res-name','res-phone','res-date','res-time','res-message'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('res-guests').value = '';
+  } catch {
+    msg.textContent = 'Une erreur est survenue. Appelez-nous directement.';
+    msg.className = 'form-msg err';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Confirmer la réservation';
   }
-  function closeMobileMenu() {
-    document.getElementById('mobileNav').classList.remove('open');
-    document.getElementById('mnOverlay').classList.remove('show');
-    document.getElementById('navHam').classList.remove('open');
-    document.body.style.overflow = '';
-  }
+}
 </script>
 </body>
 </html>
