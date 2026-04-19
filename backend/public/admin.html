@@ -758,6 +758,7 @@
             <h2>Menu & Produits</h2>
             <div style="font-size:.65rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:4px;" id="menu-count"></div>
           </div>
+          <button class="btn btn-primary" id="add-product-btn">+ Nouveau produit</button>
         </div>
         <div class="menu-controls">
           <input id="menu-search" type="text" placeholder="🔍 Chercher un produit…">
@@ -810,6 +811,75 @@
 
 <!-- NOTIFICATION -->
 <div id="notif"></div>
+
+<!-- MODALE PRODUIT -->
+<div id="product-modal-ov" style="display:none;position:fixed;inset:0;background:rgba(8,9,12,.85);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#0f1117;border:1px solid rgba(255,255,255,0.07);border-radius:18px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;">
+    <div style="padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0f1117;z-index:1;">
+      <div id="modal-title" style="font-size:.95rem;font-weight:700;"></div>
+      <button onclick="closeProductModal()" style="background:#161820;border:1px solid rgba(255,255,255,0.07);border-radius:50%;width:32px;height:32px;color:#e8e4dc;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:14px;">
+      <input type="hidden" id="modal-id">
+      <div style="display:grid;grid-template-columns:1fr 80px;gap:12px;">
+        <div>
+          <label class="form-label">Nom du produit *</label>
+          <input id="modal-name" type="text" placeholder="Ex: Bahia Sunset">
+        </div>
+        <div>
+          <label class="form-label">Emoji</label>
+          <input id="modal-emoji" type="text" placeholder="🍹" style="font-size:1.3rem;">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <label class="form-label">Catégorie</label>
+          <select id="modal-cat">
+            <option value="mocktails">Mocktails</option>
+            <option value="cocktails">Cocktails</option>
+            <option value="softs">Softs</option>
+            <option value="jus">Jus</option>
+            <option value="bieres">Bières</option>
+            <option value="shooters">Shooters</option>
+            <option value="whisky">Whisky</option>
+            <option value="alcools">Alcools</option>
+            <option value="liqueurs">Liqueurs</option>
+            <option value="digestifs">Digestifs</option>
+            <option value="entrees">Entrées</option>
+            <option value="partager">À partager</option>
+            <option value="plats">Plats</option>
+            <option value="grillades">Grillades</option>
+            <option value="pates">Pâtes</option>
+            <option value="burgers">Burgers</option>
+            <option value="plats_jour">Plats du jour</option>
+            <option value="desserts">Desserts</option>
+            <option value="enfants">Enfants</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Prix (FCFA) *</label>
+          <input id="modal-price" type="number" min="0" placeholder="4500">
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Description</label>
+        <textarea id="modal-desc" placeholder="Description du produit…" style="min-height:70px;resize:vertical;"></textarea>
+      </div>
+      <div>
+        <label class="form-label">Ingrédients (séparés par des virgules)</label>
+        <input id="modal-ingr" type="text" placeholder="Rhum blanc, Mangue, Citron vert…">
+      </div>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input id="modal-new" type="checkbox" style="width:auto;accent-color:#00e5c8;">
+        <span style="font-size:.82rem;">Marquer comme nouveau produit</span>
+      </label>
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);">
+        <button class="btn btn-ghost" onclick="closeProductModal()">Annuler</button>
+        <button class="btn btn-primary" onclick="saveProduct()">Enregistrer →</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 const API = window.location.origin + '/api';
@@ -1075,6 +1145,9 @@ async function loadMenu() {
         <td class="td-price">${fmt(i.price||0)} F</td>
         <td>${i.available ? '<span style="color:var(--green);">✓ Dispo</span>' : '<span style="color:var(--red);">✕ Indispo</span>'}</td>
         <td class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${JSON.stringify(i)})">
+            ✎ Modifier
+          </button>
           <button class="btn btn-ghost btn-sm" onclick="toggleItem('${i.id}')">
             ${i.available ? 'Désactiver' : 'Activer'}
           </button>
@@ -1106,6 +1179,97 @@ async function deleteItem(id, name) {
 }
 
 document.getElementById('menu-search').addEventListener('input', loadMenu);
+
+// ── MODALE PRODUIT ────────────────────────────────────
+document.getElementById('add-product-btn').addEventListener('click', () => openAddModal());
+
+// Fermer en cliquant l'overlay
+document.getElementById('product-modal-ov').addEventListener('click', e => {
+  if (e.target === document.getElementById('product-modal-ov')) closeProductModal();
+});
+
+function openAddModal() {
+  document.getElementById('modal-title').textContent = 'Nouveau produit';
+  document.getElementById('modal-id').value    = '';
+  document.getElementById('modal-name').value  = '';
+  document.getElementById('modal-emoji').value = '';
+  document.getElementById('modal-cat').value   = 'cocktails';
+  document.getElementById('modal-price').value = '';
+  document.getElementById('modal-desc').value  = '';
+  document.getElementById('modal-ingr').value  = '';
+  document.getElementById('modal-new').checked = false;
+  showModal();
+}
+
+function openEditModal(item) {
+  document.getElementById('modal-title').textContent = 'Modifier le produit';
+  document.getElementById('modal-id').value    = item.id || '';
+  document.getElementById('modal-name').value  = item.name || '';
+  document.getElementById('modal-emoji').value = item.emoji || '';
+  document.getElementById('modal-cat').value   = item.cat || 'cocktails';
+  document.getElementById('modal-price').value = item.price || '';
+  document.getElementById('modal-desc').value  = item.desc || item.description || '';
+  document.getElementById('modal-ingr').value  = Array.isArray(item.ingr) ? item.ingr.join(', ') : (item.ingr || '');
+  document.getElementById('modal-new').checked = !!item.isNew;
+  showModal();
+}
+
+function showModal() {
+  const ov = document.getElementById('product-modal-ov');
+  ov.style.display = 'flex';
+  document.getElementById('modal-name').focus();
+}
+
+function closeProductModal() {
+  document.getElementById('product-modal-ov').style.display = 'none';
+}
+
+async function saveProduct() {
+  const id    = document.getElementById('modal-id').value;
+  const name  = document.getElementById('modal-name').value.trim();
+  const price = parseInt(document.getElementById('modal-price').value, 10);
+
+  if (!name)       { showNotif('Le nom est requis', true); return; }
+  if (!price || price <= 0) { showNotif('Le prix est requis', true); return; }
+
+  const body = {
+    name,
+    emoji:    document.getElementById('modal-emoji').value.trim() || '🍽️',
+    cat:      document.getElementById('modal-cat').value,
+    price,
+    desc:     document.getElementById('modal-desc').value.trim(),
+    ingr:     document.getElementById('modal-ingr').value.split(',').map(s => s.trim()).filter(Boolean),
+    isNew:    document.getElementById('modal-new').checked,
+    available: true,
+    intensity: 0,
+    ar: false,
+    grad: '',
+    modelUrl: '',
+    imageUrl: ''
+  };
+
+  const btn = document.querySelector('#product-modal-ov .btn-primary');
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement…';
+
+  try {
+    const url    = id ? API + '/admin/menu/' + id : API + '/admin/menu';
+    const method = id ? 'PUT' : 'POST';
+    const res    = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'HTTP ' + res.status);
+    }
+    showNotif(id ? name + ' mis à jour' : name + ' ajouté');
+    closeProductModal();
+    loadMenu();
+  } catch(e) {
+    showNotif('Erreur : ' + e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enregistrer →';
+  }
+}
 
 // ── TABLES ────────────────────────────────────────────
 async function loadTables() {
