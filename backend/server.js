@@ -412,11 +412,15 @@ app.get('/api/admin/stats', auth, async (req, res) => {
 app.get('/api/qrcode/:table', async (req, res) => {
   try {
     const QRCode = require('qrcode');
-    const host = req.headers.host || 'localhost:3001';
-    const proto = req.protocol || 'http';
-    const url = `${proto}://${host}/kiosk.html?table=${req.params.table}`;
-    const svg = await QRCode.toString(url, { type: 'svg' });
+    const url = `${req.protocol}://${req.get('host')}/menu.html?table=${req.params.table}`;
+    const svg = await QRCode.toString(url, {
+      type: 'svg',
+      width: 200,
+      margin: 2,
+      color: { dark: '#000000', light: '#ffffff' }
+    });
     res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(svg);
   } catch (e) {
     res.status(500).json({ error: e.message });
