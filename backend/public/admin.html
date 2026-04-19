@@ -822,7 +822,7 @@ const fmt = n => Number(n).toLocaleString('fr-FR');
 function authHeaders() {
   return {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + token
+    'Authorization': 'Bearer ' + localStorage.getItem('bahia_token')
   };
 }
 
@@ -853,7 +853,10 @@ async function doLogin() {
   const email = document.getElementById('email').value.trim();
   const pass  = document.getElementById('password').value;
   const errEl = document.getElementById('login-error');
+  const btn   = document.getElementById('login-btn');
   errEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Connexion…';
 
   try {
     const res  = await fetch(API + '/auth/login', {
@@ -869,14 +872,11 @@ async function doLogin() {
     } else {
       errEl.textContent = data.error || 'Identifiants incorrects';
     }
-  } catch {
-    if (email === 'admin@bahia.sn' && pass === 'bahia2025') {
-      token = 'demo-token-bahia';
-      localStorage.setItem('bahia_token', token);
-      showDashboard();
-    } else {
-      errEl.textContent = 'Connexion impossible — vérifiez vos identifiants';
-    }
+  } catch(err) {
+    errEl.textContent = 'Erreur réseau : ' + err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Se connecter →';
   }
 }
 
@@ -1150,7 +1150,6 @@ function copyLink(url) {
 // ── WEBSOCKET ─────────────────────────────────────────
 let wsTimer;
 function connectWS() {
-  if (token === 'demo-token-bahia') return;
   let ws;
   try {
     const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -1173,8 +1172,22 @@ function connectWS() {
 // Auto-refresh orders
 setInterval(() => { if (currentPage === 'orders') loadOrders(); }, 30000);
 
-// Auto-login si token déjà stocké
-if (token) showDashboard();
+// Auto-login : valider le token sauvegardé avant d'afficher le dashboard
+const savedToken = localStorage.getItem('bahia_token');
+if (savedToken) {
+  fetch(API + '/admin/stats', {
+    headers: { 'Authorization': 'Bearer ' + savedToken }
+  }).then(r => {
+    if (r.ok) {
+      token = savedToken;
+      showDashboard();
+    } else {
+      localStorage.removeItem('bahia_token');
+    }
+  }).catch(() => {
+    localStorage.removeItem('bahia_token');
+  });
+}
 </script>
 </body>
 </html>
