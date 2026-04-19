@@ -21,20 +21,21 @@
 
     html, body {
       height: 100%;
+      overflow: hidden;
       background: var(--bg);
       color: var(--white);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
       -webkit-tap-highlight-color: transparent;
-      touch-action: pan-y;
-      overflow-x: hidden;
     }
 
     /* ── LAYOUT WRAPPER ── */
     #app {
       display: flex;
       flex-direction: column;
-      min-height: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
     }
 
     /* ── SIDEBAR (= header on mobile/tablet) ── */
@@ -151,7 +152,14 @@
     }
 
     /* ── MAIN CONTENT ── */
-    #main-content { flex: 1; }
+    #main-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+    }
     #menu-list { padding: 12px 16px 140px; }
 
     .section-title {
@@ -1159,11 +1167,19 @@ async function loadMenu() {
   }
 }
 
-// ── UN SEUL LISTENER GLOBAL (touch + click pour Android) ─
+// ── LISTENERS GLOBAUX ─────────────────────────────────
+// touchstart : UNIQUEMENT le bouton + rapide (réponse immédiate sans bloquer le scroll)
 document.body.addEventListener('touchstart', function(e) {
-  handleInteraction(e);
+  const addBtn = e.target.closest('[data-add]');
+  if (addBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    quickAdd(addBtn.dataset.add);
+  }
 }, { passive: false });
 
+// click : tout le reste — cartes, catégories, sheet, panier
+// (rapide sur mobile grâce à touch-action:manipulation déjà sur .card)
 document.body.addEventListener('click', function(e) {
   handleInteraction(e);
 });
