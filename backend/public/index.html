@@ -51,12 +51,9 @@
     }
     .nav-logo-icon {
       width: 42px; height: 42px;
-      background: linear-gradient(135deg, var(--turq), var(--gold));
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem; font-weight: 600;
-      color: #06090e;
+      object-fit: cover;
+      display: block;
     }
     .nav-logo-text {
       font-family: 'Cormorant Garamond', serif;
@@ -348,36 +345,63 @@
     .insta-header { text-align: center; padding: 0 5% 40px; }
     .insta-track-wrap { overflow: hidden; }
     .insta-track {
-      display: flex; gap: 12px;
+      display: flex; gap: 16px;
       width: max-content;
-      animation: scrollLeft 25s linear infinite;
+      animation: scrollLeft 30s linear infinite;
     }
     .insta-track:hover { animation-play-state: paused; }
     @keyframes scrollLeft {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
-    .insta-tile {
-      width: 180px; height: 180px;
-      flex-shrink: 0;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.5rem;
+    .insta-card {
+      width: 240px; flex-shrink: 0;
+      border-radius: 14px;
+      background: #0d1622;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
       cursor: pointer;
-      transition: border-color 0.2s;
-      position: relative; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
     }
-    .insta-tile:hover { border-color: var(--turq); }
-    .insta-tile-overlay {
-      position: absolute; inset: 0;
-      background: rgba(31,217,192,0.12);
-      opacity: 0; transition: opacity 0.2s;
+    .insta-card:hover { border-color: var(--turq); transform: translateY(-3px); }
+    .insta-card-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+    }
+    .insta-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1rem; flex-shrink: 0;
     }
-    .insta-tile:hover .insta-tile-overlay { opacity: 1; }
+    .insta-username { font-size: 0.72rem; font-weight: 500; color: #f2ede6; }
+    .insta-card-img {
+      width: 100%; height: 200px;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .insta-img-bg { position: absolute; inset: 0; }
+    .insta-img-emoji { position: relative; z-index: 1; font-size: 4rem; opacity: 0.8; }
+    .insta-card-footer { padding: 10px 12px; }
+    .insta-actions { font-size: 0.72rem; margin-bottom: 6px; color: rgba(242,237,230,0.7); }
+    .insta-caption {
+      font-size: 0.65rem; color: rgba(242,237,230,0.55);
+      line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .insta-follow-wrap { text-align: center; padding: 32px 5% 0; }
+    .btn-instagram {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      color: #fff;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      font-weight: 600; border-radius: 3px; text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-instagram:hover { opacity: 0.88; transform: translateY(-2px); }
 
     /* ── REVIEWS ── */
     #reviews { background: var(--surface); }
@@ -657,13 +681,18 @@
 <!-- ── INSTAGRAM ── -->
 <section id="instagram">
   <div class="insta-header reveal">
-    <p class="section-eyebrow">✦ @bahiabeachclub_dakar</p>
+    <p class="section-eyebrow">✦ @lebahiabeachclub</p>
     <h2 class="section-title" style="text-align:center">Suivez-nous sur <em>Instagram</em></h2>
   </div>
   <div class="insta-track-wrap">
     <div class="insta-track" id="insta-track">
-      <!-- Tiles filled by JS × 2 for infinite loop -->
+      <!-- Cards filled by JS × 2 for infinite loop -->
     </div>
+  </div>
+  <div class="insta-follow-wrap reveal">
+    <a href="https://instagram.com/lebahiabeachclub" target="_blank" rel="noopener noreferrer" class="btn-instagram">
+      <span>📷</span> Voir notre Instagram @lebahiabeachclub
+    </a>
   </div>
 </section>
 
@@ -736,10 +765,17 @@
           <p class="contact-info-val">Lun–Jeu : 12h – 23h<br>Ven–Dim : 12h – 01h</p>
         </div>
       </div>
-      <div class="map-placeholder">
-        <span style="font-size:2rem">🗺️</span>
-        <span>Corniche Ouest, Dakar</span>
-        <a href="https://maps.google.com/?q=Corniche+Ouest+Dakar" target="_blank" rel="noopener">Ouvrir dans Google Maps →</a>
+      <div style="margin-top:30px">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.8234567890!2d-17.521684499999998!3d14.741056099999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x11fd6704a8b3d6b1%3A0xddaae27754e3ac38!2sBahia%20Beach%20Club!5e0!3m2!1sfr!2ssn!4v1234567890123"
+          width="100%"
+          height="420"
+          style="border:0; border-radius:16px; filter:invert(90%) hue-rotate(180deg);"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Bahia Beach Club - Corniche des Almadies, Dakar">
+        </iframe>
       </div>
     </div>
     <div class="resv-form reveal">
@@ -806,7 +842,7 @@
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="nav-logo">
-        <div class="nav-logo-icon">B</div>
+        <img src="image/bahia-logo.png" alt="Bahia Beach Club" class="nav-logo-icon" />
         <span class="nav-logo-text">Bahia Beach Club</span>
       </div>
       <p>Restaurant & Beach Club de prestige sur la Corniche Ouest de Dakar. Une adresse unique pour les moments qui comptent.</p>
@@ -982,17 +1018,35 @@ document.getElementById('menu-cats').addEventListener('click', e => {
 
 loadMenu();
 
-// ── INSTAGRAM TILES ──
+// ── INSTAGRAM CARDS ──
 (function buildInsta() {
-  const emojis = ['🌅','🍹','🎶','🌊','🥘','🌴','🍽️','🥂','🌙','🏖️','🎉','🦐'];
+  const posts = [
+    { emoji:'🍹', caption:'Notre Bahia Sunset, la signature absolue du club ✨', likes:'234', comments:'18', grad:'linear-gradient(135deg,#ff6b35,#f7c59f)' },
+    { emoji:'🌊', caption:'Vue sur l\'Atlantique depuis nos terrasses 🌊', likes:'412', comments:'32', grad:'linear-gradient(135deg,#006994,#0099cc)' },
+    { emoji:'🌅', caption:'Coucher de soleil magique ce soir 🧡', likes:'891', comments:'67', grad:'linear-gradient(135deg,#ff6b6b,#ffd93d)' },
+    { emoji:'🍽️', caption:'Nouveau plat du jour : Thiéboudienne royale 👨‍🍳', likes:'156', comments:'14', grad:'linear-gradient(135deg,#8b4513,#d4a847)' },
+    { emoji:'🎵', caption:'Live music chaque vendredi soir 🎶🔥', likes:'523', comments:'45', grad:'linear-gradient(135deg,#6a0dad,#ff6b9d)' },
+    { emoji:'🥂', caption:'Soirée privatisation mémorable 🥂', likes:'678', comments:'52', grad:'linear-gradient(135deg,#1a1a2e,#d4a847)' },
+    { emoji:'🌴', caption:'Dakar Sour, notre cocktail signature 🌴', likes:'345', comments:'28', grad:'linear-gradient(135deg,#2d5a27,#7bc67e)' },
+    { emoji:'🌙', caption:'L\'ambiance nocturne du Bahia 🌙', likes:'789', comments:'61', grad:'linear-gradient(135deg,#0d1b2a,#1fd9c0)' },
+  ];
+  const card = p => `
+    <div class="insta-card">
+      <div class="insta-card-header">
+        <div class="insta-avatar">🏖️</div>
+        <div class="insta-username">lebahiabeachclub</div>
+      </div>
+      <div class="insta-card-img">
+        <div class="insta-img-bg" style="background:${p.grad}"></div>
+        <div class="insta-img-emoji">${p.emoji}</div>
+      </div>
+      <div class="insta-card-footer">
+        <div class="insta-actions">♡ ${p.likes} &nbsp; 💬 ${p.comments}</div>
+        <div class="insta-caption">${p.caption}</div>
+      </div>
+    </div>`;
   const track = document.getElementById('insta-track');
-  const tiles = [...emojis, ...emojis].map(em => `
-    <div class="insta-tile">
-      ${em}
-      <div class="insta-tile-overlay">❤️</div>
-    </div>
-  `).join('');
-  track.innerHTML = tiles;
+  track.innerHTML = [...posts, ...posts].map(card).join('');
 })();
 
 // ── REVIEWS ──
