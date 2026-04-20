@@ -320,6 +320,18 @@ app.get('/api/admin/reservations', auth, async (req, res) => {
   }
 });
 
+app.patch('/api/admin/reservations/:id/status', auth, async (req, res) => {
+  try {
+    const r = await prisma.reservation.update({
+      where: { id: req.params.id },
+      data: { status: req.body.status }
+    });
+    res.json(r);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // ══════════════════════════════════════════════════════
 // AVIS
 // ══════════════════════════════════════════════════════

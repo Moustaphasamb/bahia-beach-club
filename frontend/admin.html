@@ -717,6 +717,7 @@
 
     <div class="nav-section-label">Gestion</div>
     <button class="nav-btn" data-page="menu">🍽️ Menu & Produits</button>
+    <button class="nav-btn" data-page="reservations">📅 Réservations</button>
     <button class="nav-btn" data-page="tables">🪑 Tables</button>
     <button class="nav-btn" data-page="qrcodes">⊞ QR Codes</button>
 
@@ -900,6 +901,51 @@
         <button class="btn btn-ghost" onclick="closeProductModal()">Annuler</button>
         <button class="btn btn-primary" onclick="saveProduct()">Enregistrer →</button>
       </div>
+      <!-- PAGE RÉSERVATIONS -->
+      <div id="page-reservations" class="page">
+        <div class="page-header">
+          <h2>Réservations</h2>
+          <button class="btn btn-ghost" id="refresh-resa">↻ Actualiser</button>
+        </div>
+        <style>
+          .resa-card {
+            background: #0f1117;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+          }
+          .resa-header {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px; flex-wrap: wrap; gap: 8px;
+          }
+          .resa-status {
+            font-size: 0.6rem; padding: 3px 10px; border-radius: 10px;
+            background: rgba(0,229,200,0.1); color: #00e5c8;
+            border: 1px solid rgba(0,229,200,0.2);
+            text-transform: uppercase; letter-spacing: 0.1em;
+          }
+          .resa-status.confirmed { background: rgba(0,200,100,0.1); color: #00c864; border-color: rgba(0,200,100,0.2); }
+          .resa-status.cancelled { background: rgba(220,50,50,0.1); color: #dc3232; border-color: rgba(220,50,50,0.2); }
+          .resa-details { font-size: 0.75rem; color: rgba(232,228,220,0.55); margin-bottom: 8px; }
+          .resa-message {
+            font-size: 0.72rem; color: rgba(232,228,220,0.45); font-style: italic;
+            margin-bottom: 12px; padding: 8px 12px;
+            background: rgba(255,255,255,0.03); border-radius: 8px;
+          }
+          .resa-actions { display: flex; gap: 8px; }
+          .resa-actions button {
+            padding: 6px 14px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05); color: #e8e4dc;
+            font-size: 0.65rem; cursor: pointer; transition: all 0.2s;
+          }
+          .resa-actions button:hover { border-color: rgba(0,229,200,0.4); color: #00e5c8; }
+        </style>
+        <div id="reservations-list">Chargement…</div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -994,7 +1040,8 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 // ── NAVIGATION ────────────────────────────────────────
 const PAGE_TITLES = {
   stats: 'Dashboard', orders: 'Commandes',
-  menu: 'Menu & Produits', tables: 'Tables', qrcodes: 'QR Codes'
+  menu: 'Menu & Produits', reservations: 'Réservations',
+  tables: 'Tables', qrcodes: 'QR Codes'
 };
 
 function navTo(page) {
@@ -1010,10 +1057,11 @@ function navTo(page) {
   // Title
   document.getElementById('page-title').textContent = PAGE_TITLES[page] || page;
   // Load data
-  if (page === 'stats')   loadStats();
-  if (page === 'orders')  loadOrders();
-  if (page === 'menu')    loadMenu();
-  if (page === 'tables')  loadTables();
+  if (page === 'stats')        loadStats();
+  if (page === 'orders')       loadOrders();
+  if (page === 'menu')         loadMenu();
+  if (page === 'tables')       loadTables();
+  if (page === 'reservations') loadReservations();
   // qrcodes already built on init
 }
 
@@ -1478,6 +1526,57 @@ if (savedToken) {
     localStorage.removeItem('bahia_token');
   });
 }
+
+// ── RÉSERVATIONS ──────────────────────────────────────
+async function loadReservations() {
+  const el = document.getElementById('reservations-list');
+  el.innerHTML = 'Chargement…';
+  try {
+    const res = await fetch(API + '/admin/reservations', { headers: authHeaders() });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.length) {
+      el.innerHTML = '<div style="color:var(--muted);font-size:.8rem;text-align:center;padding:40px;">Aucune réservation pour le moment.</div>';
+      return;
+    }
+    el.innerHTML = data.map(r => `
+      <div class="resa-card">
+        <div class="resa-header">
+          <strong>${r.name}</strong>
+          <span style="color:var(--muted);font-size:.78rem;">${r.date} à ${r.time}</span>
+          <span class="resa-status ${r.status}">${r.status || 'pending'}</span>
+        </div>
+        <div class="resa-details">
+          👥 ${r.guests} personne(s) &nbsp;|&nbsp;
+          📞 ${r.phone} &nbsp;|&nbsp;
+          📅 ${new Date(r.createdAt).toLocaleDateString('fr-FR')}
+        </div>
+        ${r.message ? `<div class="resa-message">💬 ${r.message}</div>` : ''}
+        <div class="resa-actions">
+          <button onclick="updateResaStatus('${r.id}','confirmed')">✅ Confirmer</button>
+          <button onclick="updateResaStatus('${r.id}','cancelled')">❌ Annuler</button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--red);font-size:.8rem;padding:20px;">Erreur : ${e.message}</div>`;
+  }
+}
+
+async function updateResaStatus(id, status) {
+  try {
+    await fetch(API + '/admin/reservations/' + id + '/status', {
+      method: 'PATCH',
+      headers: authHeaders(),
+      body: JSON.stringify({ status })
+    });
+    showNotif('Réservation ' + (status === 'confirmed' ? 'confirmée' : 'annulée'));
+    loadReservations();
+  } catch(e) {
+    showNotif('Erreur : ' + e.message, true);
+  }
+}
+
+document.getElementById('refresh-resa').addEventListener('click', loadReservations);
 </script>
 </body>
 </html>
