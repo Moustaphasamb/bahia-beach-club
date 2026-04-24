@@ -297,14 +297,17 @@ app.get('/api/admin/tables', auth, async (req, res) => {
 app.post('/api/reservations', async (req, res) => {
   try {
     const { name, phone, date, time, guests, message } = req.body;
+    console.log('Nouvelle réservation reçue:', req.body);
     if (!name || !phone || !date || !time || !guests)
       return res.status(400).json({ error: 'Tous les champs sont requis' });
 
     const reservation = await prisma.reservation.create({
-      data: { name, phone, date, time, guests: parseInt(guests), message: message || '' }
+      data: { name, phone, date, time, guests: parseInt(guests), message: message || '', status: 'pending' }
     });
-    res.status(201).json(reservation);
+    console.log('Réservation créée:', reservation.id);
+    res.status(201).json({ success: true, message: 'Réservation confirmée !', id: reservation.id });
   } catch (e) {
+    console.error('Erreur réservation:', e);
     res.status(500).json({ error: e.message });
   }
 });
@@ -314,8 +317,10 @@ app.get('/api/admin/reservations', auth, async (req, res) => {
     const reservations = await prisma.reservation.findMany({
       orderBy: { createdAt: 'desc' }
     });
+    console.log('Réservations trouvées:', reservations.length);
     res.json(reservations);
   } catch (e) {
+    console.error('Erreur get reservations:', e);
     res.status(500).json({ error: e.message });
   }
 });

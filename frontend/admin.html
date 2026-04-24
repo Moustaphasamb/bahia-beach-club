@@ -1530,34 +1530,43 @@ if (savedToken) {
 // ── RÉSERVATIONS ──────────────────────────────────────
 async function loadReservations() {
   const el = document.getElementById('reservations-list');
-  el.innerHTML = 'Chargement…';
+  el.innerHTML = '<div style="color:var(--muted);font-size:.8rem;text-align:center;padding:40px;">Chargement…</div>';
   try {
     const res = await fetch(API + '/admin/reservations', { headers: authHeaders() });
+    console.log('Status réservations:', res.status);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
+    console.log('Réservations reçues:', data.length);
     if (!data.length) {
-      el.innerHTML = '<div style="color:var(--muted);font-size:.8rem;text-align:center;padding:40px;">Aucune réservation pour le moment.</div>';
+      el.innerHTML = `
+        <div style="text-align:center;padding:60px 20px;color:rgba(232,228,220,0.4)">
+          <div style="font-size:3rem;margin-bottom:16px">📅</div>
+          <p style="font-size:.9rem;margin-bottom:8px">Aucune réservation pour le moment</p>
+          <p style="font-size:0.72rem">Les réservations faites depuis la vitrine apparaîtront ici</p>
+        </div>`;
       return;
     }
+    const statusLabel = s => s === 'confirmed' ? '✅ Confirmée' : s === 'cancelled' ? '❌ Annulée' : '⏳ En attente';
     el.innerHTML = data.map(r => `
       <div class="resa-card">
         <div class="resa-header">
           <strong>${r.name}</strong>
           <span style="color:var(--muted);font-size:.78rem;">${r.date} à ${r.time}</span>
-          <span class="resa-status ${r.status}">${r.status || 'pending'}</span>
+          <span class="resa-status ${r.status}">${statusLabel(r.status)}</span>
         </div>
         <div class="resa-details">
           👥 ${r.guests} personne(s) &nbsp;|&nbsp;
           📞 ${r.phone} &nbsp;|&nbsp;
-          📅 ${new Date(r.createdAt).toLocaleDateString('fr-FR')}
+          🕐 Reçue le ${new Date(r.createdAt).toLocaleDateString('fr-FR')} à ${new Date(r.createdAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
         </div>
-        ${r.message ? `<div class="resa-message">💬 ${r.message}</div>` : ''}
+        ${r.message ? `<div class="resa-message">💬 "${r.message}"</div>` : ''}
         <div class="resa-actions">
           <button onclick="updateResaStatus('${r.id}','confirmed')">✅ Confirmer</button>
           <button onclick="updateResaStatus('${r.id}','cancelled')">❌ Annuler</button>
         </div>
       </div>`).join('');
   } catch(e) {
+    console.error('Erreur loadReservations:', e);
     el.innerHTML = `<div style="color:var(--red);font-size:.8rem;padding:20px;">Erreur : ${e.message}</div>`;
   }
 }

@@ -1151,13 +1151,16 @@ async function submitReservation() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, phone, date, time, guests, message })
     });
-    if (!res.ok) throw new Error();
+    const result = await res.json();
+    console.log('Résultat réservation:', res.status, result);
+    if (!res.ok) throw new Error(result.error || 'Erreur ' + res.status);
     msg.textContent = '✓ Réservation confirmée ! Nous vous contacterons pour la confirmation définitive.';
     msg.className = 'form-msg ok';
     ['res-name','res-phone','res-date','res-time','res-message'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('res-guests').value = '';
-  } catch {
-    msg.textContent = 'Une erreur est survenue. Appelez-nous directement.';
+  } catch (err) {
+    console.error('Erreur submitReservation:', err);
+    msg.textContent = 'Erreur : ' + err.message + '. Appelez-nous directement.';
     msg.className = 'form-msg err';
   } finally {
     btn.disabled = false;
