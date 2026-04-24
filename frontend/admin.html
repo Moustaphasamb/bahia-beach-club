@@ -1551,23 +1551,22 @@ async function loadReservations() {
         </div>`;
       return;
     }
-    const statusLabel = s => s === 'confirmed' ? '✅ Confirmée' : s === 'cancelled' ? '❌ Annulée' : '⏳ En attente';
     el.innerHTML = data.map(r => `
-      <div class="resa-card">
-        <div class="resa-header">
-          <strong>${r.name}</strong>
-          <span style="color:var(--muted);font-size:.78rem;">${r.date} à ${r.time}</span>
-          <span class="resa-status ${r.status}">${statusLabel(r.status)}</span>
+      <div style="background:#1a2030;border:1px solid #2a3550;border-radius:12px;padding:16px 20px;margin-bottom:12px;color:#e8e4dc;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+          <strong style="color:#e8e4dc;font-size:1rem;">${r.name}</strong>
+          <span style="color:rgba(232,228,220,0.7);font-size:0.85rem;">${r.date} à ${r.time}</span>
+          <span style="background:rgba(0,229,200,0.15);color:#00e5c8;border:1px solid rgba(0,229,200,0.3);padding:3px 10px;border-radius:10px;font-size:0.6rem;text-transform:uppercase;">
+            ${r.status === 'confirmed' ? '✅ Confirmée' : r.status === 'cancelled' ? '❌ Annulée' : '⏳ En attente'}
+          </span>
         </div>
-        <div class="resa-details">
-          👥 ${r.guests} personne(s) &nbsp;|&nbsp;
-          📞 ${r.phone} &nbsp;|&nbsp;
-          🕐 Reçue le ${new Date(r.createdAt).toLocaleDateString('fr-FR')} à ${new Date(r.createdAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
+        <div style="color:rgba(232,228,220,0.6);font-size:0.78rem;margin-bottom:10px;">
+          👥 ${r.guests} personne(s) &nbsp;|&nbsp; 📞 ${r.phone} &nbsp;|&nbsp; 📅 ${new Date(r.createdAt).toLocaleDateString('fr-FR')}
         </div>
-        ${r.message ? `<div class="resa-message">💬 "${r.message}"</div>` : ''}
-        <div class="resa-actions">
-          <button onclick="updateResaStatus('${r.id}','confirmed')">✅ Confirmer</button>
-          <button onclick="updateResaStatus('${r.id}','cancelled')">❌ Annuler</button>
+        ${r.message ? `<div style="color:rgba(232,228,220,0.5);font-style:italic;font-size:0.75rem;padding:8px 12px;margin-bottom:10px;background:rgba(255,255,255,0.04);border-radius:8px;">💬 "${r.message}"</div>` : ''}
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button onclick="updateResaStatus('${r.id}','confirmed')" style="padding:6px 14px;border-radius:8px;border:1px solid rgba(0,229,200,0.3);background:rgba(0,229,200,0.08);color:#00e5c8;font-size:0.65rem;cursor:pointer;">✅ Confirmer</button>
+          <button onclick="updateResaStatus('${r.id}','cancelled')" style="padding:6px 14px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.08);color:#ff4d6d;font-size:0.65rem;cursor:pointer;">❌ Annuler</button>
         </div>
       </div>`).join('');
   } catch(e) {
