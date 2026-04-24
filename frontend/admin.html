@@ -1535,7 +1535,11 @@ if (savedToken) {
 // ── RÉSERVATIONS ──────────────────────────────────────
 async function loadReservations() {
   const el = document.getElementById('reservations-list');
-  el.innerHTML = '<div style="color:var(--muted);font-size:.8rem;text-align:center;padding:40px;">Chargement…</div>';
+  el.style.display = 'block';
+  el.style.minHeight = '200px';
+  el.style.padding = '20px';
+  el.style.color = '#e8e4dc';
+  el.innerHTML = '<p style="color:red;font-size:20px;font-weight:bold;">TEST VISIBLE — Chargement…</p>';
   try {
     const res = await fetch(API + '/admin/reservations', { headers: authHeaders() });
     console.log('Status réservations:', res.status);
@@ -1569,9 +1573,10 @@ async function loadReservations() {
           <button onclick="updateResaStatus('${r.id}','cancelled')" style="padding:6px 14px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.08);color:#ff4d6d;font-size:0.65rem;cursor:pointer;">❌ Annuler</button>
         </div>
       </div>`).join('');
+    console.log('innerHTML défini, longueur:', el.innerHTML.length, 'children:', el.children.length);
   } catch(e) {
     console.error('Erreur loadReservations:', e);
-    el.innerHTML = `<div style="color:var(--red);font-size:.8rem;padding:20px;">Erreur : ${e.message}</div>`;
+    el.innerHTML = `<div style="color:#ff4d6d;font-size:1rem;padding:20px;font-weight:bold;">ERREUR : ${e.message}</div>`;
   }
 }
 
