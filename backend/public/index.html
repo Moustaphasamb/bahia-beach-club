@@ -124,9 +124,8 @@
     }
     .hero-bg {
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 60%, rgba(31,217,192,0.08) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 20%, rgba(212,168,71,0.06) 0%, transparent 50%),
-                  linear-gradient(180deg, #06090e 0%, #0a1520 50%, #06090e 100%);
+      background: linear-gradient(rgba(6,9,14,0.65), rgba(6,9,14,0.82)),
+                  url('image/20251020151440_IMG_0192.webp') center/cover no-repeat;
     }
     .stars-canvas {
       position: absolute; inset: 0;
@@ -246,22 +245,35 @@
       gap: 24px;
     }
     .exp-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 40px 32px;
+      overflow: hidden;
+      position: relative;
+      height: 360px;
+      border: 1px solid var(--border);
       transition: border-color 0.3s, transform 0.3s;
     }
     .exp-card:hover { border-color: var(--turq); transform: translateY(-4px); }
-    .exp-icon {
-      font-size: 2.5rem; margin-bottom: 20px;
-      display: block;
+    .exp-card > img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
     }
+    .exp-card:hover > img { transform: scale(1.06); }
+    .exp-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(6,9,14,0.92) 0%, rgba(6,9,14,0.3) 55%, transparent 100%);
+    }
+    .exp-card-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 24px 28px 32px;
+    }
+    .exp-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
     .exp-card h3 {
-      font-size: 1.4rem; font-weight: 400; margin-bottom: 12px;
+      font-size: 1.4rem; font-weight: 400; margin-bottom: 10px;
       color: var(--text);
     }
-    .exp-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.8; }
+    .exp-card p { color: rgba(232,228,220,0.72); font-size: 0.82rem; line-height: 1.7; }
 
     /* ── MENU APERÇU ── */
     #menu-apercu { background: var(--bg); }
@@ -324,7 +336,13 @@
       border: 1px solid var(--border);
     }
     .amb-card:first-child { grid-row: 1 / 3; }
-    .amb-card-emoji { font-size: 3rem; }
+    .amb-card > img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .amb-card:hover > img { transform: scale(1.05); }
     .amb-card-label {
       position: absolute; bottom: 16px; left: 16px;
       font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
@@ -606,19 +624,31 @@
   </div>
   <div class="exp-grid">
     <div class="exp-card reveal">
-      <span class="exp-icon">🍽️</span>
-      <h3>Cuisine Raffinée</h3>
-      <p>Une carte inspirée des saveurs sénégalaises et méditerranéennes, élaborée avec des produits frais du marché local. Chaque plat est une invitation au voyage.</p>
+      <img src="image/20251010195206_IMG_0921.webp" alt="Cuisine Raffinée" loading="lazy">
+      <div class="exp-card-overlay"></div>
+      <div class="exp-card-content">
+        <span class="exp-icon">🍽️</span>
+        <h3>Cuisine Raffinée</h3>
+        <p>Une carte inspirée des saveurs sénégalaises et méditerranéennes, élaborée avec des produits frais du marché local. Chaque plat est une invitation au voyage.</p>
+      </div>
     </div>
     <div class="exp-card reveal">
-      <span class="exp-icon">🍹</span>
-      <h3>Cocktails & Bar</h3>
-      <p>Notre bar à cocktails propose des créations uniques alliant rhums, fruits frais et épices locales. Une sélection de vins soigneusement choisie complète la carte.</p>
+      <img src="image/20251010195206_IMG_0922.webp" alt="Cocktails & Bar" loading="lazy">
+      <div class="exp-card-overlay"></div>
+      <div class="exp-card-content">
+        <span class="exp-icon">🍹</span>
+        <h3>Cocktails & Bar</h3>
+        <p>Notre bar à cocktails propose des créations uniques alliant rhums, fruits frais et épices locales. Une sélection de vins soigneusement choisie complète la carte.</p>
+      </div>
     </div>
     <div class="exp-card reveal">
-      <span class="exp-icon">🌊</span>
-      <h3>Vue sur l'Atlantique</h3>
-      <p>Installé face à l'océan sur la Corniche Ouest, profitez de couchers de soleil spectaculaires depuis notre terrasse panoramique surplombant les vagues.</p>
+      <img src="image/20251010195206_IMG_0920.webp" alt="Vue sur l'Atlantique" loading="lazy">
+      <div class="exp-card-overlay"></div>
+      <div class="exp-card-content">
+        <span class="exp-icon">🌊</span>
+        <h3>Vue sur l'Atlantique</h3>
+        <p>Installé face à l'océan sur la Corniche Ouest, profitez de couchers de soleil spectaculaires depuis notre terrasse panoramique surplombant les vagues.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -656,23 +686,23 @@
   </div>
   <div class="ambiance-grid reveal">
     <div class="amb-card">
-      <span class="amb-card-emoji">🌅</span>
+      <img src="image/20251020151440_IMG_0192.webp" alt="Terrasse Sunset" loading="lazy">
       <span class="amb-card-label">Terrasse Sunset</span>
     </div>
     <div class="amb-card">
-      <span class="amb-card-emoji">🎶</span>
+      <img src="image/20251010195206_IMG_0918.webp" alt="Live Music" loading="lazy">
       <span class="amb-card-label">Live Music</span>
     </div>
     <div class="amb-card">
-      <span class="amb-card-emoji">🌙</span>
+      <img src="image/20251020151439_IMG_0193.webp" alt="Soirées Privées" loading="lazy">
       <span class="amb-card-label">Soirées Privées</span>
     </div>
     <div class="amb-card">
-      <span class="amb-card-emoji">🏖️</span>
+      <img src="image/20251010195206_IMG_0919.webp" alt="Beach Club" loading="lazy">
       <span class="amb-card-label">Beach Club</span>
     </div>
     <div class="amb-card">
-      <span class="amb-card-emoji">🥂</span>
+      <img src="image/20251010195206_IMG_0922.webp" alt="Happy Hour" loading="lazy">
       <span class="amb-card-label">Happy Hour</span>
     </div>
   </div>
@@ -1021,14 +1051,14 @@ loadMenu();
 // ── INSTAGRAM CARDS ──
 (function buildInsta() {
   const posts = [
-    { emoji:'🍹', caption:'Notre Bahia Sunset, la signature absolue du club ✨', likes:'234', comments:'18', grad:'linear-gradient(135deg,#ff6b35,#f7c59f)' },
-    { emoji:'🌊', caption:'Vue sur l\'Atlantique depuis nos terrasses 🌊', likes:'412', comments:'32', grad:'linear-gradient(135deg,#006994,#0099cc)' },
-    { emoji:'🌅', caption:'Coucher de soleil magique ce soir 🧡', likes:'891', comments:'67', grad:'linear-gradient(135deg,#ff6b6b,#ffd93d)' },
-    { emoji:'🍽️', caption:'Nouveau plat du jour : Thiéboudienne royale 👨‍🍳', likes:'156', comments:'14', grad:'linear-gradient(135deg,#8b4513,#d4a847)' },
-    { emoji:'🎵', caption:'Live music chaque vendredi soir 🎶🔥', likes:'523', comments:'45', grad:'linear-gradient(135deg,#6a0dad,#ff6b9d)' },
-    { emoji:'🥂', caption:'Soirée privatisation mémorable 🥂', likes:'678', comments:'52', grad:'linear-gradient(135deg,#1a1a2e,#d4a847)' },
-    { emoji:'🌴', caption:'Dakar Sour, notre cocktail signature 🌴', likes:'345', comments:'28', grad:'linear-gradient(135deg,#2d5a27,#7bc67e)' },
-    { emoji:'🌙', caption:'L\'ambiance nocturne du Bahia 🌙', likes:'789', comments:'61', grad:'linear-gradient(135deg,#0d1b2a,#1fd9c0)' },
+    { img:'image/20251010195206_IMG_0918.webp', caption:'Notre Bahia Sunset, la signature absolue du club ✨', likes:'234', comments:'18' },
+    { img:'image/20251010195206_IMG_0921.webp', caption:'Vue sur l\'Atlantique depuis nos terrasses 🌊', likes:'412', comments:'32' },
+    { img:'image/20251020151440_IMG_0192.webp', caption:'Coucher de soleil magique ce soir 🧡', likes:'891', comments:'67' },
+    { img:'image/20251010195206_IMG_0919.webp', caption:'Nouveau plat du jour : Thiéboudienne royale 👨‍🍳', likes:'156', comments:'14' },
+    { img:'image/20251010195206_IMG_0922.webp', caption:'Live music chaque vendredi soir 🎶🔥', likes:'523', comments:'45' },
+    { img:'image/20251010195206_IMG_0920.webp', caption:'Soirée privatisation mémorable 🥂', likes:'678', comments:'52' },
+    { img:'image/20251020151439_IMG_0193.webp', caption:'Dakar Sour, notre cocktail signature 🌴', likes:'345', comments:'28' },
+    { img:'image/20251010195206_IMG_0921.webp', caption:'L\'ambiance nocturne du Bahia 🌙', likes:'789', comments:'61' },
   ];
   const card = p => `
     <div class="insta-card">
@@ -1037,8 +1067,7 @@ loadMenu();
         <div class="insta-username">lebahiabeachclub</div>
       </div>
       <div class="insta-card-img">
-        <div class="insta-img-bg" style="background:${p.grad}"></div>
-        <div class="insta-img-emoji">${p.emoji}</div>
+        <img src="${p.img}" alt="" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       </div>
       <div class="insta-card-footer">
         <div class="insta-actions">♡ ${p.likes} &nbsp; 💬 ${p.comments}</div>
