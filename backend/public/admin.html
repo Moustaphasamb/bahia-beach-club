@@ -303,8 +303,10 @@
     #content::-webkit-scrollbar { width: 4px; }
     #content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    .page { display: none; }
-    .page.active { display: block; }
+    .page { display: none !important; }
+    .page.active { display: block !important; width: 100% !important; color: #e8e4dc !important; }
+    #page-reservations.active { display: block !important; min-height: 200px !important; color: #e8e4dc !important; }
+    #reservations-list { display: block !important; width: 100% !important; color: #e8e4dc !important; min-height: 60px !important; }
 
     /* ── RÉSERVATIONS ── */
     #reservations-list { padding: 16px 0; color: #e8e4dc; }
@@ -1051,10 +1053,20 @@ const PAGE_TITLES = {
 
 function navTo(page) {
   currentPage = page;
-  // Pages
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Cacher toutes les pages
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+  // Afficher la page cible
   const target = document.getElementById('page-' + page);
-  if (target) target.classList.add('active');
+  if (target) {
+    target.classList.add('active');
+    target.style.display = 'block';
+  }
+  // Reset scroll
+  const content = document.getElementById('content');
+  if (content) content.scrollTop = 0;
   // Nav buttons
   document.querySelectorAll('.nav-btn[data-page]').forEach(b => {
     b.classList.toggle('active', b.dataset.page === page);
@@ -1535,11 +1547,8 @@ if (savedToken) {
 // ── RÉSERVATIONS ──────────────────────────────────────
 async function loadReservations() {
   const el = document.getElementById('reservations-list');
-  el.style.display = 'block';
-  el.style.minHeight = '200px';
-  el.style.padding = '20px';
-  el.style.color = '#e8e4dc';
-  el.innerHTML = '<p style="color:red;font-size:20px;font-weight:bold;">TEST VISIBLE — Chargement…</p>';
+  el.style.cssText = 'display:block !important;min-height:60px;padding:20px;color:#e8e4dc;';
+  el.innerHTML = '<div style="color:rgba(232,228,220,0.5);font-size:.85rem;padding:20px 0;">Chargement…</div>';
   try {
     const res = await fetch(API + '/admin/reservations', { headers: authHeaders() });
     console.log('Status réservations:', res.status);
@@ -1573,7 +1582,7 @@ async function loadReservations() {
           <button onclick="updateResaStatus('${r.id}','cancelled')" style="padding:6px 14px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.08);color:#ff4d6d;font-size:0.65rem;cursor:pointer;">❌ Annuler</button>
         </div>
       </div>`).join('');
-    console.log('innerHTML défini, longueur:', el.innerHTML.length, 'children:', el.children.length);
+    el.style.cssText = 'display:block !important;min-height:60px;padding:20px;color:#e8e4dc;';
   } catch(e) {
     console.error('Erreur loadReservations:', e);
     el.innerHTML = `<div style="color:#ff4d6d;font-size:1rem;padding:20px;font-weight:bold;">ERREUR : ${e.message}</div>`;
