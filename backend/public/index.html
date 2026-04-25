@@ -27,6 +27,7 @@
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
+      max-width: 100vw;
     }
     h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; }
 
@@ -141,13 +142,14 @@
 
     /* ── HERO ── */
     #hero {
-      position: relative; min-height: 100vh;
+      position: relative; min-height: 100vh; width: 100%; max-width: 100vw;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       text-align: center; padding: 0 5%; overflow: hidden;
     }
     .hero-bg {
       position: absolute; inset: 0;
+      width: 100%; height: 100%; overflow: hidden;
       background: url('image/20251020151440_IMG_0192.webp') center/cover no-repeat;
       will-change: transform;
     }
@@ -632,6 +634,89 @@
     .footer-bottom p { color: var(--muted); font-size: 0.73rem; }
     .footer-bottom a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
     .footer-bottom a:hover { color: var(--turq); }
+
+    /* ── À PROPOS ── */
+    #about { padding: 120px 5%; background: linear-gradient(180deg, var(--bg) 0%, rgba(13,22,34,0.5) 50%, var(--bg) 100%); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    @media (max-width: 1024px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } }
+    .about-desc { font-size: 0.9rem; color: rgba(232,232,232,0.65); line-height: 2; margin-bottom: 20px; }
+    .about-stats {
+      display: flex; gap: 40px; margin: 40px 0; padding: 30px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .about-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem; color: var(--turq); line-height: 1; margin-bottom: 6px;
+    }
+    .about-stat-lbl { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(232,232,232,0.45); }
+    .about-values { display: flex; flex-direction: column; gap: 16px; }
+    .about-value { display: flex; align-items: flex-start; gap: 16px; }
+    .av-icon {
+      font-size: 1.2rem; width: 44px; height: 44px;
+      background: rgba(31,217,192,0.08); border: 1px solid rgba(31,217,192,0.15);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .about-value strong { display: block; font-size: 0.85rem; color: var(--text); margin-bottom: 3px; font-family: 'Josefin Sans', sans-serif; }
+    .about-value p { font-size: 0.72rem; color: rgba(232,232,232,0.5); line-height: 1.5; margin: 0; }
+    .about-photos { position: relative; height: 500px; }
+    @media (max-width: 1024px) { .about-photos { height: 340px; } }
+    .about-photo-main {
+      position: absolute; top: 0; left: 0; width: 75%; height: 80%;
+      border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08);
+    }
+    .about-photo-main img { width: 100%; height: 100%; object-fit: cover; }
+    .about-photo-secondary {
+      position: absolute; bottom: 0; right: 0; width: 55%; height: 55%;
+      border-radius: 20px; overflow: hidden; border: 1px solid rgba(212,168,71,0.2);
+    }
+    .about-photo-secondary img { width: 100%; height: 100%; object-fit: cover; }
+    .about-badge-float {
+      position: absolute; top: 50%; right: -16px; transform: translateY(-50%);
+      background: var(--surface); border: 1px solid rgba(212,168,71,0.3);
+      border-radius: 16px; padding: 16px 20px; text-align: center; z-index: 10;
+    }
+    @media (max-width: 1024px) { .about-badge-float { right: 8px; } }
+    .abf-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold); line-height: 1; }
+    .abf-stars { color: var(--gold); font-size: 0.7rem; margin: 4px 0; }
+    .abf-lbl { font-size: 0.5rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(232,232,232,0.5); }
+
+    /* ── PLAT DU JOUR ── */
+    .plat-du-jour { margin-bottom: 52px; }
+    .pdj-label {
+      font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .pdj-card {
+      background: linear-gradient(135deg, rgba(13,22,34,0.9), rgba(6,9,14,0.95));
+      border: 1px solid rgba(212,168,71,0.25); border-radius: 20px;
+      padding: 32px 40px; display: flex; align-items: center; gap: 32px;
+      position: relative; overflow: hidden;
+    }
+    .pdj-card::before {
+      content: '';
+      position: absolute; top: 0; right: 0; width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(212,168,71,0.08), transparent);
+    }
+    .pdj-emoji { font-size: 4rem; flex-shrink: 0; }
+    .pdj-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; margin-bottom: 10px; color: var(--text);
+    }
+    .pdj-content p { font-size: 0.85rem; color: rgba(232,232,232,0.6); line-height: 1.8; margin-bottom: 16px; }
+    .pdj-prix { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gold); }
+    .btn-menu-complet {
+      display: inline-block; margin-top: 44px;
+      padding: 16px 48px; border: 1px solid rgba(31,217,192,0.4);
+      border-radius: 4px; color: var(--turq); text-decoration: none;
+      font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+    }
+    .btn-menu-complet:hover { background: var(--turq); color: var(--bg); border-color: var(--turq); }
+    @media (max-width: 768px) {
+      .pdj-card { flex-direction: column; text-align: center; padding: 24px; gap: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -648,6 +733,7 @@
   </a>
   <ul class="nav-links">
     <li><a href="#experience">L'Expérience</a></li>
+    <li><a href="#about">À propos</a></li>
     <li><a href="#menu-apercu">Menu</a></li>
     <li><a href="#ambiance">Ambiance</a></li>
     <li><a href="#reviews">Avis</a></li>
@@ -660,6 +746,7 @@
 </nav>
 <div class="nav-mobile" id="nav-mobile">
   <a href="#experience" onclick="toggleMenu()">L'Expérience</a>
+  <a href="#about" onclick="toggleMenu()">À propos</a>
   <a href="#menu-apercu" onclick="toggleMenu()">Menu</a>
   <a href="#ambiance" onclick="toggleMenu()">Ambiance</a>
   <a href="#reviews" onclick="toggleMenu()">Avis</a>
@@ -742,13 +829,87 @@
   </div>
 </section>
 
+<!-- ── À PROPOS ── -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="section-eyebrow reveal">✦ À propos</p>
+      <h2 class="section-title reveal">Une adresse d'exception<br><em>sur la Corniche</em></h2>
+      <div class="divider reveal"></div>
+      <p class="about-desc reveal">
+        Niché sur la Corniche des Almadies, le Bahia Beach Club est bien plus qu'un restaurant — c'est une invitation à vivre l'instant présent face à l'Atlantique.
+      </p>
+      <p class="about-desc reveal">
+        Depuis 2018, nous accueillons nos hôtes dans un cadre unique mêlant élégance contemporaine et chaleur sénégalaise. Notre équipe passionnée crée chaque jour des expériences mémorables, du déjeuner tranquille au coucher de soleil jusqu'aux soirées animées par nos DJs.
+      </p>
+      <div class="about-stats reveal">
+        <div class="about-stat">
+          <div class="about-stat-num" data-target="6">0</div>
+          <div class="about-stat-lbl">Ans d'existence</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-num" data-target="129">0</div>
+          <div class="about-stat-lbl">Plats au menu</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-num" data-target="20">0</div>
+          <div class="about-stat-lbl">Tables disponibles</div>
+        </div>
+      </div>
+      <div class="about-values reveal">
+        <div class="about-value">
+          <span class="av-icon">🌊</span>
+          <div>
+            <strong>Vue imprenable</strong>
+            <p>Terrasse et rooftop face à l'Atlantique</p>
+          </div>
+        </div>
+        <div class="about-value">
+          <span class="av-icon">🍽️</span>
+          <div>
+            <strong>Cuisine d'exception</strong>
+            <p>Saveurs locales et inspirations internationales</p>
+          </div>
+        </div>
+        <div class="about-value">
+          <span class="av-icon">🎵</span>
+          <div>
+            <strong>Ambiance unique</strong>
+            <p>DJ sets et événements exclusifs chaque semaine</p>
+          </div>
+        </div>
+        <div class="about-value">
+          <span class="av-icon">🥂</span>
+          <div>
+            <strong>Privatisation</strong>
+            <p>Anniversaires, mariages, événements corporate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about-photos reveal">
+      <div class="about-photo-main">
+        <img src="image/20251020151440_IMG_0192.webp" alt="Terrasse Bahia Beach Club" loading="lazy">
+      </div>
+      <div class="about-photo-secondary">
+        <img src="image/20251020151439_IMG_0193.webp" alt="Service Bahia Beach Club" loading="lazy">
+      </div>
+      <div class="about-badge-float">
+        <div class="abf-num">4.2</div>
+        <div class="abf-stars">★★★★☆</div>
+        <div class="abf-lbl">Note Google</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ── MENU APERÇU ── -->
 <section id="menu-apercu">
   <div class="section-header center reveal">
     <p class="section-eyebrow">✦ Notre carte</p>
-    <h2 class="section-title">Un menu <em>inspiré</em></h2>
+    <h2 class="section-title">Une cuisine qui <em>éveille les sens</em></h2>
     <div class="divider center"></div>
-    <p class="section-desc">Des entrées aux desserts, chaque plat raconte une histoire. Survolez les cartes pour découvrir.</p>
+    <p class="section-desc">Des saveurs sénégalaises et méditerranéennes, élaborées chaque jour avec les produits frais du marché.</p>
   </div>
 
   <div class="menu-showcase">
@@ -810,19 +971,20 @@
     </div>
   </div>
 
-  <p class="menu-section-label reveal">✦ Toute la carte</p>
-  <div class="menu-cats" id="menu-cats">
-    <button class="menu-cat-btn active" data-cat="all">Tout</button>
-    <button class="menu-cat-btn" data-cat="entrees">Entrées</button>
-    <button class="menu-cat-btn" data-cat="plats">Plats</button>
-    <button class="menu-cat-btn" data-cat="desserts">Desserts</button>
-    <button class="menu-cat-btn" data-cat="boissons">Boissons</button>
+  <div class="plat-du-jour reveal" id="plat-du-jour">
+    <div class="pdj-label" id="pdj-label">🌟 Plat du jour — <span id="pdj-jour"></span></div>
+    <div class="pdj-card">
+      <div class="pdj-emoji" id="pdj-emoji"></div>
+      <div class="pdj-content">
+        <h3 id="pdj-nom"></h3>
+        <p id="pdj-desc"></p>
+        <div class="pdj-prix" id="pdj-prix"></div>
+      </div>
+    </div>
   </div>
-  <div class="menu-grid" id="menu-grid">
-    <div style="color:var(--muted);font-size:0.82rem;grid-column:1/-1;text-align:center;padding:40px">Chargement du menu…</div>
-  </div>
-  <div class="menu-more-wrap reveal">
-    <a href="/menu.html" class="btn-primary">Voir le menu complet</a>
+
+  <div class="menu-more-wrap reveal" style="text-align:center">
+    <a href="menu.html?table=1" class="btn-menu-complet">Voir le menu complet →</a>
   </div>
 </section>
 
@@ -1037,6 +1199,7 @@
       <p class="footer-col-title">Navigation</p>
       <ul class="footer-links">
         <li><a href="#experience">L'Expérience</a></li>
+        <li><a href="#about">À propos</a></li>
         <li><a href="#menu-apercu">Menu</a></li>
         <li><a href="#ambiance">Ambiance</a></li>
         <li><a href="#reviews">Avis</a></li>
@@ -1071,6 +1234,16 @@
 </footer>
 
 <script>
+// ── SCROLL FIX : forcer le haut de page au chargement ──
+history.replaceState(null, '', window.location.pathname);
+document.documentElement.scrollTop = 0;
+document.body.scrollTop = 0;
+window.addEventListener('load', () => {
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+});
+
 const API = window.location.origin + '/api';
 
 // ── NAV SCROLL + PARALLAX ──
@@ -1132,71 +1305,49 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ── MENU ──
-let allMenuItems = [];
-let activeMenuCat = 'all';
+// ── PLAT DU JOUR ──
+const PLATS_DU_JOUR = {
+  1: { nom: 'Curry de Cabillaud au Lait de Coco', desc: 'Cabillaud fondant mijoté dans un lait de coco parfumé au curry doux, servi avec du riz basmati et des légumes croquants.', prix: '6 000 FCFA', emoji: '🍛', jour: 'Lundi' },
+  2: { nom: 'Mafé', desc: 'Le classique sénégalais — viande tendre mijotée dans une sauce arachide onctueuse, servie avec du riz blanc.', prix: '6 000 FCFA', emoji: '🥘', jour: 'Mardi' },
+  3: { nom: 'Lasagnes de Bœuf', desc: 'Lasagnes maison gratinées au fromage, avec un ragù de bœuf mijoté aux herbes fraîches.', prix: '6 000 FCFA', emoji: '🍝', jour: 'Mercredi' },
+  4: { nom: 'Thiéboudienne Rouge', desc: 'Le plat national sénégalais — riz rouge au poisson, légumes du marché et sauce tomate maison.', prix: '6 000 FCFA', emoji: '🐟', jour: 'Jeudi' },
+  5: { nom: "Parmentier d'Agneau", desc: 'Agneau confit effiloché, purée de pommes de terre dorée au four, jus de viande parfumé aux herbes.', prix: '6 000 FCFA', emoji: '🥩', jour: 'Vendredi' },
+  6: { nom: 'Gambas Grillées', desc: 'Gambas royales grillées au charbon, beurre à l\'ail et aux herbes, servies avec frites maison.', prix: '13 000 FCFA', emoji: '🦐', jour: 'Samedi' },
+  0: { nom: 'Brunch Bahia', desc: 'Notre brunch dominical — œufs, charcuterie, fruits frais, jus pressés et viennoiseries.', prix: '13 500 FCFA', emoji: '🍳', jour: 'Dimanche' }
+};
 
-async function loadMenu() {
-  try {
-    const res = await fetch(API + '/menu');
-    if (!res.ok) throw new Error();
-    allMenuItems = await res.json();
-    renderMenu();
-  } catch { renderMenuFallback(); }
+(function initPlatDuJour() {
+  const jour = new Date().getDay();
+  const plat = PLATS_DU_JOUR[jour];
+  document.getElementById('pdj-jour').textContent = plat.jour;
+  document.getElementById('pdj-emoji').textContent = plat.emoji;
+  document.getElementById('pdj-nom').textContent = plat.nom;
+  document.getElementById('pdj-desc').textContent = plat.desc;
+  document.getElementById('pdj-prix').textContent = plat.prix;
+})();
+
+// ── COMPTEURS ANIMÉS (À propos) ──
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const duration = 1800;
+  const step = target / (duration / 16);
+  let current = 0;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = Math.floor(current);
+  }, 16);
 }
-
-function renderMenu() {
-  const grid = document.getElementById('menu-grid');
-  const items = activeMenuCat === 'all'
-    ? allMenuItems.slice(0, 8)
-    : allMenuItems.filter(i => i.cat === activeMenuCat).slice(0, 8);
-  if (!items.length) {
-    grid.innerHTML = '<div style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px">Aucun article dans cette catégorie.</div>';
-    return;
-  }
-  grid.innerHTML = items.map(item => `
-    <div class="menu-item-card">
-      ${item.imageUrl
-        ? `<img class="menu-item-img" src="${item.imageUrl}" alt="${item.name}" loading="lazy" />`
-        : `<div class="menu-item-img">🍽️</div>`}
-      <div class="menu-item-body">
-        <div class="menu-item-name">${item.name}</div>
-        ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ''}
-        <div class="menu-item-price">${item.price.toLocaleString('fr-FR')} FCFA</div>
-      </div>
-    </div>`).join('');
-}
-
-function renderMenuFallback() {
-  const items = [
-    { name: 'Thiéboudienne Royal', desc: 'Riz au poisson façon Bahia, légumes du marché', price: 8500, emoji: '🐟' },
-    { name: 'Poulet Yassa Corniche', desc: 'Poulet mariné aux oignons et citron vert', price: 7200, emoji: '🍗' },
-    { name: 'Plateau Fruits de Mer', desc: 'Crevettes, homard et calamars grillés', price: 18500, emoji: '🦐' },
-    { name: 'Salade Tropicale', desc: 'Mangue, avocat, crevettes et vinaigrette passion', price: 5500, emoji: '🥗' },
-    { name: 'Mojito Bahia', desc: 'Rhum blanc, menthe fraîche, citron vert', price: 4500, emoji: '🍹' },
-    { name: 'Fondant Chocolat', desc: 'Cœur fondant, glace vanille bourbon', price: 3800, emoji: '🍫' },
-  ];
-  document.getElementById('menu-grid').innerHTML = items.map(i => `
-    <div class="menu-item-card">
-      <div class="menu-item-img">${i.emoji}</div>
-      <div class="menu-item-body">
-        <div class="menu-item-name">${i.name}</div>
-        <div class="menu-item-desc">${i.desc}</div>
-        <div class="menu-item-price">${i.price.toLocaleString('fr-FR')} FCFA</div>
-      </div>
-    </div>`).join('');
-}
-
-document.getElementById('menu-cats').addEventListener('click', e => {
-  const btn = e.target.closest('.menu-cat-btn');
-  if (!btn) return;
-  document.querySelectorAll('.menu-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activeMenuCat = btn.dataset.cat;
-  renderMenu();
-});
-
-loadMenu();
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.about-stat-num').forEach(animateCounter);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.4 });
+const aboutStats = document.querySelector('.about-stats');
+if (aboutStats) counterObserver.observe(aboutStats);
 
 // ── INSTAGRAM CARDS ──
 (function buildInsta() {
