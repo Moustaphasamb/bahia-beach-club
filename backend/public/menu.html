@@ -403,7 +403,7 @@
       border-radius: 50%;
       background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--white);
+      color: var(--brun-profond);
       font-size: 1rem;
       display: flex;
       align-items: center;
@@ -628,6 +628,51 @@
     .empty-ico { font-size: 2.8rem; margin-bottom: 12px; }
     .empty p { font-size: .72rem; line-height: 1.8; }
 
+    /* ── MENU TABS (Restaurant / Bar) ── */
+    .menu-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border-bottom: 2px solid rgba(201,169,110,0.2);
+    }
+    .menu-tab {
+      flex: 1;
+      padding: 12px 6px;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: rgba(232,213,163,0.5);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+    }
+    .menu-tab.active {
+      color: #C9A96E;
+      border-bottom-color: #C9A96E;
+    }
+
+    /* ── CARD INITIAL ── */
+    .card-initial {
+      position: relative;
+      z-index: 2;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: #E8D5A3;
+      opacity: 0.85;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    /* Cat button icon discret */
+    .cat-btn > span:first-child {
+      font-size: 0.85rem;
+      filter: grayscale(30%) opacity(0.75);
+    }
+
     /* ════════════════════════════════════════
        TABLETTE  ≥ 768px
     ════════════════════════════════════════ */
@@ -848,6 +893,12 @@
       <a href="/" class="brand">Bahia <em>Beach Club</em></a>
       <div class="table-pill" id="table-pill">Table —</div>
     </div>
+    <!-- ONGLETS RESTAURANT / BAR -->
+    <div class="menu-tabs" id="menu-tabs">
+      <button class="menu-tab active" data-menu="restaurant">🍽️ Restaurant</button>
+      <button class="menu-tab" data-menu="bar">🍹 Bar</button>
+    </div>
+
     <div id="search-wrap">
       <span id="search-ico">🔍</span>
       <input id="search-input" type="text" placeholder="Chercher un plat, cocktail…" autocomplete="off">
@@ -950,6 +1001,36 @@ const TABLE = parseInt(new URLSearchParams(window.location.search).get('table'))
 document.getElementById('table-pill').textContent = 'Table ' + TABLE;
 document.title = 'Bahia Beach Club · Table ' + TABLE;
 
+// ── PARTITION RESTAURANT / BAR ──────────────────────────
+const RESTAURANT_CATS = new Set([
+  'petits_dej','tapas','entrees','partager','plats',
+  'grillades','pates','burgers','plats_jour','desserts','enfants'
+]);
+const BAR_CATS = new Set([
+  'mocktails','cocktails','softs','jus','bieres','coin_chaud',
+  'vins_blancs','vins_roses','vins_rouges','champagnes',
+  'alcools_blancs','rhums','whisky','liqueurs','digestifs',
+  'shooters','autres_alcools'
+]);
+
+// ── IMAGES PAR CATÉGORIE ─────────────────────────────────
+const CAT_IMAGES = {
+  plats:         'image/20251010195206_IMG_0921.jpg',
+  grillades:     'image/20251010195206_IMG_0921.jpg',
+  entrees:       'image/20251010195206_IMG_0919.jpg',
+  tapas:         'image/20251010195206_IMG_0919.jpg',
+  partager:      'image/20251010195206_IMG_0919.jpg',
+  burgers:       'image/20251010195206_IMG_0919.jpg',
+  cocktails:     'image/20251010195206_IMG_0922.jpg',
+  mocktails:     'image/20251010195206_IMG_0918.jpg',
+  softs:         'image/20251010195206_IMG_0918.jpg',
+  jus:           'image/20251010195206_IMG_0918.jpg',
+  bieres:        'image/20251010195206_IMG_0918.jpg',
+  desserts:      'image/20251010195206_IMG_0920.jpg',
+  pates:         'image/20251010195206_IMG_0920.jpg',
+};
+const DEFAULT_IMG = 'image/20251020151440_IMG_0192.jpg';
+
 // ── CATÉGORIES ──────────────────────────────────────────
 const CATS = [
   { id:'all',           label:'Tout',               icon:'✦'  },
@@ -987,6 +1068,7 @@ const CAT_MAP = Object.fromEntries(CATS.map(c => [c.id, c.label]));
 // ── STATE ───────────────────────────────────────────────
 let allItems   = [];
 let activeCat  = 'all';
+let activeMenu = 'restaurant';
 let searchQ    = '';
 let cart       = [];
 let activeItem = null;
@@ -998,7 +1080,9 @@ const fmt = p  => Number(p).toLocaleString('fr-FR') + ' FCFA';
 
 // ── RENDU CATÉGORIES ────────────────────────────────────
 function renderCats() {
-  el('cats').innerHTML = CATS.map(c =>
+  const tabCats = activeMenu === 'restaurant' ? RESTAURANT_CATS : BAR_CATS;
+  const visible = CATS.filter(c => c.id === 'all' || tabCats.has(c.id));
+  el('cats').innerHTML = visible.map(c =>
     `<button class="cat-btn${c.id === activeCat ? ' active' : ''}" data-cat="${c.id}">
        <span>${c.icon}</span>${c.label}
      </button>`
@@ -1009,10 +1093,12 @@ function renderCats() {
 function renderMenu() {
   const list = el('menu-list');
   const q = searchQ.toLowerCase();
+  const tabCats = activeMenu === 'restaurant' ? RESTAURANT_CATS : BAR_CATS;
   const items = allItems.filter(i => {
+    const tabOk = tabCats.has(i.cat);
     const catOk = activeCat === 'all' || i.cat === activeCat;
     const srOk  = !q || i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q);
-    return catOk && srOk;
+    return tabOk && catOk && srOk;
   });
 
   if (!items.length) {
@@ -1022,7 +1108,7 @@ function renderMenu() {
 
   let html = '';
   if (activeCat === 'all' && !q) {
-    CATS.filter(c => c.id !== 'all').forEach(c => {
+    CATS.filter(c => c.id !== 'all' && tabCats.has(c.id)).forEach(c => {
       const grp = items.filter(i => i.cat === c.id);
       if (!grp.length) return;
       html += `<div class="section-title">${c.icon} ${c.label}</div>`;
@@ -1042,12 +1128,13 @@ function renderMenu() {
 }
 
 function cardHtml(item) {
-  const grad = item.grad || 'linear-gradient(135deg,rgba(31,217,192,.1),rgba(0,0,0,.2))';
+  const imgSrc   = CAT_IMAGES[item.cat] || DEFAULT_IMG;
   const newBadge = item.isNew ? `<span class="badge-new">Nouveau</span>` : '';
   return `<div class="card" data-id="${item.id}">
     <div class="card-visual">
-      <div class="card-visual-bg" style="background:${grad}"></div>
-      <div class="card-emoji">${item.emoji}</div>
+      <div class="card-visual-bg" style="background:url('${imgSrc}') center/cover;filter:brightness(0.80);"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(61,46,20,0.55) 100%);pointer-events:none;"></div>
+      <div class="card-initial">${item.name.charAt(0)}</div>
     </div>
     <div class="card-info">
       <div class="card-name">${item.name}</div>
@@ -1070,8 +1157,8 @@ function openSheet(id) {
   shQty = 1;
   updateShQty();
 
-  const grad = activeItem.grad || 'linear-gradient(135deg,rgba(31,217,192,.1),rgba(0,0,0,.3))';
-  el('sh-bg').style.background = grad;
+  const imgSrc = CAT_IMAGES[activeItem.cat] || DEFAULT_IMG;
+  el('sh-bg').style.cssText = `background:url('${imgSrc}') center/cover no-repeat;filter:brightness(0.72);`;
   el('sh-emoji').textContent   = activeItem.emoji;
   el('sh-name').textContent    = activeItem.name;
   el('sh-cat').textContent     = CAT_MAP[activeItem.cat] || '';
@@ -1213,6 +1300,22 @@ function handleInteraction(e) {
   if (card && !e.target.closest('[data-add]')) {
     e.preventDefault();
     openSheet(card.dataset.id);
+    return;
+  }
+
+  // onglet Restaurant / Bar
+  const menuTab = e.target.closest('[data-menu]');
+  if (menuTab) {
+    e.preventDefault();
+    activeMenu = menuTab.dataset.menu;
+    activeCat  = 'all';
+    document.querySelectorAll('.menu-tab').forEach(t =>
+      t.classList.toggle('active', t.dataset.menu === activeMenu)
+    );
+    renderCats();
+    renderMenu();
+    const mc = el('main-content');
+    if (mc) mc.scrollTop = 0;
     return;
   }
 
