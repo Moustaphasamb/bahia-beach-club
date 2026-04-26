@@ -4,26 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Bahia Beach Club · Menu</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #06090e;
-      --surface:  #0d1622;
-      --surface2: #131f32;
-      --border:   rgba(255,255,255,0.07);
-      --turq:     #1fd9c0;
-      --gold:     #d4a847;
-      --white:    #f2ede6;
-      --muted:    rgba(242,237,230,0.45);
+      --bg:       #FDFAF5;
+      --surface:  #F5EFE4;
+      --surface2: #EDE5D6;
+      --border:   rgba(201,169,110,0.2);
+      --turq:     #C9A96E;
+      --gold:     #A8884E;
+      --white:    #F5EFE4;
+      --muted:    rgba(61,46,20,0.45);
+      --brun-profond: #3D2E14;
     }
 
     html, body {
       height: 100%;
       overflow: hidden;
       background: var(--bg);
-      color: var(--white);
+      color: var(--brun-profond);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
       -webkit-tap-highlight-color: transparent;
@@ -43,9 +44,9 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--bg);
+      background: var(--brun-profond);
       padding: 14px 16px 0;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(201,169,110,0.25);
       flex-shrink: 0;
     }
     #sidebar-top {
@@ -58,7 +59,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 1.05rem;
       text-decoration: none;
-      color: var(--white);
+      color: var(--or-clair, #E8D5A3);
     }
     .brand em { color: var(--turq); font-style: italic; }
     .table-pill {
@@ -66,7 +67,7 @@
       letter-spacing: .15em;
       text-transform: uppercase;
       background: var(--turq);
-      color: var(--bg);
+      color: #FDFAF5;
       padding: 5px 12px;
       border-radius: 20px;
       font-weight: 500;
@@ -81,18 +82,18 @@
     #search-wrap input {
       width: 100%;
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(201,169,110,0.3);
       border-radius: 12px;
       padding: 11px 14px 11px 40px;
-      color: var(--white);
+      color: var(--brun-profond);
       font-family: 'DM Sans', sans-serif;
       font-size: .84rem;
       font-weight: 300;
       outline: none;
       transition: border-color .2s;
     }
-    #search-wrap input:focus { border-color: rgba(31,217,192,.4); }
-    #search-wrap input::placeholder { color: var(--muted); }
+    #search-wrap input:focus { border-color: rgba(201,169,110,.5); }
+    #search-wrap input::placeholder { color: rgba(61,46,20,0.4); }
     #search-ico {
       position: absolute;
       left: 13px;
@@ -107,7 +108,7 @@
       font-size: .42rem;
       letter-spacing: .22em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: rgba(232,213,163,0.5);
       margin-bottom: 10px;
     }
 
@@ -132,9 +133,9 @@
       gap: 5px;
       padding: 7px 16px;
       border-radius: 20px;
-      border: 1px solid var(--border);
+      border: 1px solid #D3CEBF;
       background: var(--surface);
-      color: var(--muted);
+      color: #7A5C30;
       font-family: 'DM Sans', sans-serif;
       font-size: .64rem;
       letter-spacing: .04em;
@@ -147,7 +148,7 @@
     .cat-btn.active {
       background: var(--turq);
       border-color: var(--turq);
-      color: var(--bg);
+      color: #FDFAF5;
       font-weight: 500;
     }
 
@@ -176,7 +177,7 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--border);
+      background: rgba(201,169,110,0.25);
     }
 
     /* ── CARDS GRID (no grid on mobile — natural flow) ── */
@@ -226,7 +227,9 @@
     }
     .card-desc {
       font-size: .58rem;
-      color: var(--muted);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      color: rgba(61,46,20,0.55);
       line-height: 1.5;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -251,8 +254,8 @@
       text-transform: uppercase;
       padding: 2px 7px;
       border-radius: 6px;
-      border: 1px solid rgba(212,168,71,.35);
-      color: var(--gold);
+      border: 1px solid rgba(201,169,110,.35);
+      color: var(--turq);
     }
     .add-btn {
       width: 30px;
@@ -260,7 +263,7 @@
       border-radius: 50%;
       background: var(--turq);
       border: none;
-      color: var(--bg);
+      color: #FDFAF5;
       font-size: 1.15rem;
       line-height: 1;
       display: flex;
@@ -278,7 +281,7 @@
     #sheet-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(6,9,14,.8);
+      background: rgba(30,20,8,.6);
       z-index: 1000;
       opacity: 0;
       pointer-events: none;
@@ -329,9 +332,9 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: rgba(6,9,14,.6);
-      border: 1px solid var(--border);
-      color: var(--white);
+      background: rgba(30,20,8,.55);
+      border: 1px solid rgba(201,169,110,0.3);
+      color: #F5EFE4;
       font-size: .8rem;
       display: flex;
       align-items: center;
@@ -354,8 +357,10 @@
       margin-bottom: 12px;
     }
     #sh-desc {
-      font-size: .75rem;
-      color: var(--muted);
+      font-size: .82rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      color: rgba(61,46,20,0.65);
       line-height: 1.9;
       margin-bottom: 16px;
     }
@@ -421,7 +426,7 @@
       border-radius: 12px;
       background: var(--turq);
       border: none;
-      color: var(--bg);
+      color: #FDFAF5;
       font-family: 'DM Sans', sans-serif;
       font-size: .68rem;
       letter-spacing: .1em;
@@ -446,7 +451,7 @@
       right: 0;
       z-index: 900;
       padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-      background: linear-gradient(to top, var(--bg) 65%, transparent);
+      background: linear-gradient(to top, #FDFAF5 65%, transparent);
       transform: translateY(100%);
       transition: transform .3s ease;
     }
@@ -455,9 +460,9 @@
       width: 100%;
       padding: 15px 20px;
       border-radius: 14px;
-      background: var(--turq);
+      background: var(--brun-profond);
       border: none;
-      color: var(--bg);
+      color: #E8D5A3;
       font-family: 'DM Sans', sans-serif;
       font-size: .72rem;
       letter-spacing: .08em;
@@ -469,7 +474,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 6px 24px rgba(31,217,192,.22);
+      box-shadow: 0 6px 24px rgba(61,46,20,.25);
       transition: background .15s;
     }
     #cart-btn:active { background: var(--gold); }
@@ -491,7 +496,7 @@
     #order-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(6,9,14,.85);
+      background: rgba(30,20,8,.65);
       z-index: 1100;
       opacity: 0;
       pointer-events: none;
@@ -547,16 +552,16 @@
     .op-rm { background: none; border: none; color: var(--muted); font-size: .58rem; padding: 4px 8px; border-radius: 8px; cursor: pointer; touch-action: manipulation; min-height: 32px; min-width: 48px; }
     .op-note { margin: 16px 0; padding: 13px; background: var(--surface2); border-radius: 11px; border: 1px solid var(--border); }
     .op-note-lbl { font-size: .44rem; letter-spacing: .2em; text-transform: uppercase; color: var(--turq); margin-bottom: 7px; }
-    .op-note textarea { width: 100%; background: none; border: none; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 300; resize: none; outline: none; min-height: 50px; }
+    .op-note textarea { width: 100%; background: none; border: none; color: var(--brun-profond); font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 300; resize: none; outline: none; min-height: 50px; }
     .op-note textarea::placeholder { color: var(--muted); }
     .op-total { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0; }
     .op-total-lbl { font-size: .54rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-    .op-total-amt { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--gold); }
+    .op-total-amt { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--turq); }
     .op-total-amt small { font-family: 'DM Sans', sans-serif; font-size: .48rem; color: var(--muted); }
     #btn-waiter {
       width: 100%; margin-top: 16px; padding: 14px; border-radius: 12px;
-      background: rgba(212,168,71,.1); border: 1px solid rgba(212,168,71,.25);
-      color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: .68rem;
+      background: rgba(201,169,110,.1); border: 1px solid rgba(201,169,110,.25);
+      color: var(--turq); font-family: 'DM Sans', sans-serif; font-size: .68rem;
       letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
       touch-action: manipulation; min-height: 48px;
       display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -564,7 +569,7 @@
     }
     #btn-confirm {
       width: 100%; padding: 15px; border-radius: 12px;
-      background: var(--turq); border: none; color: var(--bg);
+      background: var(--turq); border: none; color: #FDFAF5;
       font-family: 'DM Sans', sans-serif; font-size: .72rem;
       letter-spacing: .1em; text-transform: uppercase; font-weight: 500;
       cursor: pointer; touch-action: manipulation; min-height: 50px;
@@ -588,7 +593,7 @@
       white-space: nowrap;
       display: flex; align-items: center; gap: 7px;
       transition: transform .3s ease;
-      box-shadow: 0 4px 18px rgba(31,217,192,.2);
+      box-shadow: 0 4px 18px rgba(201,169,110,.25);
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -609,14 +614,14 @@
     #success p { font-size: .72rem; color: var(--muted); line-height: 1.9; margin-bottom: 26px; }
     #success-back {
       padding: 13px 30px; border-radius: 20px; background: var(--turq);
-      border: none; color: var(--bg); font-family: 'DM Sans', sans-serif;
+      border: none; color: #FDFAF5; font-family: 'DM Sans', sans-serif;
       font-size: .64rem; letter-spacing: .14em; text-transform: uppercase;
       font-weight: 500; cursor: pointer; touch-action: manipulation; min-height: 48px;
     }
 
     /* ── ÉTATS ── */
     .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 14px; }
-    .spinner { width: 36px; height: 36px; border: 2px solid var(--border); border-top-color: var(--turq); border-radius: 50%; animation: spin 1s linear infinite; }
+    .spinner { width: 36px; height: 36px; border: 2px solid rgba(201,169,110,0.2); border-top-color: var(--turq); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-txt { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--turq); }
     .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
@@ -691,9 +696,9 @@
         overflow-y: auto;
         overflow-x: hidden;
         border-bottom: none;
-        border-right: 1px solid var(--border);
+        border-right: 1px solid rgba(201,169,110,0.25);
         padding: 32px 22px 32px;
-        background: linear-gradient(180deg, rgba(13,22,34,.9) 0%, rgba(6,9,14,.95) 100%);
+        background: linear-gradient(180deg, #3D2E14 0%, #2A1F0A 100%);
         display: flex;
         flex-direction: column;
         scrollbar-width: none;
@@ -707,7 +712,7 @@
         gap: 10px;
         margin-bottom: 0;
         padding-bottom: 22px;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid rgba(201,169,110,0.25);
         margin-bottom: 22px;
       }
       .brand { font-size: 1.3rem; }
@@ -773,7 +778,7 @@
         margin-bottom: 0;
         border-radius: 14px;
       }
-      .card:hover { border-color: rgba(31,217,192,.25); transform: translateY(-2px); }
+      .card:hover { border-color: rgba(201,169,110,.5); transform: translateY(-2px); }
       .card:active { transform: scale(.99) translateY(0); }
       .card-visual {
         width: 100%;
