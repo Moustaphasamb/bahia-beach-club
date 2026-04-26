@@ -923,25 +923,38 @@
         <div>
           <label class="form-label">Catégorie</label>
           <select id="modal-cat">
-            <option value="mocktails">Mocktails</option>
-            <option value="cocktails">Cocktails</option>
-            <option value="softs">Softs</option>
-            <option value="jus">Jus</option>
-            <option value="bieres">Bières</option>
-            <option value="shooters">Shooters</option>
-            <option value="whisky">Whisky</option>
-            <option value="alcools">Alcools</option>
-            <option value="liqueurs">Liqueurs</option>
-            <option value="digestifs">Digestifs</option>
-            <option value="entrees">Entrées</option>
-            <option value="partager">À partager</option>
-            <option value="plats">Plats</option>
-            <option value="grillades">Grillades</option>
-            <option value="pates">Pâtes</option>
-            <option value="burgers">Burgers</option>
-            <option value="plats_jour">Plats du jour</option>
-            <option value="desserts">Desserts</option>
-            <option value="enfants">Enfants</option>
+            <optgroup label="── Restaurant ──">
+              <option value="petits_dej">Petits Déjeuners</option>
+              <option value="tapas">Tapas</option>
+              <option value="entrees">Entrées</option>
+              <option value="partager">À Partager</option>
+              <option value="plats">Nos Plats</option>
+              <option value="grillades">Grillades</option>
+              <option value="pates">Pâtes</option>
+              <option value="burgers">Burgers & Sandwichs</option>
+              <option value="plats_jour">Plats du Jour</option>
+              <option value="desserts">Desserts</option>
+              <option value="enfants">Menu Enfants</option>
+            </optgroup>
+            <optgroup label="── Bar ──">
+              <option value="mocktails">Mocktails</option>
+              <option value="cocktails">Cocktails</option>
+              <option value="softs">Softs & Eaux</option>
+              <option value="coin_chaud">Boissons Chaudes</option>
+              <option value="jus">Jus</option>
+              <option value="bieres">Bières</option>
+              <option value="vins_blancs">Vins Blancs</option>
+              <option value="vins_roses">Vins Rosés</option>
+              <option value="vins_rouges">Vins Rouges</option>
+              <option value="champagnes">Champagnes</option>
+              <option value="alcools_blancs">Alcools Blancs</option>
+              <option value="rhums">Rhums</option>
+              <option value="whisky">Whisky</option>
+              <option value="liqueurs">Liqueurs</option>
+              <option value="digestifs">Digestifs</option>
+              <option value="shooters">Shooters</option>
+              <option value="autres_alcools">Autres Alcools</option>
+            </optgroup>
           </select>
         </div>
         <div>
@@ -956,6 +969,13 @@
       <div>
         <label class="form-label">Ingrédients (séparés par des virgules)</label>
         <input id="modal-ingr" type="text" placeholder="Rhum blanc, Mangue, Citron vert…">
+      </div>
+      <div>
+        <label class="form-label">Image URL (optionnel)</label>
+        <input id="modal-img" type="text" placeholder="https://… ou image/photo.jpg">
+        <div id="modal-img-preview" style="margin-top:8px;width:100%;height:120px;border-radius:8px;overflow:hidden;display:none;border:1px solid rgba(201,169,110,0.3);">
+          <img id="modal-img-thumb" style="width:100%;height:100%;object-fit:cover;">
+        </div>
       </div>
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
         <input id="modal-new" type="checkbox" style="width:auto;accent-color:#C9A96E;">
@@ -973,6 +993,7 @@
 const API = window.location.origin + '/api';
 let token = localStorage.getItem('bahia_token');
 let currentPage = 'stats';
+let menuItemsMap = {};
 
 // ── UTILS ──────────────────────────────────────────────
 const fmt = n => Number(n).toLocaleString('fr-FR');
@@ -1236,16 +1257,24 @@ async function loadMenu() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     let items = await res.json();
     if (!Array.isArray(items)) throw new Error('Format inattendu');
+    menuItemsMap = {};
+    items.forEach(i => { menuItemsMap[i.id] = i; });
     if (search) items = items.filter(i => i.name.toLowerCase().includes(search) || (i.cat||'').includes(search));
     document.getElementById('menu-count').textContent = items.length + ' produits';
     document.getElementById('menu-list').innerHTML = items.map(i => `
       <tr>
-        <td><span style="font-size:1.3rem;">${i.emoji||'🍽️'}</span> ${i.name}</td>
+        <td style="display:flex;align-items:center;gap:10px;">
+          ${i.imageUrl
+            ? `<img src="${i.imageUrl}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid rgba(201,169,110,0.2);flex-shrink:0;">`
+            : `<div style="width:44px;height:44px;border-radius:8px;background:rgba(201,169,110,0.1);border:1px solid rgba(201,169,110,0.2);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;">${i.emoji||'🍽️'}</div>`
+          }
+          <span>${i.name}</span>
+        </td>
         <td style="color:var(--muted);font-size:.75rem;">${i.cat||'—'}</td>
         <td class="td-price">${fmt(i.price||0)} F</td>
         <td>${i.available ? '<span style="color:var(--green);">✓ Dispo</span>' : '<span style="color:var(--red);">✕ Indispo</span>'}</td>
         <td class="td-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${JSON.stringify(i)})">
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${i.id}')">
             ✎ Modifier
           </button>
           <button class="btn btn-ghost btn-sm" onclick="toggleItem('${i.id}')">
@@ -1280,6 +1309,14 @@ async function deleteItem(id, name) {
 
 document.getElementById('menu-search').addEventListener('input', loadMenu);
 
+document.getElementById('modal-img').addEventListener('input', function() {
+  const val     = this.value.trim();
+  const preview = document.getElementById('modal-img-preview');
+  const thumb   = document.getElementById('modal-img-thumb');
+  if (val) { thumb.src = val; preview.style.display = 'block'; }
+  else      { preview.style.display = 'none'; }
+});
+
 // ── MODALE PRODUIT ────────────────────────────────────
 document.getElementById('add-product-btn').addEventListener('click', () => openAddModal());
 
@@ -1298,10 +1335,14 @@ function openAddModal() {
   document.getElementById('modal-desc').value  = '';
   document.getElementById('modal-ingr').value  = '';
   document.getElementById('modal-new').checked = false;
+  document.getElementById('modal-img').value = '';
+  document.getElementById('modal-img-preview').style.display = 'none';
   showModal();
 }
 
-function openEditModal(item) {
+function openEditModal(id) {
+  const item = menuItemsMap[id];
+  if (!item) { showNotif('Produit introuvable', true); return; }
   document.getElementById('modal-title').textContent = 'Modifier le produit';
   document.getElementById('modal-id').value    = item.id || '';
   document.getElementById('modal-name').value  = item.name || '';
@@ -1311,6 +1352,9 @@ function openEditModal(item) {
   document.getElementById('modal-desc').value  = item.desc || item.description || '';
   document.getElementById('modal-ingr').value  = Array.isArray(item.ingr) ? item.ingr.join(', ') : (item.ingr || '');
   document.getElementById('modal-new').checked = !!item.isNew;
+  const imgInput = document.getElementById('modal-img');
+  imgInput.value = item.imageUrl || '';
+  imgInput.dispatchEvent(new Event('input'));
   showModal();
 }
 
@@ -1345,7 +1389,7 @@ async function saveProduct() {
     ar: false,
     grad: '',
     modelUrl: '',
-    imageUrl: ''
+    imageUrl: document.getElementById('modal-img').value.trim()
   };
 
   const btn = document.querySelector('#product-modal-ov .btn-primary');
