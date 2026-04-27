@@ -1128,13 +1128,17 @@ function renderMenu() {
 }
 
 function cardHtml(item) {
-  const imgSrc   = CAT_IMAGES[item.cat] || DEFAULT_IMG;
+  const hasImage = item.imageUrl && item.imageUrl.trim() !== '';
+  const fallbackBg = item.grad || (CAT_IMAGES[item.cat] ? `url('${CAT_IMAGES[item.cat]}') center/cover` : `url('${DEFAULT_IMG}') center/cover`);
   const newBadge = item.isNew ? `<span class="badge-new">Nouveau</span>` : '';
   return `<div class="card" data-id="${item.id}">
     <div class="card-visual">
-      <div class="card-visual-bg" style="background:url('${imgSrc}') center/cover;filter:brightness(0.80);"></div>
-      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(61,46,20,0.55) 100%);pointer-events:none;"></div>
-      <div class="card-initial">${item.name.charAt(0)}</div>
+      ${hasImage
+        ? `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" onerror="this.style.display='none'">`
+        : `<div class="card-visual-bg" style="background:${fallbackBg};filter:brightness(0.80);"></div>
+      <div class="card-emoji">${item.emoji}</div>`
+      }
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(61,46,20,0.55) 100%);pointer-events:none;"></div>
     </div>
     <div class="card-info">
       <div class="card-name">${item.name}</div>
@@ -1157,9 +1161,20 @@ function openSheet(id) {
   shQty = 1;
   updateShQty();
 
-  const imgSrc = CAT_IMAGES[activeItem.cat] || DEFAULT_IMG;
-  el('sh-bg').style.cssText = `background:url('${imgSrc}') center/cover no-repeat;filter:brightness(0.72);`;
-  el('sh-emoji').textContent   = activeItem.emoji;
+  const hasImage = activeItem.imageUrl && activeItem.imageUrl.trim() !== '';
+  if (hasImage) {
+    el('sheet-hero').style.backgroundImage = `url('${activeItem.imageUrl}')`;
+    el('sheet-hero').style.backgroundSize = 'cover';
+    el('sheet-hero').style.backgroundPosition = 'center';
+    el('sh-bg').style.cssText = '';
+    el('sh-emoji').style.display = 'none';
+  } else {
+    el('sheet-hero').style.backgroundImage = 'none';
+    const imgSrc = CAT_IMAGES[activeItem.cat] || DEFAULT_IMG;
+    el('sh-bg').style.cssText = `background:url('${imgSrc}') center/cover no-repeat;filter:brightness(0.72);`;
+    el('sh-emoji').style.display = '';
+    el('sh-emoji').textContent = activeItem.emoji;
+  }
   el('sh-name').textContent    = activeItem.name;
   el('sh-cat').textContent     = CAT_MAP[activeItem.cat] || '';
   el('sh-desc').textContent    = activeItem.desc;
@@ -1262,6 +1277,7 @@ async function loadMenu() {
   try {
     const res = await fetch(API + '/menu');
     allItems  = await res.json();
+    console.log('Premier item imageUrl:', allItems[0]?.imageUrl);
     renderMenu();
   } catch {
     el('menu-list').innerHTML = `<div class="empty"><div class="empty-ico">⚠️</div><p>Impossible de charger le menu.<br>Vérifiez la connexion.</p></div>`;
