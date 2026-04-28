@@ -452,6 +452,18 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// ── APPEL SERVEUR ─────────────────────────────────────
+app.post('/api/call-waiter', async (req, res) => {
+  try {
+    const { tableNumber } = req.body;
+    console.log(`🔔 Appel serveur Table ${tableNumber}`);
+    broadcast({ type: 'WAITER_CALL', tableNumber, time: new Date().toISOString() });
+    res.json({ success: true, message: 'Serveur appelé !' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // ══════════════════════════════════════════════════════
 // WEBSOCKET — notifications temps réel
 // ══════════════════════════════════════════════════════

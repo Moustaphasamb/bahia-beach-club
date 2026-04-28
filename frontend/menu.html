@@ -1406,8 +1406,21 @@ function handleInteraction(e) {
   // appeler serveur
   if (e.target.closest('#btn-waiter')) {
     e.preventDefault();
-    toast('Serveur appelé ! Il arrive…');
-    closeOrder();
+    try {
+      const res = await fetch(window.location.origin + '/api/call-waiter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tableNumber: TABLE })
+      });
+      if (res.ok) {
+        toast('🔔 Serveur appelé ! Il arrive…');
+        closeOrder();
+      } else {
+        toast('Erreur — réessayez');
+      }
+    } catch (err) {
+      toast('Erreur — réessayez');
+    }
     return;
   }
 
