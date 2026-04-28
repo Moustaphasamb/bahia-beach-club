@@ -239,10 +239,12 @@
       border: 1px solid rgba(212,168,71,0.25);
       border-radius: 4px; overflow: hidden;
       opacity: 0; transform: translateY(20px);
+      max-width: 100%;
     }
     .hero-stat {
       padding: 14px 30px; text-align: center;
       border-right: 1px solid rgba(212,168,71,0.2);
+      flex: 1 1 0; min-width: 0;
     }
     .hero-stat:last-child { border-right: none; }
     .hero-stat-value {
@@ -850,6 +852,13 @@
       section { padding: 60px 5%; }
       .avis-section { padding: 60px 0; }
       #cta { padding: 60px 5%; }
+      .about-stats { gap: 20px; }
+    }
+    @media (max-width: 420px) {
+      .hero-stat { padding: 10px 14px; }
+      .hero-stat-value { font-size: 1.2rem; }
+      .hero-stat-label { font-size: 0.5rem; letter-spacing: 0.08em; }
+      #hero { padding: var(--nav-h) 4% 0; }
     }
   </style>
 </head>
