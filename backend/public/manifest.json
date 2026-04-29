@@ -1,0 +1,22 @@
+{
+  "name": "Bahia Beach Club Menu",
+  "short_name": "Bahia Menu",
+  "description": "Menu digital du Bahia Beach Club",
+  "start_url": "/menu.html?table=1",
+  "display": "standalone",
+  "background_color": "#FDFAF5",
+  "theme_color": "#C9A96E",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/image/bahia-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/image/bahia-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
