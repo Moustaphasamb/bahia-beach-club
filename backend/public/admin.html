@@ -1535,7 +1535,7 @@ function printQR(tableNum) {
     .qr-wrap img{display:block;width:200px;height:200px}
     .table-name{font-family:'Playfair Display',serif;font-size:1.8rem;color:#1a1a1a;margin-bottom:8px}
     .instruction{font-size:.75rem;color:#666;line-height:1.6;margin-bottom:20px}
-    .url{font-size:.55rem;color:#aaa;word-break:break-all}
+    .qr-logo-img{width:60px;height:60px;object-fit:contain;opacity:.75}
     hr{border:none;border-top:1px solid #eee;margin:20px 0}
     @media print{body{padding:0}}
   </style>
@@ -1548,7 +1548,7 @@ function printQR(tableNum) {
     <div class="table-name">Table ${tableNum}</div>
     <hr>
     <div class="instruction">Scannez ce QR code avec votre téléphone<br>pour accéder à notre menu digital<br>et passer votre commande</div>
-    <div class="url">${url}</div>
+    <img src="${window.location.origin}/image/bahia-logo.png" class="qr-logo-img" alt="Bahia Beach Club" onerror="this.style.display='none'">
   </div>
   <script>window.onload=function(){window.print();}<\/script>
 </body>
@@ -1568,7 +1568,7 @@ function printAllQR() {
         <div class="qr-wrap"><img src="${qrUrl}" alt="QR Table ${i}" width="160" height="160"></div>
         <div class="table-name">Table ${i}</div>
         <div class="instruction">Scannez pour commander</div>
-        <div class="url">${url}</div>
+        <img src="${window.location.origin}/image/bahia-logo.png" style="width:40px;height:40px;object-fit:contain;opacity:.75;margin-top:8px;" alt="Bahia Beach Club" onerror="this.style.display='none'">
       </div>`;
   }
   win.document.write(`<!DOCTYPE html>
