@@ -375,12 +375,13 @@ app.get('/api/admin/stats', auth, async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const [todayOrders, allOrders, menuItems, activeTables, arItems] = await Promise.all([
+    const [todayOrders, allOrders, menuItems, activeTables, arItems, pendingReservations] = await Promise.all([
       prisma.order.findMany({ where: { createdAt: { gte: today } } }),
       prisma.order.findMany(),
       prisma.menuItem.count(),
       prisma.table.count({ where: { active: true } }),
-      prisma.menuItem.count({ where: { ar: true } })
+      prisma.menuItem.count({ where: { ar: true } }),
+      prisma.reservation.count({ where: { status: 'pending' } })
     ]);
 
     const revenueToday = todayOrders.reduce((s, o) => s + o.total, 0);
@@ -414,6 +415,7 @@ app.get('/api/admin/stats', auth, async (req, res) => {
       menuItems,
       activeTables,
       arItems,
+      pendingReservations,
       topProducts,
       byStatus
     });

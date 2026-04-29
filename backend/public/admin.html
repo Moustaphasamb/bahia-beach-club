@@ -840,7 +840,7 @@
           <div class="stat-card"><div class="stat-val turq" id="s-orders">—</div><div class="stat-lbl">Commandes aujourd'hui</div></div>
           <div class="stat-card"><div class="stat-val gold" id="s-revenue">—</div><div class="stat-lbl">CA aujourd'hui (FCFA)</div></div>
           <div class="stat-card"><div class="stat-val green" id="s-tables">—</div><div class="stat-lbl">Tables occupées</div></div>
-          <div class="stat-card"><div class="stat-val red" id="s-items">—</div><div class="stat-lbl">Produits au menu</div></div>
+          <div class="stat-card"><div class="stat-val red" id="s-resa-pending">—</div><div class="stat-lbl">Réservations en attente</div></div>
         </div>
         <div class="panel">
           <div class="panel-head">Commandes récentes</div>
@@ -1205,7 +1205,7 @@ async function loadStats() {
     document.getElementById('s-orders').textContent  = s.todayOrders   ?? '—';
     document.getElementById('s-revenue').textContent = s.revenueToday != null ? fmt(s.revenueToday) : '—';
     document.getElementById('s-tables').textContent  = s.activeTables != null ? s.activeTables + '/20' : '—';
-    document.getElementById('s-items').textContent   = s.menuItems     ?? s.arItems ?? '—';
+    document.getElementById('s-resa-pending').textContent = s.pendingReservations ?? '—';
     // Badge
     const pending = s.byStatus?.pending || 0;
     const badge = document.getElementById('badge');
