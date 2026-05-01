@@ -1429,6 +1429,9 @@ function handleInteraction(e) {
   // appeler serveur
   if (e.target.closest('#btn-waiter')) {
     e.preventDefault();
+    const btn = document.getElementById('btn-waiter');
+    if (btn.disabled) return;
+    btn.disabled = true;
     fetch(window.location.origin + '/api/call-waiter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1437,11 +1440,15 @@ function handleInteraction(e) {
       if (res.ok) {
         toast('🔔 Serveur appelé ! Il arrive…');
         closeOrder();
+        // Réactiver après 10 secondes pour éviter les appels répétés
+        setTimeout(() => { btn.disabled = false; }, 10000);
       } else {
         toast('Erreur — réessayez');
+        btn.disabled = false;
       }
     }).catch(() => {
       toast('Erreur — réessayez');
+      btn.disabled = false;
     });
     return;
   }

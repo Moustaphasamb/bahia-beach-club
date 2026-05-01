@@ -1841,8 +1841,12 @@ function printAllQR() {
 
 // ── WEBSOCKET ─────────────────────────────────────────
 let wsTimer;
+let ws = null;
 function connectWS() {
-  let ws;
+  // Fermer toute connexion existante avant d'en ouvrir une nouvelle
+  if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+    return;
+  }
   try {
     const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
     ws = new WebSocket(proto + '//' + location.host);
@@ -1863,8 +1867,8 @@ function connectWS() {
       }
     } catch {}
   };
-  ws.onclose = () => { clearTimeout(wsTimer); wsTimer = setTimeout(connectWS, 5000); };
-  ws.onerror = () => ws.close();
+  ws.onclose = () => { ws = null; clearTimeout(wsTimer); wsTimer = setTimeout(connectWS, 5000); };
+  ws.onerror = () => { ws?.close(); };
 }
 
 // ── APPELS SERVEUR ────────────────────────────────────
