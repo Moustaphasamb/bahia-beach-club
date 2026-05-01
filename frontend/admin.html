@@ -765,6 +765,49 @@
       width: 20px; height: 20px; font-size: .65rem;
       align-items: center; justify-content: center; margin-left: auto;
     }
+    @keyframes slideOutRight {
+      from { transform: translateX(0);    opacity: 1; }
+      to   { transform: translateX(120%); opacity: 0; }
+    }
+    /* ── RESERVATION NOTIFICATION ── */
+    .resa-notif {
+      position: fixed; top: 20px; right: 20px; z-index: 9999;
+      background: #FDFAF5; border: 2px solid #C9A96E;
+      border-radius: 16px; padding: 16px 18px;
+      display: flex; align-items: flex-start; gap: 14px;
+      box-shadow: 0 8px 30px rgba(61,46,20,0.25);
+      min-width: 300px; max-width: 380px;
+      animation: slideInRight 0.4s ease;
+    }
+    .rn-icon { font-size: 2rem; flex-shrink: 0; }
+    .rn-content { flex: 1; }
+    .rn-title {
+      font-size: .7rem; letter-spacing: .15em;
+      text-transform: uppercase; color: #C9A96E;
+      font-weight: 600; margin-bottom: 4px;
+    }
+    .rn-name {
+      font-size: 1rem; font-weight: 700; color: #3D2E14;
+      font-family: 'Playfair Display', serif; margin-bottom: 4px;
+    }
+    .rn-details { font-size: .78rem; color: #9A8060; margin-bottom: 3px; }
+    .rn-phone   { font-size: .75rem; color: #7A5C30; font-weight: 500; }
+    .rn-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+    .rn-btn-view {
+      padding: 6px 14px; background: #C9A96E; border: none;
+      border-radius: 8px; color: #FDFAF5; font-size: .7rem;
+      font-weight: 600; cursor: pointer; white-space: nowrap;
+    }
+    .rn-btn-close {
+      padding: 6px 14px; background: none;
+      border: 1px solid #D3CEBF; border-radius: 8px;
+      color: #9A8060; font-size: .7rem; cursor: pointer;
+    }
+    #resa-badge {
+      background: #e74c3c; color: #fff; border-radius: 50%;
+      width: 20px; height: 20px; font-size: .65rem;
+      align-items: center; justify-content: center; margin-left: auto;
+    }
   </style>
 </head>
 <body>
@@ -808,7 +851,10 @@
 
     <div class="nav-section-label">Gestion</div>
     <button class="nav-btn" data-page="menu">🍽️ Menu & Produits</button>
-    <button class="nav-btn" data-page="reservations">📅 Réservations</button>
+    <button class="nav-btn" data-page="reservations" style="display:flex;align-items:center;justify-content:space-between;">
+      <span>📅 Réservations</span>
+      <span id="resa-badge" style="display:none;">0</span>
+    </button>
     <button class="nav-btn" data-page="tables">🪑 Tables</button>
     <button class="nav-btn" data-page="qrcodes">⊞ QR Codes</button>
     <button class="nav-btn" data-page="waiter-calls">🔔 Appels Serveur <span id="waiter-badge" style="display:none;">0</span></button>
@@ -1162,7 +1208,11 @@ function navTo(page) {
   if (page === 'orders')       loadOrders();
   if (page === 'menu')         loadMenu();
   if (page === 'tables')       loadTables();
-  if (page === 'reservations') loadReservations();
+  if (page === 'reservations') {
+    const badge = document.getElementById('resa-badge');
+    if (badge) { badge.textContent = '0'; badge.style.display = 'none'; }
+    loadReservations();
+  }
   // qrcodes already built on init
 }
 
@@ -1625,6 +1675,9 @@ function connectWS() {
         loadStats();
         if (currentPage === 'orders') loadOrders();
       }
+      if (d.type === 'NEW_RESERVATION') {
+        showReservationAlert(d.reservation);
+      }
       if (d.type === 'WAITER_CALL') {
         showWaiterAlert(d.tableNumber, d.time);
       }
@@ -1661,6 +1714,58 @@ function showWaiterAlert(tableNumber, time) {
 
   // Ajouter dans la liste
   addWaiterCall(tableNumber, time);
+}
+
+// ── NOTIFICATIONS RÉSERVATIONS ───────────────────────
+function showReservationAlert(resa) {
+  const badge = document.getElementById('resa-badge');
+  if (badge) {
+    const count = parseInt(badge.textContent || '0') + 1;
+    badge.textContent = count;
+    badge.style.display = 'inline-flex';
+  }
+
+  const notif = document.createElement('div');
+  notif.className = 'resa-notif';
+  notif.innerHTML = `
+    <div class="rn-icon">📅</div>
+    <div class="rn-content">
+      <div class="rn-title">Nouvelle réservation !</div>
+      <div class="rn-name">${resa.name}</div>
+      <div class="rn-details">${resa.date} à ${resa.time} · ${resa.guests} personne(s)</div>
+      ${resa.phone ? `<div class="rn-phone">📞 ${resa.phone}</div>` : ''}
+    </div>
+    <div class="rn-actions">
+      <button class="rn-btn-view" onclick="navTo('reservations');this.closest('.resa-notif').remove();">Voir</button>
+      <button class="rn-btn-close" onclick="this.closest('.resa-notif').remove()">✕</button>
+    </div>
+  `;
+  document.body.appendChild(notif);
+
+  try {
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.setValueAtTime(660, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.5);
+  } catch(e) {}
+
+  setTimeout(() => {
+    if (notif.parentElement) {
+      notif.style.animation = 'slideOutRight 0.4s ease forwards';
+      setTimeout(() => notif.remove(), 400);
+    }
+  }, 20000);
+
+  if (document.getElementById('page-reservations')?.classList.contains('active')) {
+    loadReservations();
+  }
 }
 
 function addWaiterCall(tableNumber, time) {

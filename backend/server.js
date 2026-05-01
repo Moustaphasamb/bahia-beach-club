@@ -305,6 +305,21 @@ app.post('/api/reservations', async (req, res) => {
       data: { name, phone, date, time, guests: parseInt(guests), message: message || '', status: 'pending' }
     });
     console.log('Réservation créée:', reservation.id);
+
+    broadcast({
+      type: 'NEW_RESERVATION',
+      reservation: {
+        id: reservation.id,
+        name: reservation.name,
+        phone: reservation.phone,
+        date: reservation.date,
+        time: reservation.time,
+        guests: reservation.guests,
+        message: reservation.message,
+        createdAt: reservation.createdAt
+      }
+    });
+
     res.status(201).json({ success: true, message: 'Réservation confirmée !', id: reservation.id });
   } catch (e) {
     console.error('Erreur réservation:', e);
