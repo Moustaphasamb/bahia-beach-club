@@ -417,8 +417,43 @@
       border-bottom: 1px solid var(--border);
       font-size: .85rem;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .panel-head-sub {
+      font-size: .6rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-weight: 400;
     }
     .panel-body { padding: 16px 20px; }
+
+    /* ── CHARTS ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .chart-wrap {
+      position: relative;
+      padding: 16px 20px 20px;
+    }
+    .chart-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: var(--muted);
+      font-size: .78rem;
+      letter-spacing: .06em;
+    }
+    @media (max-width: 900px) {
+      .charts-row { grid-template-columns: 1fr; }
+    }
 
     /* ── ORDER ROWS ── */
     .order-row {
@@ -888,6 +923,29 @@
           <div class="stat-card"><div class="stat-val green" id="s-tables">—</div><div class="stat-lbl">Tables occupées</div></div>
           <div class="stat-card"><div class="stat-val red" id="s-resa-pending">—</div><div class="stat-lbl">Réservations en attente</div></div>
         </div>
+        <div class="charts-row">
+          <div class="panel">
+            <div class="panel-head">
+              CA des 7 derniers jours
+              <span class="panel-head-sub">Chiffre d'affaires · FCFA</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-revenue" height="200"></canvas>
+              <div class="chart-empty" id="chart-revenue-empty" style="display:none;">Aucune donnée</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              Top produits
+              <span class="panel-head-sub">Quantités commandées</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-products" height="200"></canvas>
+              <div class="chart-empty" id="chart-products-empty" style="display:none;">Aucune commande</div>
+            </div>
+          </div>
+        </div>
+
         <div class="panel">
           <div class="panel-head">Commandes récentes</div>
           <div class="panel-body" id="recent-orders">Chargement…</div>
@@ -1086,6 +1144,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
 const API = window.location.origin + '/api';
 let token = localStorage.getItem('bahia_token');
@@ -1247,6 +1306,9 @@ function closeSidebar() {
 }
 
 // ── STATS ─────────────────────────────────────────────
+let _chartRevenue = null;
+let _chartProducts = null;
+
 async function loadStats() {
   try {
     const res = await fetch(API + '/admin/stats', { headers: authHeaders() });
@@ -1256,16 +1318,28 @@ async function loadStats() {
     document.getElementById('s-revenue').textContent = s.revenueToday != null ? fmt(s.revenueToday) : '—';
     document.getElementById('s-tables').textContent  = s.activeTables != null ? s.activeTables + '/20' : '—';
     document.getElementById('s-resa-pending').textContent = s.pendingReservations ?? '—';
-    // Badge
     const pending = s.byStatus?.pending || 0;
     const badge = document.getElementById('badge');
     badge.textContent = pending;
     badge.style.display = pending > 0 ? '' : 'none';
+
+    // Graphique top produits
+    renderTopProducts(s.topProducts || []);
   } catch(e) {
     console.warn('Stats error:', e.message);
   }
 
-  // Recent orders
+  // Graphique CA hebdomadaire
+  try {
+    const res = await fetch(API + '/admin/stats/weekly', { headers: authHeaders() });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const w = await res.json();
+    renderRevenueChart(w);
+  } catch(e) {
+    console.warn('Weekly stats error:', e.message);
+  }
+
+  // Commandes récentes
   try {
     const res = await fetch(API + '/admin/orders', { headers: authHeaders() });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -1284,6 +1358,112 @@ async function loadStats() {
   } catch(e) {
     document.getElementById('recent-orders').innerHTML = `<div style="color:var(--muted);font-size:.8rem;padding:10px;">Impossible de charger les commandes (${e.message})</div>`;
   }
+}
+
+function renderRevenueChart(w) {
+  const canvas  = document.getElementById('chart-revenue');
+  const isEmpty = !w.revenues || w.revenues.every(v => v === 0);
+  document.getElementById('chart-revenue-empty').style.display = isEmpty ? '' : 'none';
+  canvas.style.display = isEmpty ? 'none' : '';
+  if (isEmpty) return;
+
+  if (_chartRevenue) _chartRevenue.destroy();
+  _chartRevenue = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: w.labels,
+      datasets: [{
+        label: 'CA (FCFA)',
+        data: w.revenues,
+        backgroundColor: 'rgba(201,169,110,0.25)',
+        borderColor: '#C9A96E',
+        borderWidth: 2,
+        borderRadius: 6,
+        hoverBackgroundColor: 'rgba(201,169,110,0.45)'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.parsed.y.toLocaleString('fr-FR') + ' F'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(61,46,20,0.06)' },
+          ticks: { color: '#9A8060', font: { size: 11 } }
+        },
+        y: {
+          grid: { color: 'rgba(61,46,20,0.06)' },
+          ticks: {
+            color: '#9A8060',
+            font: { size: 11 },
+            callback: v => v === 0 ? '0' : (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v)
+          },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+function renderTopProducts(products) {
+  const canvas  = document.getElementById('chart-products');
+  const isEmpty = !products || products.length === 0;
+  document.getElementById('chart-products-empty').style.display = isEmpty ? '' : 'none';
+  canvas.style.display = isEmpty ? 'none' : '';
+  if (isEmpty) return;
+
+  if (_chartProducts) _chartProducts.destroy();
+  _chartProducts = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: products.map(p => p.name.length > 18 ? p.name.slice(0, 18) + '…' : p.name),
+      datasets: [{
+        label: 'Qté',
+        data: products.map(p => p.qty),
+        backgroundColor: [
+          'rgba(201,169,110,0.8)',
+          'rgba(201,169,110,0.65)',
+          'rgba(201,169,110,0.5)',
+          'rgba(201,169,110,0.38)',
+          'rgba(201,169,110,0.25)'
+        ],
+        borderColor: '#C9A96E',
+        borderWidth: 1,
+        borderRadius: 5
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => '  ' + ctx.parsed.x + ' commandé(s)'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(61,46,20,0.06)' },
+          ticks: { color: '#9A8060', font: { size: 11 } },
+          beginAtZero: true
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#3D2E14', font: { size: 11, weight: '500' } }
+        }
+      }
+    }
+  });
 }
 
 // ── COMMANDES ─────────────────────────────────────────

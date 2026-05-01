@@ -440,6 +440,32 @@ app.get('/api/admin/stats', auth, async (req, res) => {
 });
 
 // ══════════════════════════════════════════════════════
+// STATS HEBDOMADAIRES
+// ══════════════════════════════════════════════════════
+
+app.get('/api/admin/stats/weekly', auth, async (req, res) => {
+  try {
+    const labels = [], revenues = [], counts = [];
+    for (let i = 6; i >= 0; i--) {
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+      start.setDate(start.getDate() - i);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 1);
+      const orders = await prisma.order.findMany({
+        where: { createdAt: { gte: start, lt: end } }
+      });
+      labels.push(start.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' }));
+      revenues.push(orders.reduce((s, o) => s + (o.total || 0), 0));
+      counts.push(orders.length);
+    }
+    res.json({ labels, revenues, counts });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ══════════════════════════════════════════════════════
 // QR CODES
 // ══════════════════════════════════════════════════════
 
