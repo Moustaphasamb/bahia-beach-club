@@ -440,6 +440,41 @@ app.get('/api/admin/stats', auth, async (req, res) => {
 });
 
 // ══════════════════════════════════════════════════════
+// TOP PRODUITS — public
+// ══════════════════════════════════════════════════════
+
+app.get('/api/top-products', async (req, res) => {
+  try {
+    const orderItems = await prisma.orderItem.groupBy({
+      by: ['name'],
+      _sum: { qty: true },
+      orderBy: { _sum: { qty: 'desc' } },
+      take: 10
+    });
+
+    const products = await Promise.all(
+      orderItems.map(async item => {
+        const menuItem = await prisma.menuItem.findFirst({
+          where: { name: item.name }
+        });
+        return {
+          name: item.name,
+          qty: item._sum.qty,
+          price: menuItem?.price || null,
+          imageUrl: menuItem?.imageUrl || null,
+          cat: menuItem?.cat || null,
+          desc: menuItem?.desc || null
+        };
+      })
+    );
+
+    res.json(products);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ══════════════════════════════════════════════════════
 // STATS HEBDOMADAIRES
 // ══════════════════════════════════════════════════════
 

@@ -102,7 +102,6 @@
       width: 56px; height: 56px;
       border-radius: 50%;
       object-fit: cover; display: block;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     }
     .nav-logo-text {
       font-family: 'Playfair Display', serif;
@@ -380,56 +379,97 @@
 
     /* ── MENU APERÇU ── */
     #menu-apercu { background: var(--bg); }
-    /* Flip showcase */
-    .menu-showcase {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px; margin-bottom: 64px;
+
+    /* ── TICKER CAROUSEL ── */
+    .menu-ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 56px;
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
     }
-    .menu-card-wrap { perspective: 1000px; height: 290px; cursor: pointer; }
-    .menu-card-inner {
-      position: relative; width: 100%; height: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+    .menu-ticker {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      animation: menuScroll 40s linear infinite;
     }
-    .menu-card-wrap:hover .menu-card-inner { transform: rotateY(180deg); }
-    .menu-card-front, .menu-card-back {
-      position: absolute; inset: 0;
-      backface-visibility: hidden; border-radius: 20px; overflow: hidden;
+    .menu-ticker:hover { animation-play-state: paused; }
+    @keyframes menuScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
-    .menu-card-front img { width: 100%; height: 100%; object-fit: cover; }
-    .menu-card-front-label {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 14px 16px 16px;
-      background: linear-gradient(to top, rgba(6,9,14,0.92), transparent);
-      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--text);
-    }
-    .menu-card-back {
+    .ticker-card {
+      flex-shrink: 0;
+      width: 220px;
+      height: 300px;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
       background: var(--brun-profond);
-      transform: rotateY(180deg);
+      border: 1px solid rgba(201,169,110,0.2);
+      cursor: default;
+    }
+    .ticker-card-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.75;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .menu-ticker:hover .ticker-card:hover .ticker-card-img {
+      opacity: 0.55;
+      transform: scale(1.05);
+    }
+    .ticker-card-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(61,46,20,0.9) 0%, rgba(168,136,78,0.4) 100%);
+    }
+    .ticker-card-body {
+      position: absolute; inset: 0;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 28px 22px; text-align: center;
-      border: 1px solid rgba(201,169,110,0.25);
+      justify-content: flex-end;
+      padding: 18px 16px;
+      background: linear-gradient(to top, rgba(22,14,4,0.92) 0%, transparent 55%);
     }
-    .menu-card-back-title {
+    .ticker-card-rank {
+      position: absolute; top: 14px; left: 14px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(201,169,110,0.25);
+      border: 1px solid rgba(201,169,110,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem;
+      font-family: 'DM Mono', monospace;
+      color: #C9A96E;
+      font-weight: 600;
+    }
+    .ticker-card-cat {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 5px;
+    }
+    .ticker-card-name {
       font-family: 'Playfair Display', serif;
-      font-size: 1.3rem; font-weight: 400; color: #F5EFE4; margin-bottom: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #F5EFE4;
+      line-height: 1.25;
+      margin-bottom: 6px;
     }
-    .menu-card-back-desc {
-      color: rgba(245,239,228,0.65);
-      font-family: 'Cormorant Garamond', serif; font-weight: 300;
-      font-size: 0.85rem; line-height: 1.6; margin-bottom: 14px;
+    .ticker-card-price {
+      font-size: 0.78rem;
+      color: #C9A96E;
+      letter-spacing: 0.05em;
     }
-    .menu-card-back-price { color: var(--turq); font-size: 1rem; letter-spacing: 0.05em; margin-bottom: 20px; }
-    .menu-card-back-btn {
-      padding: 8px 18px; border: 1px solid var(--turq); color: var(--turq);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
-      border-radius: 3px; text-decoration: none;
-      transition: background 0.2s, color 0.2s;
+    .ticker-card-qty {
+      font-size: 0.6rem;
+      color: rgba(245,239,228,0.5);
+      font-family: 'DM Mono', monospace;
+      margin-top: 3px;
     }
-    .menu-card-back-btn:hover { background: var(--turq); color: #FDFAF5; }
     /* API menu */
     .menu-section-label {
       font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
@@ -1270,62 +1310,9 @@
     <p class="section-desc">Des saveurs sénégalaises et méditerranéennes, élaborées chaque jour avec les produits frais du marché.</p>
   </div>
 
-  <div class="menu-showcase">
-    <div class="menu-card-wrap reveal reveal-delay-1">
-      <div class="menu-card-inner">
-        <div class="menu-card-front">
-          <img src="image/20251010195206_IMG_0919.webp" alt="Thiéboudienne" loading="lazy">
-          <div class="menu-card-front-label">Thiéboudienne Royal</div>
-        </div>
-        <div class="menu-card-back">
-          <div class="menu-card-back-title">Thiéboudienne Royal</div>
-          <div class="menu-card-back-desc">Riz au poisson façon Bahia, légumes du marché, épices maison</div>
-          <div class="menu-card-back-price">8 500 FCFA</div>
-          <a href="/menu.html" class="menu-card-back-btn">Voir le menu</a>
-        </div>
-      </div>
-    </div>
-    <div class="menu-card-wrap reveal reveal-delay-2">
-      <div class="menu-card-inner">
-        <div class="menu-card-front">
-          <img src="image/20251010195206_IMG_0921.webp" alt="Fruits de Mer" loading="lazy">
-          <div class="menu-card-front-label">Plateau Fruits de Mer</div>
-        </div>
-        <div class="menu-card-back">
-          <div class="menu-card-back-title">Plateau Fruits de Mer</div>
-          <div class="menu-card-back-desc">Crevettes, homard et calamars grillés, sauce citronnelle</div>
-          <div class="menu-card-back-price">18 500 FCFA</div>
-          <a href="/menu.html" class="menu-card-back-btn">Voir le menu</a>
-        </div>
-      </div>
-    </div>
-    <div class="menu-card-wrap reveal reveal-delay-3">
-      <div class="menu-card-inner">
-        <div class="menu-card-front">
-          <img src="image/20251010195206_IMG_0922.webp" alt="Cocktail Bahia" loading="lazy">
-          <div class="menu-card-front-label">Bahia Sunset</div>
-        </div>
-        <div class="menu-card-back">
-          <div class="menu-card-back-title">Bahia Sunset</div>
-          <div class="menu-card-back-desc">Rhum blanc, fruits de la passion, ananas frais, ginger beer</div>
-          <div class="menu-card-back-price">4 500 FCFA</div>
-          <a href="/menu.html" class="menu-card-back-btn">Voir le menu</a>
-        </div>
-      </div>
-    </div>
-    <div class="menu-card-wrap reveal reveal-delay-3">
-      <div class="menu-card-inner">
-        <div class="menu-card-front">
-          <img src="image/20251010195206_IMG_0920.webp" alt="Poulet Yassa" loading="lazy">
-          <div class="menu-card-front-label">Poulet Yassa Corniche</div>
-        </div>
-        <div class="menu-card-back">
-          <div class="menu-card-back-title">Poulet Yassa Corniche</div>
-          <div class="menu-card-back-desc">Poulet mariné aux oignons caramélisés, citron vert et moutarde</div>
-          <div class="menu-card-back-price">7 200 FCFA</div>
-          <a href="/menu.html" class="menu-card-back-btn">Voir le menu</a>
-        </div>
-      </div>
+  <div class="menu-ticker-wrap">
+    <div class="menu-ticker" id="menuTicker">
+      <!-- rempli dynamiquement par JS -->
     </div>
   </div>
 
@@ -2034,6 +2021,58 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') { currentGalIndex = (currentGalIndex - 1 + galItems.length) % galItems.length; openLightbox(); }
   if (e.key === 'ArrowRight') { currentGalIndex = (currentGalIndex + 1) % galItems.length; openLightbox(); }
 });
+
+// ── MENU TICKER ──
+(function initMenuTicker() {
+  const API_BASE = window.location.origin;
+  const ticker = document.getElementById('menuTicker');
+  if (!ticker) return;
+
+  const CAT_LABELS = {
+    entree: 'Entrée', plat: 'Plat', dessert: 'Dessert',
+    boisson: 'Boisson', cocktail: 'Cocktail', snack: 'Snack'
+  };
+
+  function cardHTML(p, rank) {
+    const cat = CAT_LABELS[p.cat] || (p.cat || '');
+    const price = p.price ? p.price.toLocaleString('fr-FR') + ' F' : '';
+    const qty   = p.qty   ? p.qty + ' commandé' + (p.qty > 1 ? 's' : '') : '';
+    const img   = p.imageUrl
+      ? `<img src="${p.imageUrl}" alt="${p.name}" class="ticker-card-img" loading="lazy">`
+      : '';
+    const bg    = p.imageUrl ? '' : '<div class="ticker-card-bg"></div>';
+    return `
+      <div class="ticker-card">
+        ${img}${bg}
+        <div class="ticker-card-rank">${rank}</div>
+        <div class="ticker-card-body">
+          ${cat ? `<div class="ticker-card-cat">${cat}</div>` : ''}
+          <div class="ticker-card-name">${p.name}</div>
+          ${price ? `<div class="ticker-card-price">${price}</div>` : ''}
+          ${qty   ? `<div class="ticker-card-qty">${qty}</div>` : ''}
+        </div>
+      </div>`;
+  }
+
+  fetch(API_BASE + '/api/top-products')
+    .then(r => r.ok ? r.json() : [])
+    .then(products => {
+      if (!products.length) {
+        ticker.closest('.menu-ticker-wrap').style.display = 'none';
+        return;
+      }
+      const html = products.map((p, i) => cardHTML(p, i + 1)).join('');
+      // dupliquer pour la boucle infinie
+      ticker.innerHTML = html + html;
+
+      // ajuster la durée selon le nombre de cartes
+      const speed = products.length * 4; // secondes
+      ticker.style.animationDuration = speed + 's';
+    })
+    .catch(() => {
+      ticker.closest('.menu-ticker-wrap').style.display = 'none';
+    });
+})();
 
 // ── CUSTOM CURSOR ──
 (function initCursor() {
