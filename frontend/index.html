@@ -581,8 +581,11 @@
     }
     .avis-carousel-wrap {
       position: relative;
-      overflow: hidden;
       margin: 48px 0 32px;
+      padding: 0 56px;
+    }
+    .avis-carousel-clip {
+      overflow: hidden;
     }
     .avis-carousel {
       display: flex;
@@ -666,8 +669,8 @@
       display: flex; align-items: center; justify-content: center;
       backdrop-filter: blur(10px);
     }
-    .avis-prev { left: -24px; }
-    .avis-next { right: -24px; }
+    .avis-prev { left: 4px; }
+    .avis-next { right: 4px; }
     .avis-prev:hover, .avis-next:hover {
       background: rgba(201,169,110,0.15);
       border-color: rgba(201,169,110,0.5);
@@ -702,7 +705,8 @@
     }
     .btn-google:hover { border-color: rgba(201,169,110,0.6); color: var(--turq); transform: translateX(4px); }
     @media (max-width: 768px) {
-      .avis-card { min-width: calc(100vw - 60px); max-width: calc(100vw - 60px); padding: 28px 24px; }
+      .avis-card { min-width: calc(100vw - 120px); max-width: calc(100vw - 120px); padding: 28px 24px; }
+      .avis-carousel-wrap { padding: 0 44px; }
       .avis-prev { left: 0; }
       .avis-next { right: 0; }
     }
@@ -1449,8 +1453,10 @@
     </div>
 
     <div class="avis-carousel-wrap">
-      <div class="avis-carousel" id="avisCarousel"></div>
       <button class="avis-prev" aria-label="Précédent">←</button>
+      <div class="avis-carousel-clip">
+        <div class="avis-carousel" id="avisCarousel"></div>
+      </div>
       <button class="avis-next" aria-label="Suivant">→</button>
       <div class="avis-dots" id="avisDots"></div>
     </div>
